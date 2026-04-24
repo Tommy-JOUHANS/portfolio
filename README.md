@@ -1,28 +1,32 @@
 # Portfolio: CyberAudit & Solution
 
 
-- CyberAudit & Solutions is a cybersecurity business creation project undertaken by three 
+CyberAudit & Solutions is a cybersecurity startup project developed by three students from different training schools in Dijon 
 
-students from different educational institutions in Dijon, in partnership with "LES 
+through “Les Entrep',” an entrepreneurial association that supports students in starting their own businesses.
 
-ENTREP'", an association of entrepreneurs that trains students to launch their own 
 
-businesses.
+The services offered by CyberAudit & Solutions include:
 
-- CyberAudit & Solutions offers services such as risk audits and analyses, incident 
+-	Risk assessment and analysis (EBIOS RM methodology)
 
-management and vulnerability remediation, system protection and 24/7 security operations 
+-	 Incident management and vulnerability remediation
 
-center (SOC) monitoring, and vulnerability assessments. As part of our portfolio project at 
+-	 System protection and 24/7 monitoring (SOC),
 
-Horberton School, we will design a full-stack web platform for SMEs and very small 
+-	 Team awareness training
 
-businesses that lack in-house IT expertise.
 
-- This platform allows users to submit cybersecurity audit requests for the four required 
+As part of the Holberton School portfolio project, we are designing a full-stack web platform for small and medium-sized 
 
-services, track the progress of their requests in real time, view vulnerability reports, and 
+businesses without in-house IT expertise.
 
-access awareness modules, all within a secure environment featuring role management, JWT 
 
-authentication, and protection against XSS and SQL injection attacks.
+The platform allows SME clients to choose a service package from among CyberAudit & Solutions’ four offerings, submit their 
+
+service request via a structured form, receive an immediate email confirmation,
+
+track the progress of their case in real time, view clear vulnerability reports, and access awareness modules, all within a 
+
+secure environment featuring role-based access control and JWT authentication.
+
