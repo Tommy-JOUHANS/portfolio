@@ -160,8 +160,8 @@ cyberaudit/
 | **S4** | Core features 1 | Formulaire audit, dashboard Client | API CRUD demandes, validation, protection SQL |
 | **S5** | Core features 2 | Dashboard Admin, module formations | Génération PDF, upload fichiers, endpoints formations |
 | **S6** | Async & Perfo | Notifications UI, pagination | Celery + Redis, pagination API, optimisation BDD |
-| **S7** | Tests | Tests React, end-to-end, **tests UX (x3)** | Tests unitaires, Postman, vérification XSS/SQL |
-| **S8** | Déploiement | Frontend (Vercel/Render), slides soutenance | Backend + BDD, HTTPS SSL, documentation finale |
+| **S7-10** | Tests | Tests React, end-to-end, **tests UX (x3)** | Tests unitaires, Postman, vérification XSS/SQL |
+| **S11-12** | Déploiement | Frontend (Vercel/Render), slides soutenance | Backend + BDD, HTTPS SSL, documentation finale |
 
 ### Tâches communes (les deux membres)
 - Revues de code croisées sur GitHub (obligatoires avant chaque merge)

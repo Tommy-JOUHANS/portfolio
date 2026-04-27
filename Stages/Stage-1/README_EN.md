@@ -160,8 +160,8 @@ cyberaudit/
 | **W4** | Core Features 1 | Audit form, Client dashboard | Audit CRUD API, input validation, SQL protection |
 | **W5** | Core Features 2 | Admin dashboard, training module | PDF generation, file upload, training endpoints |
 | **W6** | Async & Performance | Notification UI, pagination | Celery + Redis, API pagination, DB optimisation |
-| **W7** | Testing | React tests, end-to-end, **UX user tests (x3)** | Unit tests, Postman API tests, XSS/SQL checks |
-| **W8** | Deployment | Frontend (Vercel/Render), presentation slides | Backend + DB deployment, HTTPS SSL, documentation |
+| **W7-10** | Testing | React tests, end-to-end, **UX user tests (x3)** | Unit tests, Postman API tests, XSS/SQL checks |
+| **W11-12** | Deployment | Frontend (Vercel/Render), presentation slides | Backend + DB deployment, HTTPS SSL, documentation |
 
 ### Shared Tasks (both members)
 - Cross code reviews on GitHub (mandatory before every merge)
