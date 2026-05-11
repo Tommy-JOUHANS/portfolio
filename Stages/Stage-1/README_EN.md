@@ -33,7 +33,7 @@
 
 ### Problem
 
-**45% of French SMEs have no internal IT team** *(Source: ANSSI "Panorama de la cybermenace" 2023)*.  
+**45% of French SMEs have no internal IT team** *(Source: ANSSI "Panorama de la cybermenace" 2023)*.
 They face increasingly frequent cyberattacks — ransomware, phishing, data breaches — but lack the skills and tools to protect themselves. Existing solutions are designed for large enterprises: too complex, too costly, inaccessible.
 
 > **Result:** SMEs suffer preventable attacks, lose critical data, and risk heavy GDPR penalties (up to 4% of annual turnover).
@@ -406,10 +406,10 @@ LOW INFLUENCE
 
 ## 📄 Licence
 
-This project is developed as part of the Holberton School Dijon curriculum.  
+This project is developed as part of the Holberton School Dijon curriculum.
 © 2026 Tommy JOUHANS & James ROUSSEL — CyberAudit & Solutions
 
 ---
 
-*Portfolio Project — Stage 1: Team Formation and Idea Development*  
+*Portfolio Project — Stage 1: Team Formation and Idea Development*
 *Holberton School Dijon | 2026*

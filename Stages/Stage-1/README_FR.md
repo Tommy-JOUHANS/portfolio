@@ -33,7 +33,7 @@
 
 ### Problème identifié
 
-**45% des PME/TPE françaises n'ont aucune équipe informatique interne** *(Source : ANSSI « Panorama de la cybermenace » 2023)*.  
+**45% des PME/TPE françaises n'ont aucune équipe informatique interne** *(Source : ANSSI « Panorama de la cybermenace » 2023)*.
 Elles sont exposées à des cyberattaques de plus en plus fréquentes — ransomware, phishing, fuite de données — mais n'ont ni les compétences ni les outils pour s'en protéger. Les solutions existantes sont conçues pour les grandes entreprises : trop complexes, trop coûteuses, inaccessibles.
 
 > **Résultat :** les PME subissent des attaques évitables, perdent des données critiques et risquent des sanctions RGPD lourdes (jusqu'à 4% du chiffre d'affaires annuel).
@@ -406,10 +406,10 @@ INFLUENCE FAIBLE
 
 ## 📄 Licence
 
-Ce projet est développé dans le cadre du cursus Holberton School Dijon.  
+Ce projet est développé dans le cadre du cursus Holberton School Dijon.
 © 2026 Tommy JOUHANS & James ROUSSEL — CyberAudit & Solutions
 
 ---
 
-*Projet Portfolio — Stage 1 : Constitution de l'équipe et développement de l'idée*  
+*Projet Portfolio — Stage 1 : Constitution de l'équipe et développement de l'idée*
 *Holberton School Dijon | 2026*

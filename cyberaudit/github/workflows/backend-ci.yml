@@ -1,0 +1,38 @@
+name: Backend CI
+on:
+push:
+paths: ["backend/**", ".github/workflows/backend-ci.yml"]
+pull_request:
+paths: ["backend/**"]
+jobs:
+test:
+runs-on: ubuntu-latest
+services:
+postgres:
+image: postgres:15-alpineenv:
+POSTGRES_USER: cyberaudit
+POSTGRES_PASSWORD: ci
+POSTGRES_DB: cyberaudit_test
+ports: ["5432:5432"]
+options: --health-cmd pg_isready --health-interval 5s --health-retries 5
+redis:
+image: redis:7-alpine
+ports: ["6379:6379"]
+defaults:
+run:
+working-directory: backend
+steps:
+- uses: actions/checkout@v4
+- uses: actions/setup-python@v5
+with:
+python-version: "3.11"
+cache: pip
+- run: pip install -r requirements-dev.txt
+- run: ruff check .
+- run: black --check .
+- env:
+DATABASE_URL: postgres://cyberaudit:ci@localhost:5432/cyberaudit_test
+REDIS_URL: redis://localhost:6379/0
+DJANGO_SECRET_KEY: ci-secret
+DJANGO_DEBUG: 0
+run: pytest --cov=apps --cov-fail-under=80

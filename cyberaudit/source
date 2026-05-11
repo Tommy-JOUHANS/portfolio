@@ -1,0 +1,3 @@
+export NVM_DIR=/home/tommy/.nvm
+[ -s /home/tommy/.nvm/nvm.sh ] && \. /home/tommy/.nvm/nvm.sh  # This loads nvm
+[ -s /home/tommy/.nvm/bash_completion ] && \. /home/tommy/.nvm/bash_completion  # This loads nvm bash_completion /home/tommy/.bashrc
