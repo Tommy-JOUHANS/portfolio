@@ -27,12 +27,14 @@
   - [3.2 Data Flow — Audit Request](#32-data-flow--audit-request)
   - [3.3 Architecture Choices Justified](#33-architecture-choices-justified)
   - [3.4 Accessibility (WCAG 2.1 AA)](#34-accessibility-wcag-21-aa)
+  - [3.5 Performance Budget (Web Vitals)](#35-performance-budget-web-vitals)
 - [4. Components, Classes and Database](#4-components-classes-and-database)
   - [4.1 Database Schema](#41-database-schema)
   - [4.2 Back-End Class Diagram](#42-back-end-class-diagram)
   - [4.3 Front-End Components (React + Tailwind)](#43-front-end-components-react--tailwind)
   - [4.4 PDF Report Generation](#44-pdf-report-generation)
   - [4.5 Monitoring & Observability](#45-monitoring--observability)
+  - [4.6 Database Migrations & Seeding](#46-database-migrations--seeding)
 - [5. Sequence Diagrams](#5-sequence-diagrams)
   - [5.1 Sign-up + JWT Login](#51-sign-up--jwt-login)
   - [5.2 Audit Request Submission (async)](#52-audit-request-submission-async)
@@ -130,7 +132,7 @@ US-15 to US-17 (V2). Out of scope: mobile app, AI score, marketplace, OAuth2, ga
 
 Hero (ANSSI problem), CTA, benefits. The landing page presents the company, services and packs tailored to entrepreneurs with fewer than 50 employees. The user clicks **SIGN IN** to create an account and log in.
 
-![Mockup 1 — Public Landing](figma-import/image.png)
+![Mockup 1 — Public Landing](imgs/img-001-000.jpg)
 
 #### Screen 2 — Sign-up
 
@@ -141,19 +143,19 @@ Email + Password + GDPR/T&C consent. After clicking **Create an account**, Marie
 - Email format `name@domain` required
 - Password: one lowercase, one uppercase, one digit, one special char, min 10 chars
 
-![Mockup 2 — Sign-up](figma-import/image%20(1).png)
+![Mockup 2 — Sign-up](imgs/img-001-001.jpg)
 
 #### Screen 3 — Login
 
 Email + Password. The client logs in with her account; otherwise she clicks **Create an account**. "Lost Mail" and "Lost Password" links planned (future enhancement for the RNCP 5 portfolio).
 
-![Mockup 3 — Login](figma-import/image%20(2).png)
+![Mockup 3 — Login](imgs/img-001-002.jpg)
 
 #### Screen 4 — Client Dashboard
 
 Sidebar, request list, floating CTA. Once logged in, the client tracks her audit request progress (Pending / In progress / Completed). She clicks **View details** and can download the report via **Download report**.
 
-![Mockup 4 — Client Dashboard](figma-import/image%20(3).png)
+![Mockup 4 — Client Dashboard](imgs/img-001-003.jpg)
 
 #### Screen 5 — Audit Request Form
 
@@ -171,13 +173,13 @@ Status, timeline. After submission, a confirmation message is sent to the expert
 
 Card list + Markdown detail (future enhancement). Modules: "anti-phishing", "Multi-factor authentication", "Public Wi-Fi & VPN", "Data backup", "Incident response". Various formats (video, video call, documentation) with progress bar.
 
-![Mockup 7 — Training Modules](figma-import/image%20(6).png)
+![Mockup 7 — Training Modules](imgs/img-001-006.jpg)
 
 #### Screen 8 — Admin Dashboard
 
 Table + filters. The expert (Karim) accesses his dashboard with all requests. He can sort by pack, by current status, then view and edit each request.
 
-![Mockup 8 — Admin Dashboard](figma-import/image%20(7).png)
+![Mockup 8 — Admin Dashboard](figma-import/image%20(8).png)
 
 #### Screen 9 — Request Detail (admin)
 
@@ -262,6 +264,39 @@ The primary user (Marie, 45, non-technical) requires an accessible journey. The 
 #### Measurable Target
 
 Lighthouse Accessibility score **≥ 90/100** on the 4 main pages (landing, login, client dashboard, audit form) before the W12 defense.
+
+### 3.5 Performance Budget (Web Vitals)
+
+The target UX (Marie, < 3-min journey) imposes a non-negotiable performance requirement. The platform sets a **performance budget** aligned with Google's *Core Web Vitals*.
+
+#### Web Vitals Targets
+
+| Metric | "Good" Target | Definition & Impact |
+|---|---|---|
+| **LCP** (Largest Contentful Paint) | < 2.5 s | Time to render the largest visible element. Measures perceived load. |
+| **INP** (Interaction to Next Paint) | < 200 ms | Response latency to user interactions (replaces FID since March 2024). |
+| **CLS** (Cumulative Layout Shift) | < 0.1 | Visual stability — no unexpected layout jumps. |
+| **TTI** (Time to Interactive) | < 3.5 s | Time before user can click/type without lag. |
+| **TTFB** (Time to First Byte) | < 600 ms | Server delay — covers Django + DB. |
+| **JS bundle** | < 200 kB gzipped | Initial JavaScript weight. Beyond, 3G/4G degradation. |
+| **Lighthouse Perf** | ≥ 85/100 | Aggregated global score, computed in CI on every PR. |
+
+#### Optimization Strategies
+
+- **Code splitting** via `React.lazy()` and `Suspense` on each route (LoginPage, ClientDashboard, AdminDashboard, TrainingPage) → lighter initial load.
+- **Tree-shaking** automatic via Vite, named imports only (no `import * as ...`).
+- **Images**: `<img loading="lazy">` by default, AVIF/WebP via `vite-plugin-imagemin`, explicit dimensions (anti-CLS).
+- **Web fonts**: `font-display: swap`, preload main font via `<link rel="preload">`.
+- **HTTP cache**: Vercel static assets with `Cache-Control: public, max-age=31536000, immutable` (hash-based cache busting).
+- **API**: pagination 20 items default, never `SELECT *` in Django (`only()` / `defer()` on lists).
+- **DB**: BTREE and composite indexes (see §4.1), `select_related` / `prefetch_related` systematic to avoid N+1.
+
+#### Measurement and CI
+
+- **Lighthouse CI** in GitHub Actions: runs on every PR over the 4 key pages, fails if Performance < 85 or Web Vitals exceed targets.
+- **Sentry Performance**: p50/p75/p95 tracking of LCP and INP in production (10% sample rate).
+- **Bundle analyzer**: `rollup-plugin-visualizer` on every release, alert if bundle exceeds 200 kB.
+- **Real User Monitoring** (V2): `web-vitals.js` sends real metrics to a `/api/metrics/vitals/` endpoint.
 
 ---
 
@@ -618,6 +653,75 @@ Django configures `structlog` to produce JSON logs consumable by Railway and a f
 
 An `AUDIT_LOG` table tracks sensitive actions: logins, report downloads, status changes, account deletions. Fields: `id, user_id, action, resource, ip, user_agent, created_at`. Retention 1 year, GDPR-compliant (see §7.5).
 
+### 4.6 Database Migrations & Seeding
+
+Schema version transitions and pre-population of reference data (4 audit packs, initial training modules, admin account) are fully automated. No manual intervention in production.
+
+#### Django Migrations Strategy
+
+- **Convention**: 1 migration = 1 atomic change. Explicit name: `0007_add_security_score_to_auditreport.py`.
+- **Schema migrations**: generated via `python manage.py makemigrations`, never hand-edited.
+- **Data migrations**: use `migrations.RunPython(forward, reverse)` with a systematic `reverse` function for rollback.
+- **CI enforcement**: `python manage.py migrate --check` in the pipeline to detect non-generated migrations.
+- **Production**: Railway runs `migrate` automatically on deploy via the `Procfile` release command.
+
+#### Example Data Migration
+
+```python
+# audits/migrations/0002_seed_packs.py
+from django.db import migrations
+
+def seed_packs(apps, schema_editor):
+    AuditPack = apps.get_model('audits', 'AuditPack')
+    AuditPack.objects.bulk_create([
+        AuditPack(code='audit',      name='Audit',      duration_days=5,  price=490),
+        AuditPack(code='security',   name='Security',   duration_days=10, price=990),
+        AuditPack(code='protection', name='Protection', duration_days=15, price=1490),
+        AuditPack(code='premium',    name='Premium',    duration_days=20, price=2490),
+    ])
+
+def remove_packs(apps, schema_editor):
+    apps.get_model('audits', 'AuditPack').objects.all().delete()
+
+class Migration(migrations.Migration):
+    dependencies = [('audits', '0001_initial')]
+    operations = [migrations.RunPython(seed_packs, remove_packs)]
+```
+
+#### Fixtures (Demo Data)
+
+JSON fixtures in `backend/fixtures/` load demo data (5 fake clients, 10 audit requests, 3 reports) for jury demos and E2E tests:
+
+```bash
+python manage.py loaddata fixtures/demo_clients.json
+python manage.py loaddata fixtures/demo_audits.json
+python manage.py loaddata fixtures/demo_reports.json
+```
+
+A wrapper script `scripts/seed_demo.sh` chains `migrate` + `loaddata` for a 1-command demo environment.
+
+#### Initial Admin Creation
+
+No plaintext passwords in code. A custom Django command `create_initial_admin` reads `ADMIN_EMAIL` and `ADMIN_PASSWORD` from environment variables and creates the user if the table is empty:
+
+```bash
+python manage.py create_initial_admin
+# Idempotent: does nothing if an admin already exists
+```
+
+#### Rollback Strategy
+
+| Scenario | Procedure |
+|---|---|
+| Broken migration just after deploy | `python manage.py migrate audits 0006` reverts. The RunPython `reverse` function executes. |
+| Corrupted data detected | Restore the latest Railway backup (1-click), then investigate off-prod on a snapshot. |
+| Migration requiring downtime | Planned maintenance window, Vercel maintenance page, migration, verification, reopen. |
+| Non-backward-compatible schema change | "Expand & contract": 1) add column, 2) dual-write, 3) backfill, 4) switch reads, 5) drop old column. |
+
+#### Snapshot Before Each Release
+
+Before each merge to `main` (prod release), a manual Railway DB snapshot is triggered via `railway db snapshot create`. 14-day retention. Allows rollback in < 5 min.
+
 ---
 
 ## 5. Sequence Diagrams
@@ -628,17 +732,134 @@ The user enters email and password. The front calls `POST /api/auth/register/`, 
 
 ![Figure 5 — Sign-up + JWT Login Sequence](diagrammes/sequence1.png)
 
+**Messages exchanged:**
+
+1. **Marie → RegisterPage**: fills the form (email, password, company_name).
+2. **RegisterPage → ApiClient**: `POST /api/auth/register/` with JSON body `{email, password, company_name, ...}`.
+3. **ApiClient → Django (RegisterView)**: DRF serializer validates (unique email, password strength).
+4. **Django → PostgreSQL**: `INSERT INTO accounts_user` with bcrypt-hashed password.
+5. **Django → Celery**: `send_welcome_email.delay(user_id)`.
+6. **Django → RegisterPage**: `201 Created` with `{user, access, refresh}`.
+7. **RegisterPage → AuthStore**: stores tokens.
+8. **RegisterPage → React Router**: redirect to `/dashboard` based on `user.role`.
+9. **Celery worker → SMTP Gmail**: sends welcome email asynchronously.
+
+```mermaid
+sequenceDiagram
+    actor Marie
+    participant Front as RegisterPage
+    participant API as Django /auth
+    participant DB as PostgreSQL
+    participant Celery
+    participant SMTP as Gmail SMTP
+
+    Marie->>Front: Fill form
+    Front->>API: POST /auth/register/ {email, password, ...}
+    API->>API: Validate (DRF serializer)
+    API->>DB: INSERT user (bcrypt password)
+    API->>Celery: send_welcome_email.delay(user_id)
+    API-->>Front: 201 {user, access, refresh}
+    Front->>Front: AuthStore.set(tokens)
+    Front-->>Marie: Redirect /dashboard
+    Celery->>SMTP: Welcome email
+    SMTP-->>Marie: Email received
+```
+
 ### 5.2 Audit Request Submission (async)
 
 The client submits the audit form. The front calls `POST /api/audits/` with the JWT in headers. Django validates via the DRF serializer, persists to the database, enqueues a Celery acknowledgment-email task, and responds `201 Created`. The Celery worker pops the task from Redis and sends the email via SMTP.
 
 ![Figure 6 — Async Audit Submission Sequence](diagrammes/sequence2.png)
 
+**Messages exchanged:**
+
+1. **Marie → AuditRequestForm**: selects a pack and enters `scope_notes`.
+2. **AuditRequestForm → ApiClient**: `POST /api/audits/`, header `Authorization: Bearer <JWT>`, body `{pack_id, scope_notes}`.
+3. **ApiClient → Django (AuditCreateView)**: middleware checks JWT, DRF validates fields.
+4. **Django → PostgreSQL**: `INSERT INTO audits_auditrequest` with `status='pending'`, reference `CYB-2026-XXXX`.
+5. **Django → Redis (Celery broker)**: enqueues `send_acknowledgment_email.delay(audit_id)`.
+6. **Django → AuditRequestForm**: `201 Created` with request details.
+7. **AuditRequestForm → ClientDashboard**: redirect with "Request sent" toast.
+8. **Celery worker ← Redis**: dequeues the task.
+9. **Celery worker → SMTP Gmail**: sends acknowledgment to Marie + notification to Karim.
+10. **Celery worker → PostgreSQL**: `UPDATE notifications SET status='sent'`.
+
+```mermaid
+sequenceDiagram
+    actor Marie
+    participant Front as AuditRequestForm
+    participant API as Django /audits
+    participant DB as PostgreSQL
+    participant Redis
+    participant Worker as Celery Worker
+    participant SMTP
+
+    Marie->>Front: Choose pack + scope_notes
+    Front->>API: POST /audits/ + JWT
+    API->>API: Verify JWT + validate
+    API->>DB: INSERT audit_request (status=pending)
+    API->>Redis: enqueue send_ack_email(audit_id)
+    API-->>Front: 201 Created {audit}
+    Front-->>Marie: Redirect dashboard + toast
+    Worker->>Redis: dequeue task
+    Worker->>SMTP: Acknowledgment email
+    Worker->>DB: UPDATE notification status=sent
+    SMTP-->>Marie: Email received
+```
+
 ### 5.3 PDF Report Generation (admin)
 
 The admin clicks **Generate PDF report**. The front calls `POST /api/audits/{id}/generate-report/`. Django creates the AuditReport and enqueues the Celery task, returning `202 Accepted`. The Celery worker renders the HTML template, WeasyPrint produces the PDF, the file is stored, and an email notification is sent to the client.
 
 ![Figure 7 — PDF Report Generation Sequence](diagrammes/sequence3.png)
+
+**Messages exchanged:**
+
+1. **Karim → AdminRequestDetail**: clicks "Generate PDF report" with entered findings.
+2. **AdminRequestDetail → ApiClient**: `POST /api/audits/{id}/generate-report/`, body `{findings, summary, security_score}`.
+3. **ApiClient → Django (PdfReportService)**: checks `IsAdmin` permission, verifies `status='done'`.
+4. **Django → PostgreSQL**: `INSERT INTO reports_auditreport` with `pdf_path=NULL` (in progress).
+5. **Django → Redis**: enqueues `generate_pdf_task.delay(report_id)`.
+6. **Django → AdminRequestDetail**: `202 Accepted` with `{report_id, status: "generating"}`.
+7. **Celery worker ← Redis**: dequeues the task.
+8. **Celery worker → Django templates**: renders `report.html` with context (findings, score, recommendations).
+9. **Celery worker → WeasyPrint**: converts HTML+CSS to binary PDF.
+10. **Celery worker → Storage**: saves to `/media/reports/CYB-2026-0042.pdf`.
+11. **Celery worker → PostgreSQL**: `UPDATE auditreport SET pdf_path=...`.
+12. **Celery worker → SMTP Gmail**: sends "Report available" email to Marie.
+13. **Marie → ClientDashboard**: sees "Download report" link appear (30 s polling).
+14. **Marie → Django**: `GET /api/audits/{id}/report/` with JWT.
+15. **Django → Marie**: 15-min signed URL, PDF streaming.
+
+```mermaid
+sequenceDiagram
+    actor Karim
+    participant Front as AdminRequestDetail
+    participant API as Django /audits
+    participant DB as PostgreSQL
+    participant Redis
+    participant Worker as Celery Worker
+    participant WP as WeasyPrint
+    participant Storage
+    participant SMTP
+    actor Marie
+
+    Karim->>Front: Click Generate PDF report
+    Front->>API: POST /audits/{id}/generate-report/
+    API->>DB: INSERT auditreport (pdf_path=NULL)
+    API->>Redis: enqueue generate_pdf_task
+    API-->>Front: 202 Accepted
+    Worker->>Redis: dequeue
+    Worker->>Worker: render report.html
+    Worker->>WP: HTML+CSS to PDF
+    WP-->>Worker: PDF bytes
+    Worker->>Storage: save /media/reports/CYB-...pdf
+    Worker->>DB: UPDATE pdf_path
+    Worker->>SMTP: Email Report available
+    SMTP-->>Marie: Email received
+    Marie->>API: GET /audits/{id}/report/ + JWT
+    API-->>Marie: Stream PDF (signed URL 15min)
+```
 
 ---
 
