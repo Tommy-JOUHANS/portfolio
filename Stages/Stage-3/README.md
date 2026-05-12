@@ -26,11 +26,13 @@
   - [3.1 Overview — Layered Architecture](#31-overview--layered-architecture)
   - [3.2 Data Flow — Audit Request](#32-data-flow--audit-request)
   - [3.3 Architecture Choices Justified](#33-architecture-choices-justified)
+  - [3.4 Accessibility (WCAG 2.1 AA)](#34-accessibility-wcag-21-aa)
 - [4. Components, Classes and Database](#4-components-classes-and-database)
   - [4.1 Database Schema](#41-database-schema)
   - [4.2 Back-End Class Diagram](#42-back-end-class-diagram)
   - [4.3 Front-End Components (React + Tailwind)](#43-front-end-components-react--tailwind)
   - [4.4 PDF Report Generation](#44-pdf-report-generation)
+  - [4.5 Monitoring & Observability](#45-monitoring--observability)
 - [5. Sequence Diagrams](#5-sequence-diagrams)
   - [5.1 Sign-up + JWT Login](#51-sign-up--jwt-login)
   - [5.2 Audit Request Submission (async)](#52-audit-request-submission-async)
@@ -44,11 +46,13 @@
   - [7.2 QA Strategy](#72-qa-strategy)
   - [7.3 Manual Security Tests](#73-manual-security-tests)
   - [7.4 CI/CD Pipeline](#74-cicd-pipeline)
+  - [7.5 GDPR Compliance](#75-gdpr-compliance)
 - [8. Appendices](#8-appendices)
   - [8.1 Glossary](#81-glossary)
   - [8.2 Stage 3 ↔ RNCP 5 Skills Mapping](#82-stage-3--rncp-5-skills-mapping)
   - [8.3 Sources & Technical References](#83-sources--technical-references)
-  - [8.4 Internal Project Links](#84-internal-project-links)
+  - [8.4 Project Risk Matrix](#84-project-risk-matrix)
+  - [8.5 Internal Project Links](#85-internal-project-links)
 
 ---
 
@@ -214,7 +218,7 @@ The architecture follows a layered model: Client (browser) → CDN/Backend → D
 - **Data Layer** — PostgreSQL 15 + PDF storage
 - **External Services** — SMTP Gmail (email notifications)
 
-![Figure 1 — Layered Architecture](imgs/img-001-011.jpg)
+![Figure 1 — Layered Architecture](diagrammes/architecture.png)
 
 ### 3.2 Data Flow — Audit Request
 
@@ -231,6 +235,33 @@ The architecture follows a layered model: Client (browser) → CDN/Backend → D
 - **Async with Celery** → PDF generation can take 5–10 s; we don't block the HTTP thread.
 - **Relational PostgreSQL** → strongly structured data with relations (User → AuditRequest → Report), critical ACID integrity.
 - **Stateless JWT** → no server session, horizontally scalable.
+
+### 3.4 Accessibility (WCAG 2.1 AA)
+
+The primary user (Marie, 45, non-technical) requires an accessible journey. The platform targets **WCAG 2.1 level AA** compliance across the 4 principles: perceivable, operable, understandable, robust.
+
+#### Rules Applied
+
+| WCAG Principle | Implementation |
+|---|---|
+| Minimum contrast | 4.5:1 on body text, 3:1 on large text. `cyber-700` (#5b21b6) on white validated — checked with `axe DevTools`. |
+| Keyboard navigation | All interactive elements reachable via `Tab` / `Shift+Tab`. Logical focus order. `:focus-visible` Tailwind 2px purple ring on every CTA. |
+| ARIA labels | `StatusBadge` exposes `aria-label="Status: in progress"`. `SecurityScoreGauge` exposes `role="meter"` + `aria-valuenow`. Decorative icons `aria-hidden="true"`. |
+| Forms | Every `<input>` has an associated `<label>` (not just a placeholder). Error messages tied via `aria-describedby`. Required fields announced with `aria-required`. |
+| Semantic structure | `<header>`, `<nav>`, `<main>`, `<footer>` tags, heading hierarchy `h1`→`h6` without skipping. "Skip to content" link first. |
+| Images and icons | Systematic `alt` attribute: descriptive if informative, empty if decorative. Architecture diagrams offered as accessible SVG + text equivalent. |
+| Multilingual | `lang="fr"` on `<html>`. No content mixing FR/EN without `lang` switch. |
+| Animations | `prefers-reduced-motion` respected via Tailwind media query: transitions disabled if the user requests so in their OS. |
+
+#### Automated Accessibility Testing
+
+- **axe-core** integrated into Vitest tests: `npm install -D @axe-core/react jest-axe`. Each major component (LoginForm, AuditRequestForm, RequestTable) tested via `expect(await axe(container)).toHaveNoViolations()`.
+- **Lighthouse CI** in the GitHub Actions pipeline: Accessibility score ≥ 90 required to merge.
+- **Manual testing W7-W10**: 100% keyboard navigation on the 3 critical journeys (sign-up, audit submission, PDF download), screen reader testing with NVDA (Windows) and VoiceOver (macOS).
+
+#### Measurable Target
+
+Lighthouse Accessibility score **≥ 90/100** on the 4 main pages (landing, login, client dashboard, audit form) before the W12 defense.
 
 ---
 
@@ -255,7 +286,7 @@ The architecture follows a layered model: Client (browser) → CDN/Backend → D
 - (`AUDIT_REQUEST.client_id`, `AUDIT_REQUEST.created_at`) composite (client dashboard)
 - `AUDIT_REPORT.audit_request_id` UNIQUE (1 report per request)
 
-![Figure 2 — Database Schema](imgs/img-001-012.jpg)
+![Figure 2 — Database Schema](diagrammes/DIAGRAMME%20ER%202.png)
 
 ### 4.2 Back-End Class Diagram
 
@@ -339,7 +370,7 @@ Tracks all emails sent via Celery.
 
 Cybersecurity awareness modules (phishing, MFA, GDPR…) with per-user progress tracking.
 
-![Figure 3 — Back-End Class Diagram](imgs/img-001-013.jpg)
+![Figure 3 — Back-End Class Diagram](diagrammes/diagramme%20class.png)
 
 #### Example — `accounts/models.py`
 
@@ -468,7 +499,7 @@ The front-end is a React SPA communicating with the REST API via JWT. It is orga
 6. The client is redirected to RequestDetail (StatusBadge "pending").
 7. On each admin status change, a Notification is sent.
 
-![Figure 4 — Front-End Component Diagram](imgs/img-001-014.jpg)
+![Figure 4 — Front-End Component Diagram](diagrammes/diagramme%20class%20front.png)
 
 #### Component Tree
 
@@ -538,6 +569,55 @@ The PDF report is the SME client's main deliverable: it consolidates the vulnera
 - **Failure notification** — after 3 failures, `generation_failed` notification sent to admin.
 - **Manual regeneration** via the **Generate PDF report** button.
 
+### 4.5 Monitoring & Observability
+
+The application must remain traceable in production: we must know **who did what, when, and why it crashed**. The strategy rests on 3 pillars: structured logs, error monitoring, alerting.
+
+#### Structured Logs (JSON)
+
+Django configures `structlog` to produce JSON logs consumable by Railway and a future ELK/Loki stack. Each log carries at minimum: `timestamp`, `level`, `request_id` (correlation), `user_id`, `endpoint`, `latency_ms`.
+
+```json
+{
+  "timestamp": "2026-05-18T09:24:11Z",
+  "level": "INFO",
+  "event": "audit_request.created",
+  "request_id": "req-7f2a...",
+  "user_id": "8f2a...c9",
+  "audit_id": "CYB-2026-0042",
+  "pack": "security",
+  "latency_ms": 142
+}
+```
+
+#### Error Monitoring — Sentry
+
+- **Back-end**: `sentry-sdk[django,celery]` captures all Django and Celery exceptions with stack trace, user context, request payload (PII anonymized).
+- **Front-end**: `@sentry/react` captures JS errors and unhandled promise rejections, plus session replay on error.
+- **Release tracking**: every git tag pushes a Sentry release → per-version regression tracking.
+- **Sample rate**: 100% of errors on MVP; 10% of performance transactions to stay within the free quota.
+
+#### Business & Technical Metrics
+
+| Metric | Source | Alert Threshold |
+|---|---|---|
+| API response time (p95) | Sentry Performance / Railway metrics | > 800 ms for 5 min |
+| 5xx error rate | Sentry | > 1% over 10 min |
+| Consecutive Celery failures | Structured logs | ≥ 3 on the same task |
+| Active DB connections | Railway Postgres metrics | > 80% of pool |
+| `/media` disk space | Railway | > 85% |
+| Audit requests / day | Django + admin dashboard | Growth metric, no alert |
+
+#### Alerting
+
+- **Sentry** emails the tech lead on every new unseen error, and a Slack DM (V2) if error rate > threshold.
+- **Healthcheck**: `GET /api/health/` endpoint checks DB, Redis, SMTP. Monitored by UptimeRobot (free) every 5 min.
+- **Celery failure notification**: after 3 retries, an admin email is sent (already documented in §4.4).
+
+#### Application Audit Log (V2)
+
+An `AUDIT_LOG` table tracks sensitive actions: logins, report downloads, status changes, account deletions. Fields: `id, user_id, action, resource, ip, user_agent, created_at`. Retention 1 year, GDPR-compliant (see §7.5).
+
 ---
 
 ## 5. Sequence Diagrams
@@ -546,19 +626,19 @@ The PDF report is the SME client's main deliverable: it consolidates the vulnera
 
 The user enters email and password. The front calls `POST /api/auth/register/`, then `POST /api/auth/login/`. Django validates credentials, issues access + refresh tokens, and returns them. The front stores them in AuthStore and redirects to the role-appropriate dashboard.
 
-![Figure 5 — Sign-up + JWT Login Sequence](imgs/img-001-015.jpg)
+![Figure 5 — Sign-up + JWT Login Sequence](diagrammes/sequence1.png)
 
 ### 5.2 Audit Request Submission (async)
 
 The client submits the audit form. The front calls `POST /api/audits/` with the JWT in headers. Django validates via the DRF serializer, persists to the database, enqueues a Celery acknowledgment-email task, and responds `201 Created`. The Celery worker pops the task from Redis and sends the email via SMTP.
 
-![Figure 6 — Async Audit Submission Sequence](imgs/img-001-017.jpg)
+![Figure 6 — Async Audit Submission Sequence](diagrammes/sequence2.png)
 
 ### 5.3 PDF Report Generation (admin)
 
 The admin clicks **Generate PDF report**. The front calls `POST /api/audits/{id}/generate-report/`. Django creates the AuditReport and enqueues the Celery task, returning `202 Accepted`. The Celery worker renders the HTML template, WeasyPrint produces the PDF, the file is stored, and an email notification is sent to the client.
 
-![Figure 7 — PDF Report Generation Sequence](imgs/img-001-018.jpg)
+![Figure 7 — PDF Report Generation Sequence](diagrammes/sequence3.png)
 
 ---
 
@@ -779,6 +859,58 @@ jobs:
 - **Annotated git tag** at each release: `git tag -a v1.0.0 -m "MVP Holberton defense"`
 - **Changelog** maintained in `CHANGELOG.md`
 
+### 7.5 GDPR Compliance
+
+The platform processes personal data (email, name, company) and sensitive data (vulnerability reports). Regulation (EU) 2016/679 (GDPR) imposes a strict framework that the MVP integrates from the design phase (**privacy by design**).
+
+#### Processing Register
+
+| Processing | Legal Basis | Data | Retention |
+|---|---|---|---|
+| Account creation | Contract performance (art. 6.1.b) | email, name, first name, company, password hash | Active account + 3 years after last login |
+| Audit request submission | Contract performance | scope, notes, chosen pack | 3 years from case closure (accounting obligation) |
+| PDF report generation | Contract performance | findings, score, recommendations | 3 years, then automatic deletion |
+| Email notifications | Contract performance | recipient, subject, send status | 1 year (debug) |
+| Access logs & audit log | Legitimate interest (art. 6.1.f) — security | IP, user-agent, action, timestamp | 1 year then automatic purge |
+| Non-essential cookies | Consent (art. 6.1.a) | none on MVP — no tracking | — |
+
+#### Data Subject Rights
+
+| GDPR Right | Implementation |
+|---|---|
+| Access (art. 15) | `GET /api/users/me/export/` returns a complete JSON of account data. SLA: ≤ 30 days. |
+| Rectification (art. 16) | `PATCH /api/users/me/` allows direct modification by the user. |
+| Erasure (art. 17 — "right to be forgotten") | `DELETE /api/users/me/` triggers **cascading deletion**: User, AuditRequest, AuditReport, Notification, TrainingProgress. PDFs physically deleted from storage. Logs anonymized (user_id replaced by `deleted-user`) but kept for legal integrity. |
+| Portability (art. 20) | JSON export via `/api/users/me/export/` in open, reusable format. |
+| Objection (art. 21) | Opt-out of non-transactional emails via user preferences (V2). |
+| Restriction (art. 18) | `is_active=False` flag suspends access without deleting the account, on request. |
+
+#### Technical and Organizational Measures
+
+- **Encryption at rest**: Railway Postgres encrypted AES-256. PDFs stored on encrypted volume.
+- **Encryption in transit**: HTTPS mandatory (Let's Encrypt), HSTS enabled with `max-age=31536000`.
+- **Hashing**: passwords via `bcrypt` (Django default, 12 rounds), never stored in clear.
+- **Minimization**: only strictly necessary data collected (no date of birth, no non-required phone).
+- **Access separation**: only CyberAudit admins see reports; other clients fully isolated (`IsOwner` permission).
+- **Subprocessors**: Railway (hosting), Vercel (front), Gmail SMTP (mail delivery) — all documented as art. 28 subprocessors in an internal register.
+
+#### Cookies & Consent Banner
+
+The MVP uses **no third-party cookies or advertising trackers**. Only a technical session cookie (JWT) is set, exempt from consent (CNIL recommendation "strictly necessary cookies"). The consent banner will be added in V2 if Google Analytics or Plausible are introduced.
+
+#### Data Breach Procedure
+
+1. Detection via Sentry / monitoring / user report.
+2. Immediate containment (token revocation, DB isolation if needed).
+3. Risk assessment for individuals (severity, number of people affected).
+4. Notification to CNIL within **72 hours** (art. 33) via [notifications.cnil.fr](https://notifications.cnil.fr).
+5. Inform affected users if high risk (art. 34).
+6. Internal documentation of the incident in the breach register.
+
+#### Legal Notices & Privacy Policy
+
+Two public pages accessible from the footer: `/legal/notices` (publisher, host, contact) and `/legal/privacy` (privacy policy restating §7.5.1 to 7.5.5 in plain language). CNIL link for complaints.
+
 ---
 
 ## 8. Appendices
@@ -827,7 +959,38 @@ Reference: RNCP 38038 — Web and Mobile Web Developer (TP issued by the French 
 | RNCP 38038 | <https://www.francecompetences.fr/recherche/rncp/38038> |
 | ANSSI — Cyber Threat Outlook 2023 | <https://www.ssi.gouv.fr> |
 
-### 8.4 Internal Project Links
+### 8.4 Project Risk Matrix
+
+Technical and operational risk analysis on the MVP scope. Each risk is rated by probability (Low / Medium / High) and impact (Low / Medium / High), then mapped to a mitigation and an owner.
+
+| ID | Risk | Probability | Impact | Mitigation | Owner |
+|---|---|---|---|---|---|
+| R-01 | Celery worker outage → PDFs not generated | Medium | High | Auto-retry (3×, exponential backoff) + admin notification after final failure + manual "regenerate" button in AdminRequestDetail. UptimeRobot healthcheck every 5 min. | James |
+| R-02 | Personal data leak (leaked PDF, DB leak) | Low | High | Signed URLs 15 min, mandatory JWT, `IsAdminOrOwner` permission, audit log (§4.5), CNIL notification procedure in 72h documented (§7.5). | Tommy + James |
+| R-03 | DB data loss (corruption, accidental deletion) | Low | High | Railway automatic daily backups (7-day retention on free plan, 30 days in V2). Manual snapshot before each prod migration. Restore tests in W10. | James |
+| R-04 | Brute-force attack on `/auth/login/` | Medium | Medium | Rate limiting 5 req/min per IP, temporary lockout after 5 failures, Sentry alert beyond 50 failures/h on same IP. E2E tests covering the scenario (§7.3). | James |
+| R-05 | Persistent XSS via `scope_notes` or training Markdown content | Medium | High | DOMPurify on front, Django escaping on back, strict CSP (`script-src 'self'`). Manual security tests W7-W10 (§7.3). | Tommy |
+| R-06 | Gmail SMTP quota reached (500 mails/day) | Medium | Medium | Daily counter monitoring. Migration to SendGrid (free up to 100/day, paid beyond) or Mailgun as soon as volume > 400/day. Celery backup queue to not lose mails. | James |
+| R-07 | Schedule slip on W12 (Holberton defense) | Medium | High | Must-Have scope frozen at W3, Should-Have negotiable, Could-Have out of MVP. Weekly check-ins Tommy/James. 1-week buffer planned in W11 for stabilization. | Tommy |
+| R-08 | Unavailability of one of the 2 devs (illness, exam) | Low | Medium | Pair programming on critical areas (auth, PDF generation). Up-to-date docs allowing handover. Trello/GitHub Project tasks assigned and prioritized. | Tommy + James |
+| R-09 | Major regression after prod deploy | Low | High | Mandatory CI/CD pipeline (lint + tests + 80% coverage), staging deploy before prod, 1-click Railway/Vercel rollback, Sentry release-by-release monitoring. | James |
+| R-10 | GDPR non-compliance flagged by jury / CNIL | Low | High | Dedicated §7.5 section, legal notices and privacy policy online from W6, right to erasure implemented before defense, processing register up to date. | Tommy |
+| R-11 | Lighthouse Accessibility score < 90 | Medium | Medium | Blocking Lighthouse CI in GitHub Actions, axe-core in unit tests, manual NVDA + keyboard audit in W8 (§3.4). Fast iterations before defense. | Tommy |
+| R-12 | Hosting cost not controlled in V2 | Low | Low | Free plans Railway and Vercel sufficient for MVP and defense. Switch to paid only if commercial launch. | Tommy |
+
+#### Criticality Grid
+
+Probability × Impact cross to visualize priorities:
+
+| | Low Impact | Medium Impact | High Impact |
+|---|---|---|---|
+| **High Probability** | — | — | — |
+| **Medium Probability** | — | R-04, R-06, R-11 | R-01, R-05, R-07 |
+| **Low Probability** | R-12 | R-08 | R-02, R-03, R-09, R-10 |
+
+The **3 critical risks** to address first (Medium Probability × High Impact) are **R-01** (Celery), **R-05** (XSS) and **R-07** (schedule).
+
+### 8.5 Internal Project Links
 
 - Stage 1 — Project Charter (FR)
 - Stage 2 — Planning & Gantt (FR)
