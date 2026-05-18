@@ -538,6 +538,33 @@ The front-end is a React SPA communicating with the REST API via JWT. It is orga
 
 #### Component Tree
 
+![Figure 5 — component tree](diagrammes/tree-component.png)
+
+This diagram shows the component hierarchy of a web application, likely an audit platform with a training module. Read it top to bottom: each arrow means a component contains (or renders) another one.
+
+At the top, App.jsx is the application's entry point. It wraps everything inside an ErrorBoundary, a component that catches JavaScript errors from its children so the whole app doesn't crash, a standard React best practice.
+Below the ErrorBoundary, you have three structural components: the Header (top bar), the Sidebar (side menu), and the Router, which is the heart of navigation. Header and Sidebar are always visible, while the Router decides what to show in the main content area based on the URL.
+
+The Router then dispatches to different pages:
+First, the public pages, accessible to everyone: HomePage (landing page), LoginPage which contains a LoginForm, and RegisterPage which contains a RegisterForm.
+
+Then, the protected pages, wrapped in ProtectedRoute components. This is a classic pattern: 
+
+ProtectedRoute checks that the user is authenticated and has the right role before rendering the page. There are four of them, each with different role restrictions:
+•	DashboardPage (client / admin roles) — renders either ClientDashboard or AdminDashboard depending on the role. Both reuse the same building blocks: AuditRequestCard and StatusBadge. A good example of reusable components.
+•	NewAuditPage (client role only) — contains an AuditRequestForm with a FieldSelector to choose the audit fields.
+•	AuditDetailPage (client / admin roles) — displays an AuditDetailView which also reuses the StatusBadge.
+•	TrainingPage (client role) — displays a ModuleList that renders ModuleViewer instances for each training module.
+
+A few interesting things to note about the architecture:
+
+Reusability is handled well: StatusBadge is used in three different places (ClientDashboard, AdminDashboard, AuditDetailView), and AuditRequestCard is shared between both dashboards. That's a sign of good decomposition.
+
+Separation of concerns is clear: the pages (*Page) handle routing and permissions, while the views (*View, *Dashboard, *Form) handle rendering and business logic.
+
+Access control is centralized in ProtectedRoute rather than scattered across each page, which makes security much easier to audit.
+
+
 ```text
 src/
 ├── components/
