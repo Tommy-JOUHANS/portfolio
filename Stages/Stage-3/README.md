@@ -132,7 +132,7 @@ US-15 to US-17 (V2). Out of scope: mobile app, AI score, marketplace, OAuth2, ga
 
 Hero (ANSSI problem), CTA, benefits. The landing page presents the company, services and packs tailored to entrepreneurs with fewer than 50 employees. The user clicks **SIGN IN** to create an account and log in.
 
-![Mockup 1 — Public Landing](imgs/img-001-000.jpg)
+![Mockup 1 — Public Landing](figma-import/image.png)
 
 #### Screen 2 — Sign-up
 
@@ -143,19 +143,19 @@ Email + Password + GDPR/T&C consent. After clicking **Create an account**, Marie
 - Email format `name@domain` required
 - Password: one lowercase, one uppercase, one digit, one special char, min 10 chars
 
-![Mockup 2 — Sign-up](imgs/img-001-001.jpg)
+![Mockup 2 — Sign-up](figma-import/image%20(1).png)
 
 #### Screen 3 — Login
 
 Email + Password. The client logs in with her account; otherwise she clicks **Create an account**. "Lost Mail" and "Lost Password" links planned (future enhancement for the RNCP 5 portfolio).
 
-![Mockup 3 — Login](imgs/img-001-002.jpg)
+![Mockup 3 — Login](figma-import/image%20(2).png)
 
 #### Screen 4 — Client Dashboard
 
 Sidebar, request list, floating CTA. Once logged in, the client tracks her audit request progress (Pending / In progress / Completed). She clicks **View details** and can download the report via **Download report**.
 
-![Mockup 4 — Client Dashboard](imgs/img-001-003.jpg)
+![Mockup 4 — Client Dashboard](figma-import/image%20(3).png)
 
 #### Screen 5 — Audit Request Form
 
@@ -173,13 +173,13 @@ Status, timeline. After submission, a confirmation message is sent to the expert
 
 Card list + Markdown detail (future enhancement). Modules: "anti-phishing", "Multi-factor authentication", "Public Wi-Fi & VPN", "Data backup", "Incident response". Various formats (video, video call, documentation) with progress bar.
 
-![Mockup 7 — Training Modules](imgs/img-001-006.jpg)
+![Mockup 7 — Training Modules](figma-import/image%20(6).png)
 
 #### Screen 8 — Admin Dashboard
 
 Table + filters. The expert (Karim) accesses his dashboard with all requests. He can sort by pack, by current status, then view and edit each request.
 
-![Mockup 8 — Admin Dashboard](figma-import/image%20(8).png)
+![Mockup 8 — Admin Dashboard](figma-import/image%20(7).png
 
 #### Screen 9 — Request Detail (admin)
 
