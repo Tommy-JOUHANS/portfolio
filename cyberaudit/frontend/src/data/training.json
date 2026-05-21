@@ -1,0 +1,32 @@
+[
+  {
+    "id": "mod-1",
+    "title": "Anti-phishing",
+    "description": "Recognize and report suspicious emails",
+    "status": "completed"
+  },
+  {
+    "id": "mod-2",
+    "title": "Strong passwords & MFA",
+    "description": "Create solid passwords and enable MFA",
+    "status": "completed"
+  },
+  {
+    "id": "mod-3",
+    "title": "Public Wi-Fi & VPN",
+    "description": "Stay safe on outside networks",
+    "status": "in_progress"
+  },
+  {
+    "id": "mod-4",
+    "title": "Data backup",
+    "description": "Best practices to back up business data",
+    "status": "to_start"
+  },
+  {
+    "id": "mod-5",
+    "title": "Incident response",
+    "description": "What to do when something happens",
+    "status": "to_start"
+  }
+]
