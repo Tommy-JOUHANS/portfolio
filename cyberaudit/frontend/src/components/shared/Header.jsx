@@ -37,7 +37,7 @@ export default function Header() {
         {/* Logo cliquable : renvoie vers la page d'accueil "/".            */}
         <Link to="/" className="flex items-center" aria-label="Accueil">
           {/* Pastille circulaire de marque.                               */}
-          <Logo size={52} />
+          <Logo size={120} />
         </Link>
 
         {/* <nav> : liens de navigation alignes a droite.                   */}
