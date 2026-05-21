@@ -30,6 +30,9 @@ footer{
     margin-top: auto;
     color: #fff;
 }
+p {
+  font-size: 14px;
+}
 
 h2 {
   color: #800080;

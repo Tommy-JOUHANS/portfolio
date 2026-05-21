@@ -22,8 +22,25 @@ function App() {
             <p><b>Presentation of the compagny</b>
               <div></div>
               Our compagny supports organisation in two essentials areas:
+              <div></div>
+              - Cybersecurity audit
+              <div></div>
+              - The fixing of flows
             </p>
 
+          </article>
+          <article>
+            <p><b>Our sercices:</b>
+              <div></div>
+              We secure your data, modernize your IT, and simplify your daily life.
+              <div></div>
+              With our all-in-one solution, you benefit from:
+              robust cybersecurity
+              
+              comprehensive support
+              <div></div>
+              - The fixing of flows
+            </p>
           </article>
         </section>
       </main>
