@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "code": "audit",
+    "name": "Pack Audit",
+    "included_services": "Audit & Risk Analysis (EBIOS RM)",
+    "for_whom": "SMEs new to cybersecurity",
+    "perimeter": "Initial assessment, vulnerability report",
+    "duration_days": 5,
+    "price": 1000
+  },
+  {
+    "id": 2,
+    "code": "security",
+    "name": "Pack Security",
+    "included_services": "Audit + Incident Management & Vulnerability Remediation",
+    "for_whom": "SMEs that have experienced an incident",
+    "perimeter": "Audit + remediation of detected vulnerabilities",
+    "duration_days": 10,
+    "price": 2000
+  },
+  {
+    "id": 3,
+    "code": "protection",
+    "name": "Pack Protection",
+    "included_services": "Audit + System Security & 24/7 SOC Monitoring",
+    "for_whom": "SMEs with sensitive data",
+    "perimeter": "Audit + Continuous Monitoring & Real-Time Alerts",
+    "duration_days": 15,
+    "price": 3500
+  },
+  {
+    "id": 4,
+    "code": "premium",
+    "name": "Pack Premium",
+    "included_services": "Audit + Incidents + SOC + Team Awareness",
+    "for_whom": "SMEs seeking comprehensive coverage",
+    "perimeter": "The most comprehensive all-in-one solution",
+    "duration_days": 20,
+    "price": 5000
+  }
+]

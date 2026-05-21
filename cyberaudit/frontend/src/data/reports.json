@@ -1,0 +1,37 @@
+[
+  {
+    "id": "rpt-0001",
+    "request_reference": "DOSSIER-2026-0001",
+    "grade": "B+",
+    "security_score": 72,
+    "verdict": "Acceptable - 3 medium-severity vulnerabilities found",
+    "summary": "EBIOS RM analysis performed on the IS perimeter declared by the client. 3 vulnerabilities identified, none critical. Action plan attached, prioritized over 30 days.",
+    "findings": [
+      {
+        "severity": "Medium",
+        "asset": "Email server",
+        "description": "No DMARC policy",
+        "recommendation": "Activate DMARC + SPF + DKIM"
+      },
+      {
+        "severity": "Medium",
+        "asset": "Wifi router",
+        "description": "Default WPA2 password",
+        "recommendation": "Rotate password and enable WPA3"
+      },
+      {
+        "severity": "Low",
+        "asset": "Workstation",
+        "description": "Outdated antivirus",
+        "recommendation": "Update Defender + central console"
+      }
+    ],
+    "action_plan": [
+      { "week": "Week 1", "action": "DMARC/SPF/DKIM activation" },
+      { "week": "Week 2", "action": "Wi-Fi rotation + WPA3 migration" },
+      { "week": "Week 3", "action": "Endpoint update campaign" },
+      { "week": "Week 4", "action": "Final compliance check" }
+    ],
+    "generated_at": "2026-05-10T11:00:00Z"
+  }
+]

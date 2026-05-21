@@ -1,49 +1,51 @@
-header {
-    background-color: #800080;
-    padding: 1.75rem 1rem;
-    
+/* ====================================================================== */
+/* global.css - Feuille de style globale de l'application CyberAudit       */
+/* Importée une seule fois dans main.jsx, elle s'applique a toute l'appli.  */
+/* ====================================================================== */
+
+/* Importe le moteur Tailwind CSS v4 (toutes les classes utilitaires).      */
+@import "tailwindcss";
+
+/* Charge le plugin daisyUI (composants pre-stylises bases sur Tailwind).   */
+@plugin "daisyui";
+
+/* ---------------------------------------------------------------------- */
+/* @theme : declare nos couleurs de marque ; Tailwind genere alors         */
+/* automatiquement les classes bg-brand, text-brand, border-brand, etc.    */
+/* ---------------------------------------------------------------------- */
+@theme {
+  /* Violet principal de la charte CyberAudit (header, footer, boutons).   */
+  --color-brand: #800080;
+  /* Violet fonce utilise pour les etats survol (hover) des boutons.       */
+  --color-brand-dark: #5f0a5f;
+  /* Violet tres clair pour les fonds doux (cartes, badges, encadres).     */
+  --color-brand-soft: #f3e6f3;
+  /* Beige/creme : couleur de fond des pages, visible sur les maquettes.   */
+  --color-cream: #f4efe6;
+  /* Bleu nuit utilise pour les titres de section dans les portails.       */
+  --color-ink: #3b2a55;
 }
 
-img {
-width: 160px;
-height: auto;
-border-radius: 200%;
+/* ---------------------------------------------------------------------- */
+/* Styles de base appliques aux elements HTML racine.                      */
+/* ---------------------------------------------------------------------- */
+
+/* Force la hauteur pleine page pour permettre un footer colle en bas.     */
+html,
+body,
+#root {
+  /* La hauteur occupe 100% de la fenetre du navigateur.                   */
+  min-height: 100%;
 }
 
-nav {
-  text-align: right;
-  color: #FFFFFF;
-}
-main{
-   background-color: #FFFFFF;
-    flex: 1;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-}
-footer{
-   background-color: #800080;
-    padding: 1.75rem 1rem;
-    text-align: center;
-    padding: 1rem 2rem;
-    margin-top: auto;
-    color: #fff;
-}
-p {
-  font-size: 14px;
-}
-
-h2 {
-  color: #800080;
-  font-size : 2rem;
-}
-
-main {
-  background-color: #CAE8E2;
-}
-
-p {
-  font-size: 14px;
-  color: #800080;
+/* Reglages generaux du corps de page.                                     */
+body {
+  /* Supprime la marge par defaut ajoutee par les navigateurs.             */
+  margin: 0;
+  /* Police lisible et moderne, repli sur les polices systeme.             */
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Couleur de fond creme identique aux maquettes.                        */
+  background-color: var(--color-cream);
+  /* Couleur de texte par defaut : gris fonce pour un bon contraste.       */
+  color: #1f2937;
 }
