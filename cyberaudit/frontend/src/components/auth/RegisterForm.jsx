@@ -68,8 +68,8 @@ export default function RegisterForm() {
     try {
       // On active l'indicateur de chargement.
       setLoading(true);
-      // register() cree le compte ; il leve une erreur si l'email existe.
-      register(form);
+      // register() crée le compte via l'API ; il lève une erreur si l'email existe.
+      await register(form);
       // Inscription reussie : l'utilisateur est connecte, on le redirige.
       navigate("/dashboard", { replace: true });
     } catch (error) {

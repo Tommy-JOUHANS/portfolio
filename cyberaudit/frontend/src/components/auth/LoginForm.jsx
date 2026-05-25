@@ -65,8 +65,8 @@ export default function LoginForm() {
     try {
       // On active l'etat de chargement (le bouton devient inactif).
       setLoading(true);
-      // login() verifie les identifiants ; il leve une erreur si echec.
-      const session = login(form.email, form.password);
+      // login() vérifie les identifiants via l'API ; il lève une erreur si échec.
+      const session = await login(form.email, form.password);
       // Connexion reussie : on redirige vers la page post-connexion.
       // (client comme admin arrivent sur /dashboard pour l'instant).
       navigate("/dashboard", { replace: true, state: { role: session.user.role } });

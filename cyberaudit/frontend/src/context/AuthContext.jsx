@@ -1,94 +1,77 @@
 // ========================================================================
-// AuthContext.jsx - Etat global d'authentification (le "AuthStore" de la doc).
-// La doc technique (section 4.3) impose : "global state via Context API".
-// Ce contexte expose : user, token, isAuthenticated, login, register,
-// logout et hasRole — accessibles partout dans l'application.
+// AuthContext.jsx — État global d'authentification (Context API).
+//
+// Expose : user, token (access JWT), ready, isAuthenticated,
+//          login, register, logout, hasRole.
+//
+// Les fonctions login / register / logout sont désormais async car elles
+// appellent l'API Django via authService.js.
 // ========================================================================
 
-// createContext : cree le contexte. useState : etat local. useEffect : effet
-// au montage. useCallback : memorise les fonctions pour eviter de les recreer.
 import { createContext, useState, useEffect, useCallback } from "react";
-
-// On importe toutes les fonctions du service d'authentification.
 import * as authService from "../services/authService.js";
 
-// Creation du contexte ; valeur initiale null tant qu'aucun Provider n'existe.
 export const AuthContext = createContext(null);
 
-// AuthProvider : composant qui englobe l'appli et fournit l'etat d'auth.
-// "children" represente tous les composants enfants enveloppes.
 export function AuthProvider({ children }) {
-  // user : l'utilisateur connecte (objet) ou null si personne n'est connecte.
-  const [user, setUser] = useState(null);
-  // token : le jeton JWT de la session courante (ou null).
+  // user    : objet utilisateur connecté ou null.
+  const [user, setUser]   = useState(null);
+  // token   : access token JWT courant ou null.
   const [token, setToken] = useState(null);
-  // ready : passe a true une fois la session restauree (evite un clignotement
-  // de redirection au tout premier rendu de l'application).
+  // ready   : true une fois la session initiale vérifiée (évite le flash de redirection).
   const [ready, setReady] = useState(false);
 
-  // useEffect avec [] : s'execute UNE seule fois, au montage du Provider.
+  // ── Restauration de session au montage ──────────────────────────────────────
   useEffect(() => {
-    // On tente de relire une session existante dans le localStorage.
     const session = authService.getSession();
-    // Si une session est trouvee, on restaure l'utilisateur et le jeton.
     if (session) {
       setUser(session.user);
-      setToken(session.token);
+      setToken(session.access);   // access token (format nouveau)
     }
-    // Dans tous les cas, l'initialisation est terminee.
     setReady(true);
   }, []);
 
-  // login : delegue au service, puis met a jour l'etat React si succes.
-  const login = useCallback((email, password) => {
-    // Appel du service ; lance une erreur si les identifiants sont mauvais.
-    const session = authService.login(email, password);
-    // Mise a jour de l'etat global avec l'utilisateur et le jeton recus.
+  // ── register ────────────────────────────────────────────────────────────────
+  const register = useCallback(async (form) => {
+    // Lance une Error si l'API répond avec une erreur (email déjà pris, etc.)
+    const session = await authService.register(form);
     setUser(session.user);
-    setToken(session.token);
-    // On retourne la session pour que la page sache vers ou rediriger.
+    setToken(session.access);
     return session;
   }, []);
 
-  // register : delegue au service, puis met a jour l'etat React si succes.
-  const register = useCallback((form) => {
-    // Appel du service ; lance une erreur si l'email est deja pris.
-    const session = authService.register(form);
-    // Mise a jour de l'etat global avec le nouvel utilisateur connecte.
+  // ── login ───────────────────────────────────────────────────────────────────
+  const login = useCallback(async (email, password) => {
+    // Lance une Error si les identifiants sont invalides.
+    const session = await authService.login(email, password);
     setUser(session.user);
-    setToken(session.token);
-    // On retourne la session a la page appelante.
+    setToken(session.access);
     return session;
   }, []);
 
-  // logout : ferme la session cote service puis vide l'etat React.
-  const logout = useCallback(() => {
-    // On efface la session memorisee dans le localStorage.
-    authService.logout();
-    // On remet l'utilisateur et le jeton a null (etat deconnecte).
+  // ── logout ──────────────────────────────────────────────────────────────────
+  const logout = useCallback(async () => {
+    await authService.logout();
     setUser(null);
     setToken(null);
   }, []);
 
-  // hasRole : indique si l'utilisateur connecte possede le role demande.
-  // Utilise par ProtectedRoute pour le controle d'acces base sur les roles.
+  // ── hasRole ─────────────────────────────────────────────────────────────────
   const hasRole = useCallback(
     (role) => Boolean(user) && user.role === role,
-    [user], // recalcule cette fonction seulement si "user" change
+    [user],
   );
 
-  // value : l'objet reellement partage avec tous les composants consommateurs.
   const value = {
-    user, // utilisateur connecte (ou null)
-    token, // jeton JWT courant (ou null)
-    ready, // true quand la session initiale a ete verifiee
-    isAuthenticated: Boolean(user), // raccourci booleen pratique
-    login, // fonction de connexion
-    register, // fonction d'inscription
-    logout, // fonction de deconnexion
-    hasRole, // fonction de verification de role
+    user,
+    token,
+    ready,
+    isAuthenticated: Boolean(user),
+    login,
+    register,
+    logout,
+    hasRole,
   };
 
-  // On rend le Provider : tous les "children" peuvent lire "value".
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
