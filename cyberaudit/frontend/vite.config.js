@@ -11,5 +11,20 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 3000
-  }
+  },
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./src/__tests__/setup.js"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "lcov"],
+      exclude: [
+        "node_modules/",
+        "src/__tests__/",
+        "src/main.jsx",
+        "*.config.*",
+      ],
+    },
+  },
 })
