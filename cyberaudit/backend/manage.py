@@ -7,7 +7,10 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+    # Force toujours config.settings sauf si une valeur VALIDE est déjà définie.
+    # setdefault ne remplace pas une valeur vide "" — d'où ce check explicite.
+    if not os.environ.get("DJANGO_SETTINGS_MODULE"):
+        os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings"
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
