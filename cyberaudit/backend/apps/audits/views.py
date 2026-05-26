@@ -64,8 +64,13 @@ class AuditRequestDetailView(generics.RetrieveUpdateDestroyAPIView):
     PATCH  /api/audits/{id}/   admin uniquement (status, notes, assigned_to).
     DELETE /api/audits/{id}/   admin uniquement → archive (soft delete).
     """
-    queryset = AuditRequest.objects.select_related("pack", "client", "assigned_to")
     permission_classes = [IsAuthenticated, IsAdminOrOwner]
+
+    def get_queryset(self):
+        qs = AuditRequest.objects.select_related("pack", "client", "assigned_to")
+        if self.request.user.role == "admin":
+            return qs
+        return qs.filter(client=self.request.user)
 
     def get_serializer_class(self):
         if self.request.method in ("PATCH", "PUT"):
