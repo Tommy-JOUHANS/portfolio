@@ -1,4 +1,4 @@
-#!/home/tommy/portfolio/cyberaudit/backend/.venv/bin/python3.11
+#!/root/portfolio/cyberaudit/backend/.venv/bin/python
 import sys
 from celery.__main__ import main
 if __name__ == '__main__':

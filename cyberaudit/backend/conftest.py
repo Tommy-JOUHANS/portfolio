@@ -88,3 +88,12 @@ def admin_auth_client(api_client, admin_user):
     token = RefreshToken.for_user(admin_user).access_token
     api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
     return api_client
+
+
+@pytest.fixture(autouse=True)
+def _reset_throttle_cache():
+    """Reset les compteurs de throttle DRF entre chaque test."""
+    from django.core.cache import cache
+    cache.clear()
+    yield
+    cache.clear()
