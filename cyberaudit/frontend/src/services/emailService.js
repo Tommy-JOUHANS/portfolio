@@ -39,8 +39,6 @@ export async function sendAuditConfirmation({
     return;
   }
 
-<<<<<<< HEAD
-=======
   // submitted_at : date/heure lisible au format français.
   const submitted_at = new Date().toLocaleString("fr-FR", {
     day: "2-digit",
@@ -50,25 +48,17 @@ export async function sendAuditConfirmation({
     minute: "2-digit",
   });
 
->>>>>>> 1e9c4ddc3126491c4c18e7a84bd3048bab4e2234
   await emailjs.send(
     SERVICE_ID,
     TEMPLATE_CONFIRM,
     {
-<<<<<<< HEAD
-      to_email,
-=======
       to_email,       // utilisé comme destinataire ET affiché dans le corps
       client_email: to_email,  // variable distincte pour le corps du template
->>>>>>> 1e9c4ddc3126491c4c18e7a84bd3048bab4e2234
       to_name,
       company_name,
       pack_name,
       reference,
-<<<<<<< HEAD
-=======
       submitted_at,
->>>>>>> 1e9c4ddc3126491c4c18e7a84bd3048bab4e2234
     },
     PUBLIC_KEY,
   );
