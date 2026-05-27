@@ -21,6 +21,8 @@ import {
   addRequestHistory,
   generateReport,
 } from "../services/dataService.js";
+// Service email : notification de suivi EmailJS.
+import { sendStatusNotification } from "../services/emailService.js";
 // StatusBadge : pastille de statut reutilisable.
 import StatusBadge from "../components/dashboard/StatusBadge.jsx";
 
@@ -124,18 +126,39 @@ export default function AdminRequestDetailPage() {
     navigate(`/admin/report/${reference}`);
   }
 
-  // handleSendNotification : journalise l'envoi d'une notification au client.
+  // handleSendNotification : envoie une notification EmailJS au client
+  // et journalise l'action dans l'historique.
   function handleSendNotification() {
+    // Libellé lisible du statut courant (sélectionné dans le panneau actions).
+    const STATUS_LABELS = {
+      pending: "En attente",
+      in_progress: "En cours",
+      completed: "Terminé",
+      archived: "Archivé",
+    };
+    const readableStatus = STATUS_LABELS[status] ?? status;
+
+    // Envoi de la notification via EmailJS (non bloquant).
+    sendStatusNotification({
+      to_email: request.client_email,
+      to_name: request.contact_name.split(" ")[0], // prénom uniquement
+      reference: request.reference,
+      new_status: readableStatus,
+      message: internalNotes, // notes internes transmises au client
+    }).catch((err) =>
+      console.error("[emailService] Notification non envoyée :", err),
+    );
+
     // On ajoute une entree d'historique (envoi de notification).
     addRequestHistory(
       reference,
       user.first_name,
-      "Notification sent to the client (email)",
+      `Notification envoyée au client — statut : ${readableStatus}`,
     );
     // On recharge la demande pour voir la nouvelle entree d'historique.
     loadRequest();
     // On informe l'operateur.
-    setNotice("Notification sent to the client.");
+    setNotice("Notification envoyée au client.");
   }
 
   // handleArchive : archive la demande (suppression douce).
