@@ -7,7 +7,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from apps.notifications.models import Notification
 from apps.notifications.services import create_and_send
-from core.permissions import IsAdminOrOwner
 
 from .models import AuditPack, AuditRequest
 from .serializers import (
@@ -70,8 +69,13 @@ class AuditRequestListCreateView(generics.ListCreateAPIView):
 
 
 class AuditRequestDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = AuditRequest.objects.select_related("pack", "client", "assigned_to")
-    permission_classes = [IsAuthenticated, IsAdminOrOwner]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = AuditRequest.objects.select_related("pack", "client", "assigned_to")
+        if self.request.user.role == "admin":
+            return qs
+        return qs.filter(client=self.request.user)
 
     def get_serializer_class(self):
         if self.request.method in ("PATCH", "PUT"):
