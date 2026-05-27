@@ -90,6 +90,8 @@ def admin_auth_client(api_client, admin_user):
     return api_client
 
 
+# ── Helpers de test ──────────────────────────────────────────────────────────
+
 @pytest.fixture(autouse=True)
 def _reset_throttle_cache():
     """Reset les compteurs de throttle DRF entre chaque test."""
@@ -97,7 +99,7 @@ def _reset_throttle_cache():
     cache.clear()
     yield
     cache.clear()
-    
+
 
 @pytest.fixture(autouse=True)
 def _celery_eager_and_locmem_email(settings):

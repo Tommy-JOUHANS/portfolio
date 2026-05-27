@@ -11,7 +11,7 @@ from django.db import models
 
 
 class Notification(models.Model):
-    """Email transactionnel (cf. doc Stage 3 §4.2 schéma NOTIFICATION)."""
+    """Email transactionnel."""
 
     class Type(models.TextChoices):
         REQUEST_RECEIVED = "request_received", "Request received"

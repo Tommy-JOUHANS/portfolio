@@ -17,7 +17,7 @@ export function useAuth() {
   // Securite : si le hook est utilise hors d'un <AuthProvider>, on previent
   // le developpeur avec une erreur claire plutot qu'un bug silencieux.
   if (context === null) {
-    throw new Error("useAuth doit etre utilise a l'interieur d'un <AuthProvider>.");
+    throw new Error("useAuth must be used indoors <AuthProvider>.");
   }
 
   // On renvoie le contexte (user, token, login, register, logout, hasRole...).

@@ -57,7 +57,7 @@ function NotFound() {
         to="/"
         className="rounded-lg bg-brand px-5 py-2 font-semibold text-white transition hover:bg-brand-dark"
       >
-        Retour a l'accueil
+        Return to the home page
       </Link>
     </div>
   );

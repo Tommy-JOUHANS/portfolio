@@ -4,7 +4,7 @@ notifications/tasks.py — Tâches Celery pour l'envoi d'emails.
   send_notification_email(notification_id)
       → envoie le mail via SMTP (en dev EMAIL_BACKEND=console)
       → met à jour le statut (sent / failed) et sent_at
-      → retry automatique 3 fois avec backoff exponentiel (10s / 30s / 90s)
+      → retry automatique 3 fois avec backoff exponentiel
 """
 from celery import shared_task
 from django.core.mail import send_mail
@@ -21,7 +21,6 @@ from django.utils import timezone
 )
 def send_notification_email(self, notification_id):
     """Envoie l'email d'une Notification et met à jour son statut."""
-    # Import local : évite un éventuel circular import au boot Django.
     from .models import Notification
 
     try:
@@ -33,7 +32,7 @@ def send_notification_email(self, notification_id):
         send_mail(
             subject=notif.subject,
             message=notif.message,
-            from_email=None,  # utilise DEFAULT_FROM_EMAIL
+            from_email=None,
             recipient_list=[notif.user.email],
             fail_silently=False,
         )
@@ -41,7 +40,7 @@ def send_notification_email(self, notification_id):
         notif.status = Notification.Status.FAILED
         notif.error_message = str(exc)
         notif.save(update_fields=["status", "error_message"])
-        raise  # déclenche autoretry_for
+        raise
 
     notif.status = Notification.Status.SENT
     notif.sent_at = timezone.now()

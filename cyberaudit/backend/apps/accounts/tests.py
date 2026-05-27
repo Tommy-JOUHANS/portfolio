@@ -48,6 +48,20 @@ class TestUserModel:
         assert admin.is_staff is True
         assert admin.role == "admin"
 
+    def test_create_user_without_email_raises_error(self):
+        from apps.accounts.models import User
+        with pytest.raises(ValueError, match="email"):
+            User.objects.create_user(email="", password="Test1234!")
+
+    def test_create_superuser_sets_flags(self):
+        from apps.accounts.models import User
+        admin = User.objects.create_superuser(
+            email="super@example.com", password="Admin1234!"
+        )
+        assert admin.is_staff is True
+        assert admin.is_superuser is True
+        assert admin.role == User.Role.ADMIN
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # POST /api/auth/register/

@@ -23,11 +23,19 @@ const api = axios.create({
 
 // ── Intercepteur requête : ajoute Authorization: Bearer <access> ─────────────
 api.interceptors.request.use((config) => {
-  const raw = localStorage.getItem(SESSION_KEY);
-  if (raw) {
-    const session = JSON.parse(raw);
-    if (session?.access) {
-      config.headers.Authorization = `Bearer ${session.access}`;
+  // Ne pas injecter le token sur les routes d'authentification elles-mêmes
+  const isAuthRoute =
+    config.url?.includes("token/refresh") ||
+    config.url?.includes("login") ||
+    config.url?.includes("register");
+
+  if (!isAuthRoute) {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (raw) {
+      const session = JSON.parse(raw);
+      if (session?.access) {
+        config.headers.Authorization = `Bearer ${session.access}`;
+      }
     }
   }
   return config;

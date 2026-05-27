@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -19,8 +20,9 @@ INSTALLED_APPS = [
     "corsheaders",
     "apps.accounts",
     "apps.audits",
-    "apps.notifications",
     "apps.reports",
+    "apps.training",
+    "apps.notifications",
 ]
 
 MIDDLEWARE = [
@@ -89,7 +91,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=60),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "AUTH_HEADER_TYPES": ("Bearer",),
@@ -104,23 +106,24 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+# ── Email ─────────────────────────────────────────────────────────────────────
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = "noreply@cyberaudit.fr"
-
-
-# ── Celery ─────────────────────────────────────────────────────────────
-import os
+DEFAULT_FROM_EMAIL = "CyberAudit <noreply@cyberaudit.fr>"
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://127.0.0.1:6379/1")
+# ── Celery ────────────────────────────────────────────────────────────────────
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TIMEZONE = "Europe/Paris"
+CELERY_TIMEZONE = "UTC"
 CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 5 * 60        # 5 min max par tâche
-CELERY_TASK_ALWAYS_EAGER = False       # passer à True en test pour exec synchrone
+CELERY_TASK_TIME_LIMIT = 5 * 60
+CELERY_TASK_ALWAYS_EAGER = False
 
-# ── Stockage des médias (PDF rapports) ─────────────────────────────────
+# ── Médias (PDF rapports) ─────────────────────────────────────────────────────
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
