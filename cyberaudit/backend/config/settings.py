@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "apps.accounts",
     "apps.audits",
+    "apps.notifications",
 ]
 
 MIDDLEWARE = [
