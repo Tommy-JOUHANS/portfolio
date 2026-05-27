@@ -28,8 +28,13 @@ const PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 export async function sendAuditConfirmation({
   to_email,
   to_name,
+  username,
   company_name,
   pack_name,
+  services_included,
+  price,
+  processing_time,
+  message,
   reference,
 }) {
   if (!SERVICE_ID || !TEMPLATE_CONFIRM || !PUBLIC_KEY) {
@@ -52,11 +57,16 @@ export async function sendAuditConfirmation({
     SERVICE_ID,
     TEMPLATE_CONFIRM,
     {
-      to_email,       // utilisé comme destinataire ET affiché dans le corps
-      client_email: to_email,  // variable distincte pour le corps du template
+      to_email,
+      client_email: to_email,
       to_name,
+      username,
       company_name,
       pack_name,
+      services_included,
+      price,
+      processing_time,
+      message: message || "-",
       reference,
       submitted_at,
     },

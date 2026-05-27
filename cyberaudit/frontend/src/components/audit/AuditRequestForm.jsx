@@ -123,11 +123,18 @@ export default function AuditRequestForm() {
     // Etape 3 : envoi de l'accusé de réception EmailJS (non bloquant).
     const pack = getPackageByCode(form.packCode);
     sendAuditConfirmation({
-      to_email: user.email,
-      to_name: user.first_name,
-      company_name: form.companyName,
-      pack_name: pack ? pack.name : form.packCode,
-      reference: created.reference,
+      to_email:          user.email,
+      to_name:           user.first_name,
+      username:          form.username,
+      company_name:      form.companyName,
+      pack_name:         pack ? pack.name : form.packCode,
+      services_included: pack
+        ? [pack.included_services, pack.for_whom, pack.perimeter].join("\n")
+        : "-",
+      price:             pack ? `${pack.price.toLocaleString("fr-FR")} EUR` : "-",
+      processing_time:   pack ? `${pack.duration_days} business days` : "-",
+      message:           form.message,
+      reference:         created.reference,
     }).catch((err) =>
       console.error("[emailService] Accusé de réception non envoyé :", err),
     );
