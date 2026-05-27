@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from decouple import config, Csv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-v^4z+19l+j126&rq8lmg&@%@v5z69*90kp^enk+p1ob51(a6x_"
@@ -110,8 +111,8 @@ CORS_ALLOW_CREDENTIALS = True
 # ── Email ─────────────────────────────────────────────────────────────────────
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "CyberAudit <noreply@cyberaudit.fr>"
-RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+RESEND_API_KEY = config("RESEND_API_KEY", default="")
+FRONTEND_URL = config("FRONTEND_URL", default="http://localhost:3000")
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://127.0.0.1:6379/1")
