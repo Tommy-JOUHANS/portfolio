@@ -1,27 +1,3 @@
-<<<<<<< HEAD
-from django.db import models
-from django.conf import settings
-
-
-class Audit(models.Model):
-
-    class Status(models.TextChoices):
-        PENDING     = "pending",     "En attente"
-        IN_PROGRESS = "in_progress", "En cours"
-        COMPLETED   = "completed",   "Terminé"
-        CANCELLED   = "cancelled",   "Annulé"
-
-    user       = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="audits",
-    )
-    status     = models.CharField(
-        max_length=20,
-        choices=Status.choices,
-        default=Status.PENDING,
-    )
-=======
 """
 audits/models.py — Modèles AuditPack et AuditRequest.
 
@@ -52,17 +28,10 @@ class AuditPack(models.Model):
     perimeter = models.TextField(blank=True)
     duration_days = models.PositiveSmallIntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
->>>>>>> 08f73c6dc1b9a9b1d4b758745c98861cb41d347c
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-<<<<<<< HEAD
-        ordering = ["-created_at"]
-
-    def __str__(self):
-        return f"Audit #{self.id} — {self.user.email} ({self.status})"
-=======
         db_table = "audit_packs"
         ordering = ["price"]
 
@@ -139,4 +108,3 @@ class AuditRequest(models.Model):
             )
             next_num = (int(last.reference.split("-")[-1]) + 1) if last else 1
         return f"{prefix}{next_num:04d}"
->>>>>>> 08f73c6dc1b9a9b1d4b758745c98861cb41d347c
