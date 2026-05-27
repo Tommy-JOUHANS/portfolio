@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>CyberAudit Report — {{ audit.reference }}</title>
+    <style>
+        @page { size: A4; margin: 2cm; }
+        body { font-family: "Helvetica", "Arial", sans-serif; color: #1f2937; font-size: 11pt; }
+        .cover { page-break-after: always; text-align: center; padding-top: 100px; }
+        .cover h1 { color: #800080; font-size: 32pt; margin-bottom: 20px; }
+        .cover .reference { font-size: 18pt; color: #5f0a5f; margin-bottom: 40px; }
+        .cover .meta { font-size: 12pt; color: #6b7280; line-height: 1.8; }
+        h2 { color: #800080; border-bottom: 2px solid #800080; padding-bottom: 5px; margin-top: 30px; }
+        .score-card { background-color: #f3e6f3; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0; }
+        .score-card .grade { font-size: 48pt; font-weight: bold; color: #800080; }
+        .score-card .score { font-size: 16pt; color: #4b5563; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #d1d5db; padding: 10px; text-align: left; }
+        th { background-color: #800080; color: white; }
+        .severity-high { color: #dc2626; font-weight: bold; }
+        .severity-medium { color: #f59e0b; font-weight: bold; }
+        .severity-low { color: #16a34a; font-weight: bold; }
+        footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #d1d5db; text-align: center; color: #9ca3af; font-size: 9pt; }
+    </style>
+</head>
+<body>
+    <div class="cover">
+        <h1>CyberAudit &amp; Solutions</h1>
+        <div class="reference">Rapport d'audit {{ audit.reference }}</div>
+        <div class="meta">
+            <p><strong>Client :</strong> {{ client.first_name }} {{ client.last_name }}</p>
+            <p><strong>Entreprise :</strong> {{ client.company_name }}</p>
+            <p><strong>Pack :</strong> {{ pack.name }}</p>
+            <p><strong>Date :</strong> {{ report.generated_at|date:"d/m/Y"|default:"En cours" }}</p>
+            <p style="margin-top: 40px; font-style: italic; color: #9ca3af;">
+                Document confidentiel — Diffusion restreinte
+            </p>
+        </div>
+    </div>
+
+    <h2>Résumé exécutif</h2>
+    <div class="score-card">
+        <div class="grade">{{ report.grade }}</div>
+        <div class="score">Score de sécurité : {{ report.security_score }}/100</div>
+    </div>
+    <p>{{ report.summary|linebreaksbr }}</p>
+    {% if report.verdict %}<p><strong>Verdict :</strong> {{ report.verdict }}</p>{% endif %}
+
+    <h2>Vulnérabilités identifiées</h2>
+    {% if report.findings %}
+    <table>
+        <thead>
+            <tr>
+                <th>Sévérité</th><th>Actif</th><th>Description</th><th>Recommandation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for finding in report.findings %}
+            <tr>
+                <td class="severity-{{ finding.severity|lower }}">{{ finding.severity }}</td>
+                <td>{{ finding.asset }}</td>
+                <td>{{ finding.description }}</td>
+                <td>{{ finding.recommendation }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p><em>Aucune vulnérabilité majeure détectée.</em></p>
+    {% endif %}
+
+    <footer>
+        CyberAudit &amp; Solutions —
+        Rapport généré le {{ report.generated_at|date:"d/m/Y à H:i"|default:"En cours" }} —
+        {{ audit.reference }}
+    </footer>
+</body>
+</html>
