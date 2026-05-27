@@ -12,3 +12,20 @@ dist/
 .vscode/
 .idea/
 .DS_Store
+
+# Secrets
+token
+*.token
+.env
+.env.local
+backend/.env
+
+# Bases & couverture
+backend/db.sqlite3
+backend/.coverage
+backend/htmlcov/
+
+# Media (PDFs générés par WeasyPrint)
+backend/media/
+*.pdf
+*.log

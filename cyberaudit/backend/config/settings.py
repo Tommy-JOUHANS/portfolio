@@ -20,9 +20,14 @@ INSTALLED_APPS = [
     "corsheaders",
     "apps.accounts",
     "apps.audits",
+<<<<<<< HEAD
     "apps.reports",
     "apps.training",
     "apps.notifications",
+=======
+    "apps.notifications",
+    "apps.reports",
+>>>>>>> 08f73c6dc1b9a9b1d4b758745c98861cb41d347c
 ]
 
 MIDDLEWARE = [
@@ -106,6 +111,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
 ]
 CORS_ALLOW_CREDENTIALS = True
+<<<<<<< HEAD
 
 # ── Email / Resend ────────────────────────────────────────────────────────────
 EMAIL_BACKEND    = "django.core.mail.backends.console.EmailBackend"  # console en dev
@@ -120,3 +126,25 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT  = ["json"]
 CELERY_TIMEZONE        = "UTC"
+=======
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "noreply@cyberaudit.fr"
+
+
+# ── Celery ─────────────────────────────────────────────────────────────
+import os
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/1")
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TIMEZONE = "Europe/Paris"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 5 * 60        # 5 min max par tâche
+CELERY_TASK_ALWAYS_EAGER = False       # passer à True en test pour exec synchrone
+
+# ── Stockage des médias (PDF rapports) ─────────────────────────────────
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+>>>>>>> 08f73c6dc1b9a9b1d4b758745c98861cb41d347c
