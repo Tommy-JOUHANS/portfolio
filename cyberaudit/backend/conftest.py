@@ -97,3 +97,15 @@ def _reset_throttle_cache():
     cache.clear()
     yield
     cache.clear()
+    
+
+@pytest.fixture(autouse=True)
+def _celery_eager_and_locmem_email(settings):
+    """
+    En test :
+      - Exécute les tâches Celery synchroniquement (pas besoin de worker)
+      - Capture les emails en mémoire (mail.outbox) au lieu de SMTP
+    """
+    settings.CELERY_TASK_ALWAYS_EAGER = True
+    settings.CELERY_TASK_EAGER_PROPAGATES = True
+    settings.EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
