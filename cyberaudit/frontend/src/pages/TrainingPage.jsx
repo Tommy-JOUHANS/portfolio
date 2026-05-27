@@ -138,8 +138,7 @@ export default function TrainingPage() {
 
       {/* ---- Note de perimetre : contenu detaille a venir -------------- */}
       <p className="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-700">
-        Le contenu detaille des modules (videos, documentation) sera ajoute
-        ulterieurement, conformement a la doc (ecran 7).
+        The detailed content of the modules (videos, documentation) will be added later, in accordance with the documentation (screen 7).
       </p>
     </div>
   );

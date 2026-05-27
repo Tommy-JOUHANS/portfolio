@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -18,6 +19,10 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "apps.accounts",
+    "apps.audits",
+    "apps.reports",
+    "apps.training",
+    "apps.notifications",
 ]
 
 MIDDLEWARE = [
@@ -86,7 +91,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=60),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "AUTH_HEADER_TYPES": ("Bearer",),
@@ -101,5 +106,17 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
 ]
 CORS_ALLOW_CREDENTIALS = True
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = "noreply@cyberaudit.fr"
+
+# ── Email / Resend ────────────────────────────────────────────────────────────
+EMAIL_BACKEND    = "django.core.mail.backends.console.EmailBackend"  # console en dev
+DEFAULT_FROM_EMAIL = "CyberAudit <noreply@cyberaudit.fr>"
+RESEND_API_KEY   = os.environ.get("RESEND_API_KEY", "")
+FRONTEND_URL     = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+
+# ── Celery ────────────────────────────────────────────────────────────────────
+CELERY_BROKER_URL      = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND  = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/1")
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT  = ["json"]
+CELERY_TIMEZONE        = "UTC"
