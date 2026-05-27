@@ -1,0 +1,13 @@
+{
+  "name": "cyberaudit",
+  "version": "1.0.0",
+  "description": "```\r cyberaudit/\r ├── frontend/                    # SPA React\r │   ├── src/\r │   │   ├── components/\r │   │   │   ├── auth/            # Login, Register\r │   │   │   ├── dashboard/       # Tableaux de bord Client & Admin\r │   │   │   ├── audit/           # Formulaire de demande d'audit\r │   │   │   └── training/        # Modules de formation\r │   │   ├── pages/\r │   │   ├── hooks/               # Custom React hooks\r │   │   ├── services/            # Appels API\r │   │   └── utils/\r │   └── public/\r │\r ├── backend/                     # API REST Django\r │   ├── apps/\r │   │   ├── accounts/            # Modèle User + rôles\r │   │   ├── audits/              # CRUD demandes d'audit\r │   │   ├── reports/             # Génération PDF\r │   │   ├── training/            # Contenu des formations\r │   │   └── notifications/       # Tâches email Celery\r │   ├── config/\r │   │   ├── settings.py\r │   │   ├── urls.py\r │   │   └── celery.py\r │   └── requirements.txt\r │\r └── README.md",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
