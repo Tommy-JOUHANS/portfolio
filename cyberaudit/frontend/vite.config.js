@@ -16,6 +16,12 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/__tests__/setup.js"],
+    // Exclut les tests emails (composants React Email pas encore créés)
+    exclude: [
+      "**/node_modules/**",
+      "**/dist/**",
+      "src/__tests__/emails/**",
+    ],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],

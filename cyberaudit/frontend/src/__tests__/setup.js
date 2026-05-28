@@ -1,7 +1,12 @@
 // ─── Setup global pour Vitest ───────────────────────────────────────────────
 // Ce fichier est exécuté avant chaque suite de tests.
 
+import React from "react";
 import "@testing-library/jest-dom";
+
+// Expose React globalement pour les fichiers JSX qui utilisent le transform
+// classique (React.createElement) sans l'importer explicitement.
+global.React = React;
 
 // ── Mock localStorage complet ────────────────────────────────────────────────
 // Vitest v3 + jsdom récent ne fournit pas localStorage.clear() nativement.

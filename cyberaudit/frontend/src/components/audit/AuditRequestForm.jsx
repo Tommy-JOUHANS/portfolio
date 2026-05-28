@@ -12,7 +12,9 @@ import { useNavigate } from "react-router-dom";
 // useAuth : pour pre-remplir le formulaire avec le client connecte.
 import { useAuth } from "../../hooks/useAuth.js";
 // Service de donnees : liste des packs et creation d'une demande.
-import { getPackages, createRequest } from "../../services/dataService.js";
+import { getPackages, createRequest, getPackageByCode } from "../../services/dataService.js";
+// Service email : accusé de réception EmailJS.
+import { sendAuditConfirmation } from "../../services/emailService.js";
 // PackSelector : composant de selection du pack.
 import PackSelector from "./PackSelector.jsx";
 // Outils de validation reutilises (presence + longueur max 50).
@@ -93,7 +95,7 @@ export default function AuditRequestForm() {
   }
 
   // handleSubmit : declenchee a l'envoi du formulaire.
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     // On bloque le rechargement de page par defaut.
     event.preventDefault();
 
@@ -118,7 +120,26 @@ export default function AuditRequestForm() {
       message: form.message, // message libre (peut etre vide)
     });
 
-    // Etape 3 : redirection vers la page de confirmation de la demande.
+    // Etape 3 : envoi de l'accusé de réception EmailJS (non bloquant).
+    const pack = getPackageByCode(form.packCode);
+    sendAuditConfirmation({
+      to_email:          user.email,
+      to_name:           user.first_name,
+      username:          form.username,
+      company_name:      form.companyName,
+      pack_name:         pack ? pack.name : form.packCode,
+      services_included: pack
+        ? [pack.included_services, pack.for_whom, pack.perimeter].join("\n")
+        : "-",
+      price:             pack ? `${pack.price.toLocaleString("fr-FR")} EUR` : "-",
+      processing_time:   pack ? `${pack.duration_days} business days` : "-",
+      message:           form.message,
+      reference:         created.reference,
+    }).catch((err) =>
+      console.error("[emailService] Accusé de réception non envoyé :", err),
+    );
+
+    // Etape 4 : redirection vers la page de confirmation de la demande.
     navigate(`/audit/confirmation/${created.reference}`);
   }
 
