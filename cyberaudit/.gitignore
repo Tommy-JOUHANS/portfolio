@@ -29,3 +29,13 @@ backend/htmlcov/
 backend/media/
 *.pdf
 *.log
+
+# Pytest / Coverage
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+
+# Redis snapshots
+dump.rdb
+*.rdb
