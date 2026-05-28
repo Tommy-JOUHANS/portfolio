@@ -26,7 +26,7 @@ export default function Logo({ size = 52 }) {
     return (
       <div
         // Cercle bleu nuit, contenu centre, anneau clair et ombre douce.
-        className="flex items-center justify-center rounded-full bg-[#0b2e6b] ring-2 ring-white/70 shadow-md"
+        className="flex items-left justify-left rounded-full bg-[#0b2e6b] ring-2 ring-white/70 shadow-md"
         // Taille dynamique appliquee en style en ligne.
         style={{ width: size, height: size }}
         // Texte d'accessibilite pour les lecteurs d'ecran.
@@ -40,21 +40,20 @@ export default function Logo({ size = 52 }) {
 
   // --- Cas normal : on affiche l'image officielle du logo ---------------
   return (
-    <img
-      // Source : fichier place dans public/ et servi a la racine du site.
-      src="/logo.png"
-      // Texte alternatif (accessibilite + affichage si l'image manque).
-      alt="Logo CyberAudit & Solutions"
-      // Largeur/hauteur intrinseques de l'element image.
-      width={size}
-      height={size}
-      // onError : si le fichier est introuvable, on bascule sur le secours.
-      onError={() => setImageFailed(true)}
-      // rounded-full = border-radius 50% (cercle parfait demande).
-      // object-cover = l'image remplit le cercle sans deformation.
-      className="rounded-full object-cover ring-2 ring-white/70 shadow-md"
-      // Taille dynamique appliquee en style en ligne.
+    <div
+      className="rounded-full overflow-hidden ring-2 ring-white/70 shadow-md flex-shrink-0"
       style={{ width: size, height: size }}
-    />
+      aria-label="Logo CyberAudit & Solutions"
+    >
+      <img
+        src="/logo.png"
+        alt="Logo CyberAudit & Solutions"
+        onError={() => setImageFailed(true)}
+        className="w-full h-full object-cover scale-[1.26] translate-y-[-10px]"
+        style={{ 
+          transformOrigin: "center center",
+         }}
+      />
+    </div>
   );
 }

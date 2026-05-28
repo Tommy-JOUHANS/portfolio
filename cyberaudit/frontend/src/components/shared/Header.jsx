@@ -31,40 +31,25 @@ export default function Header() {
   // Rendu de la barre superieure.
   return (
     // <header> : fond violet de la charte, contenu en ligne, espace interieur.
-    <header className="bg-brand">
+    <header className="static w-full bg-brand">
       {/* Conteneur centre, largeur maximale, logo a gauche / menu a droite. */}
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-        {/* Logo cliquable : renvoie vers la page d'accueil "/".            */}
-        <Link to="/" className="flex items-center" aria-label="Accueil">
+       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-2 sm:py-3">
+        <Link to="/" aria-label="Accueil">
           {/* Pastille circulaire de marque.                               */}
-          <Logo size={120} />
+          <Logo size={120} flex items-left/>
         </Link>
 
-        {/* <nav> : liens de navigation alignes a droite.                   */}
-        <nav className="flex items-center gap-6 text-sm font-semibold tracking-wide text-white">
-          {/* Lien HOME : toujours present, renvoie a l'accueil.            */}
-          <Link to="/" className="transition hover:text-white/70">
-            HOME
-          </Link>
-
-          {/* Affichage conditionnel selon l'etat de connexion.             */}
-          {isAuthenticated ? (
-            // Utilisateur connecte : bouton de deconnexion (SIGN OUT).
-            <button
-              type="button"
-              onClick={handleSignOut}
-              className="transition hover:text-white/70"
-            >
-              SIGN OUT
-            </button>
-          ) : (
-            // Visiteur non connecte : lien vers la page de connexion.
-            <Link to="/login" className="transition hover:text-white/70">
-              SIGN IN
-            </Link>
-          )}
-        </nav>
-      </div>
-    </header>
+        <nav className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm font-semibold tracking-wide text-white">
+      <Link to="/" className="transition hover:text-white/70">HOME</Link>
+      {isAuthenticated ? (
+        <button type="button" onClick={handleSignOut} className="transition hover:text-white/70 cursor-pointer">
+          SIGN OUT
+        </button>
+      ) : (
+        <Link to="/login" className="transition hover:text-white/70 ">SIGN IN</Link>
+      )}
+    </nav>
+  </div>
+</header>
   );
 }

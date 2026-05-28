@@ -91,6 +91,7 @@ export default function RegisterForm() {
 
   // Rendu du formulaire.
   return (
+    
     // <form> : onSubmit relie l'envoi a handleSubmit ; noValidate desactive
     // la validation native du navigateur (on gere tout nous-memes).
     <form onSubmit={handleSubmit} className="flex flex-col gap-3.5" noValidate>
@@ -174,7 +175,7 @@ export default function RegisterForm() {
           <button
             type="button"
             onClick={() => setShowPassword((visible) => !visible)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-brand"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-brand "
             aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
           >
             {/* Icone oeil barre (visible) ou oeil ouvert (masque).        */}
@@ -203,7 +204,7 @@ export default function RegisterForm() {
       <button
         type="submit"
         disabled={loading}
-        className="mt-1 rounded-md bg-brand py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-60"
+        className="mt-1 rounded-md bg-brand py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed"
       >
         {/* Le libelle change pendant le traitement.                       */}
         {loading ? "Creation..." : "Create an account"}

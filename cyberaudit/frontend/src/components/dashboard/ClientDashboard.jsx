@@ -147,12 +147,12 @@ export default function ClientDashboard() {
         {/* Barre de filtres : statut + pack.                             */}
         <div className="mt-3 flex flex-wrap items-center gap-3">
           {/* Etiquette "Filter :".                                       */}
-          <span className="text-sm text-gray-500">Filter :</span>
+          <span className="text-sm text-gray-500 ">Filter :</span>
           {/* Liste deroulante de filtre par statut.                      */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-md border border-gray-300 px-2 py-1 text-sm"
+            className="rounded-md border border-gray-300 px-2 py-1 text-sm cursor-pointer"
           >
             {/* Options : tous les statuts puis chaque statut.            */}
             <option value="all">All statuses</option>
@@ -165,7 +165,7 @@ export default function ClientDashboard() {
           <select
             value={packFilter}
             onChange={(e) => setPackFilter(e.target.value)}
-            className="rounded-md border border-gray-300 px-2 py-1 text-sm"
+            className="rounded-md border border-gray-300 px-2 py-1 text-sm cursor-pointer"
           >
             {/* Options : tous les packs puis chaque pack.                */}
             <option value="all">All packs</option>

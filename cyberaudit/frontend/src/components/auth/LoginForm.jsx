@@ -136,7 +136,7 @@ export default function LoginForm() {
           <button
             type="button"
             onClick={() => setShowPassword((visible) => !visible)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-brand"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-brand cursor-pointer"
             aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
           >
             {/* On affiche l'icone oeil barre ou oeil ouvert selon l'etat. */}
@@ -149,25 +149,7 @@ export default function LoginForm() {
         )}
       </div>
 
-      {/* ---- Liens "Lost Mail" / "Lost Password" (prevus plus tard) ----- */}
-      <div className="flex flex-col gap-1">
-        {/* Lien de recuperation d'email.                                  */}
-        <button
-          type="button"
-          onClick={handleLostLink}
-          className="self-start text-xs text-brand hover:underline"
-        >
-          Lost Mail ?
-        </button>
-        {/* Lien de recuperation de mot de passe.                          */}
-        <button
-          type="button"
-          onClick={handleLostLink}
-          className="self-start text-xs text-brand hover:underline"
-        >
-          Lost Password ?
-        </button>
-      </div>
+    
 
       {/* ---- Zone de message d'information (liens ci-dessus) ------------ */}
       {info && (
@@ -187,7 +169,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="mt-1 rounded-md bg-brand py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-60"
+        className="mt-1 rounded-md bg-brand py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-60 cursor-pointer"
       >
         {/* Le libelle change pendant le chargement.                       */}
         {loading ? "Connexion..." : "Connection"}
