@@ -88,3 +88,22 @@ class ReportDownloadView(APIView):
         )
         response["Cache-Control"] = "no-store, private"
         return response
+
+
+class ReportDataView(APIView):
+    """GET /api/audits/{id}/report/data/ — JSON du rapport (owner ou admin)."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, audit_id):
+        audit = _get_audit_or_404(audit_id)
+
+        if request.user.role != "admin" and audit.client_id != request.user.id:
+            raise Http404
+
+        try:
+            report = audit.report
+        except AuditReport.DoesNotExist:
+            raise NotFound("Aucun rapport pour cette demande.")
+
+        from .serializers import AuditReportSerializer
+        return Response(AuditReportSerializer(report).data)

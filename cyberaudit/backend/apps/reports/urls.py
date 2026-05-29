@@ -1,7 +1,7 @@
 """reports/urls.py — Routes nested sous /api/audits/{id}/."""
 from django.urls import path
 
-from .views import GenerateReportView, ReportDownloadView
+from .views import GenerateReportView, ReportDownloadView, ReportDataView
 
 urlpatterns = [
     path(
@@ -13,5 +13,10 @@ urlpatterns = [
         "audits/<uuid:audit_id>/report/",
         ReportDownloadView.as_view(),
         name="report-download",
+    ),
+    path(
+        "audits/<uuid:audit_id>/report/data/",
+        ReportDataView.as_view(),
+        name="report-data",
     ),
 ]
