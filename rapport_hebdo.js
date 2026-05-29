@@ -166,7 +166,7 @@ const doc = new Document({
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 0, after: 80 },
         children: [new TextRun({ text: "Semaine du 26 au 29 mai 2026", size: 23, font: "Arial", color: "666666", italics: true })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60, after: 60 },
-        children: [new TextRun({ text: "Tommy JOUHANS", size: 26, bold: true, font: "Arial" })] }),
+        children: [new TextRun({ text: "Tommy JOUHANS et James ROUSSEL", size: 26, bold: true, font: "Arial" })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 0, after: 60 },
         children: [new TextRun({ text: "Holberton School Dijon  -  Promotion Full-Stack", size: 22, font: "Arial", color: "888888" })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 0, after: 480 },
