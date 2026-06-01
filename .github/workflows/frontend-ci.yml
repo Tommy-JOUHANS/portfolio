@@ -1,0 +1,39 @@
+name: Frontend CI
+
+on:
+  push:
+    paths:
+      - "cyberaudit/frontend/**"
+      - ".github/workflows/frontend-ci.yml"
+  pull_request:
+    paths:
+      - "cyberaudit/frontend/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cyberaudit/frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: cyberaudit/frontend/package-lock.json
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Lint (eslint)
+        run: npm run lint
+
+      - name: Tests (vitest)
+        run: npm run test:run
+
+      - name: Build (vite)
+        run: npm run build
