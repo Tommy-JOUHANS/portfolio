@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import {
   getRequestByReference, updateRequest, archiveRequest,
-  addRequestHistory, generateReport,
+  addRequestHistory,
 } from "../services/dataService.js";
 import { sendStatusNotification } from "../services/emailService.js";
 import StatusBadge from "../components/dashboard/StatusBadge.jsx";
@@ -17,7 +17,6 @@ function formatDateTime(isoString) {
 
 export default function AdminRequestDetailPage() {
   const { reference } = useParams();
-  const navigate = useNavigate();
   const { user } = useAuth();
 
   const [request, setRequest]           = useState(null);
