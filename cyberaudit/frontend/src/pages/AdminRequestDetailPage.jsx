@@ -72,12 +72,6 @@ export default function AdminRequestDetailPage() {
     finally { setSaving(false); }
   }
 
-  async function handleGenerateReport() {
-    try {
-      await generateReport(reference, user.first_name);
-      navigate(`/admin/report/${reference}`);
-    } catch { setNotice("Erreur lors de la génération du rapport."); }
-  }
 
   async function handleSendNotification() {
     const STATUS_LABELS = { pending: "En attente", in_progress: "En cours", completed: "Terminé", archived: "Archivé" };
