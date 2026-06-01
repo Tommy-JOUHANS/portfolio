@@ -78,14 +78,6 @@ export default function LoginForm() {
       setLoading(false);
     }
   }
-
-  // handleLostLink : reaction aux liens "Lost Mail" / "Lost Password".
-  // Ces fonctionnalites sont prevues "plus tard" selon la doc (ecran 3).
-  function handleLostLink() {
-    // On affiche un simple message d'information temporaire.
-    setInfo("Fonctionnalite disponible prochainement.");
-  }
-
   // Rendu du formulaire.
   return (
     // <form> : onSubmit relie l'envoi a notre fonction handleSubmit.

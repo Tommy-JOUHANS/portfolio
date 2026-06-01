@@ -67,7 +67,7 @@ export async function register(form) {
 
     return saveSession(data.access, data.refresh, data.user);
   } catch (error) {
-    throw new Error(extractErrorMessage(error));
+    throw new Error(extractErrorMessage(error), { cause: error });
   }
 }
 
@@ -82,7 +82,7 @@ export async function login(email, password) {
 
     return saveSession(data.access, data.refresh, data.user);
   } catch (error) {
-    throw new Error(extractErrorMessage(error));
+    throw new Error(extractErrorMessage(error), { cause: error });
   }
 }
 
@@ -98,7 +98,7 @@ export async function logout() {
         await api.post("/auth/logout/", { refresh: session.refresh });
       }
     }
-  } catch (_) {
+  } catch {
     // On vide quand même la session locale
   } finally {
     localStorage.removeItem(SESSION_KEY);
@@ -133,7 +133,7 @@ export async function getMe() {
     const { data } = await api.get("/auth/me/");
     return data;
   } catch (error) {
-    throw new Error(extractErrorMessage(error));
+    throw new Error(extractErrorMessage(error), { cause: error });
   }
 }
 
@@ -146,6 +146,6 @@ export async function changePassword(oldPassword, newPassword) {
       new_password: newPassword,
     });
   } catch (error) {
-    throw new Error(extractErrorMessage(error));
+    throw new Error(extractErrorMessage(error), { cause: error });
   }
 }

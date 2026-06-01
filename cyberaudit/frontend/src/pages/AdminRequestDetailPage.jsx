@@ -40,6 +40,7 @@ export default function AdminRequestDetailPage() {
     setLoading(false);
   }, [reference]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadRequest(); }, [loadRequest]);
 
   if (loading) return (

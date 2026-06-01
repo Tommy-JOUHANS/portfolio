@@ -1,3 +1,4 @@
+/* global global, beforeEach */
 // ─── Setup global pour Vitest ───────────────────────────────────────────────
 // Ce fichier est exécuté avant chaque suite de tests.
 

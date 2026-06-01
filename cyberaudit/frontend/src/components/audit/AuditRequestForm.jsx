@@ -11,7 +11,7 @@ export default function AuditRequestForm() {
   const navigate = useNavigate();
 
   const [packages, setPackages]   = useState([]);
-  const [form, setForm]           = useState({ username: "", companyName: "", packCode: "", message: "" });
+  const [form, setForm]           = useState({ username: user.first_name, companyName: user.company_name, packCode: "", message: "" });
   const [errors, setErrors]       = useState({});
   const [submitting, setSubmitting] = useState(false);
 

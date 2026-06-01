@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth.js";
 import { getReportByReference, getRequestByReference } from "../services/dataService.js";
 import api from "../services/api.js";
 
@@ -18,7 +17,6 @@ function scoreColor(score) {
 
 export default function ReportViewerPage() {
   const { reference } = useParams();
-  const { user } = useAuth();
 
   const [report, setReport]       = useState(null);
   const [auditId, setAuditId]     = useState(null);

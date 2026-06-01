@@ -48,6 +48,7 @@ export default function ClientDashboard() {
     }
   }, [user.id]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadData(); }, [loadData]);
 
   async function handleDownload(request) {

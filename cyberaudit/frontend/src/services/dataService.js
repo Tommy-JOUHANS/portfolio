@@ -41,7 +41,7 @@ export async function getAllRequests() {
 }
 
 /** Demandes du client connecté (alias — le backend filtre déjà). */
-export async function getRequestsByClientId(_clientId) {
+export async function getRequestsByClientId(/* _clientId */) {
   return getAllRequests();
 }
 
@@ -83,7 +83,7 @@ export async function archiveRequest(reference) {
 }
 
 /** Le backend journalise auto les changements ; cette fn est un no-op. */
-export async function addRequestHistory(reference, _author, _action) {
+export async function addRequestHistory(reference/*, _author, _action */) {
   return await getRequestByReference(reference);
 }
 

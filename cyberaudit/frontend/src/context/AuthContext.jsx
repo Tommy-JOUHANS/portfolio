@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 // ========================================================================
 // AuthContext.jsx — État global d'authentification (Context API).
 //
@@ -22,6 +23,7 @@ export function AuthProvider({ children }) {
   const [ready, setReady] = useState(false);
 
   // ── Restauration de session au montage ──────────────────────────────────────
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const session = authService.getSession();
     if (session) {
@@ -30,6 +32,7 @@ export function AuthProvider({ children }) {
     }
     setReady(true);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // ── register ────────────────────────────────────────────────────────────────
   const register = useCallback(async (form) => {
@@ -39,6 +42,7 @@ export function AuthProvider({ children }) {
     setToken(session.access);
     return session;
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // ── login ───────────────────────────────────────────────────────────────────
   const login = useCallback(async (email, password) => {
@@ -48,6 +52,7 @@ export function AuthProvider({ children }) {
     setToken(session.access);
     return session;
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // ── logout ──────────────────────────────────────────────────────────────────
   const logout = useCallback(async () => {
@@ -55,6 +60,7 @@ export function AuthProvider({ children }) {
     setUser(null);
     setToken(null);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // ── hasRole ─────────────────────────────────────────────────────────────────
   const hasRole = useCallback(
