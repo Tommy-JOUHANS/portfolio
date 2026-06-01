@@ -1,4 +1,5 @@
 """notifications/serializers.py — Sérialiseur lecture pour l'endpoint /me/."""
+
 from rest_framework import serializers
 
 from .models import Notification
@@ -10,8 +11,14 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = [
-            "id", "type", "subject", "message", "status",
-            "request_reference", "sent_at", "created_at",
+            "id",
+            "type",
+            "subject",
+            "message",
+            "status",
+            "request_reference",
+            "sent_at",
+            "created_at",
         ]
         read_only_fields = fields
 

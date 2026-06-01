@@ -1,4 +1,5 @@
 """notifications/views.py — GET /api/notifications/me/."""
+
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 

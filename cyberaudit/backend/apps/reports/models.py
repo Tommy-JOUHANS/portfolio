@@ -1,6 +1,7 @@
 """
 reports/models.py — Modèle AuditReport (1 rapport par AuditRequest).
 """
+
 import uuid
 
 from django.db import models

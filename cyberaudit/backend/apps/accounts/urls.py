@@ -11,14 +11,12 @@ from .views import ChangePasswordView, LoginView, LogoutView, MeView, RegisterVi
 
 urlpatterns = [
     # ── Inscription / Connexion ───────────────────────────────────────────────
-    path("register/",        RegisterView.as_view(),    name="auth-register"),
-    path("login/",           LoginView.as_view(),        name="auth-login"),
-    path("logout/",          LogoutView.as_view(),       name="auth-logout"),
-
+    path("register/", RegisterView.as_view(), name="auth-register"),
+    path("login/", LoginView.as_view(), name="auth-login"),
+    path("logout/", LogoutView.as_view(), name="auth-logout"),
     # ── Renouvellement du token (SimpleJWT natif) ─────────────────────────────
-    path("token/refresh/",   TokenRefreshView.as_view(), name="token-refresh"),
-
+    path("token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
     # ── Profil courant ────────────────────────────────────────────────────────
-    path("me/",              MeView.as_view(),            name="auth-me"),
+    path("me/", MeView.as_view(), name="auth-me"),
     path("change-password/", ChangePasswordView.as_view(), name="auth-change-password"),
 ]

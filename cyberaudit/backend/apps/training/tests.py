@@ -1,6 +1,7 @@
 """
 training/tests.py — Tests modèles + endpoints + idempotence start/complete.
 """
+
 import pytest
 from django.db import IntegrityError
 from rest_framework import status
@@ -9,13 +10,13 @@ from apps.training.models import TrainingModule, TrainingProgress
 
 # ── Modèles ──────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestTrainingModels:
     def test_five_modules_seeded(self):
         assert TrainingModule.objects.count() == 5
         slugs = set(TrainingModule.objects.values_list("slug", flat=True))
-        assert {"anti-phishing", "mfa", "wifi-vpn",
-                "data-backup", "incident-response"} == slugs
+        assert {"anti-phishing", "mfa", "wifi-vpn", "data-backup", "incident-response"} == slugs
 
     def test_all_seeded_modules_are_published(self):
         assert TrainingModule.objects.filter(published_at__isnull=True).count() == 0
@@ -28,6 +29,7 @@ class TestTrainingModels:
 
 
 # ── GET /api/training/modules/ ───────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestTrainingList:
@@ -58,6 +60,7 @@ class TestTrainingList:
 
 # ── POST /api/training/modules/{id}/start/ ───────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestStartModule:
     def _url(self, pk):
@@ -87,6 +90,7 @@ class TestStartModule:
 
 
 # ── POST /api/training/modules/{id}/complete/ ────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestCompleteModule:

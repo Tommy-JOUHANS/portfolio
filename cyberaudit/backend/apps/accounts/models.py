@@ -17,6 +17,7 @@ from django.db import models
 # Manager personnalisé
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class UserManager(BaseUserManager):
     """Manager qui utilise l'email comme identifiant principal."""
 
@@ -40,32 +41,33 @@ class UserManager(BaseUserManager):
 # Modèle principal
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     """Utilisateur CyberAudit — client PME ou admin interne."""
 
     class Role(models.TextChoices):
         CLIENT = "client", "Client"
-        ADMIN  = "admin",  "Administrateur"
+        ADMIN = "admin", "Administrateur"
 
     # ── Identité ──────────────────────────────────────────────────────────────
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email        = models.EmailField(unique=True)
-    first_name   = models.CharField(max_length=50)
-    last_name    = models.CharField(max_length=50)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     company_name = models.CharField(max_length=100, blank=True)
 
     # ── Rôle & accès ──────────────────────────────────────────────────────────
-    role     = models.CharField(max_length=10, choices=Role.choices, default=Role.CLIENT)
+    role = models.CharField(max_length=10, choices=Role.choices, default=Role.CLIENT)
     is_active = models.BooleanField(default=True)
-    is_staff  = models.BooleanField(default=False)  # accès à l'admin Django
+    is_staff = models.BooleanField(default=False)  # accès à l'admin Django
 
     # ── Horodatage ────────────────────────────────────────────────────────────
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
 
-    USERNAME_FIELD  = "email"
-    REQUIRED_FIELDS = []           # createsuperuser ne demande que email + pwd
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []  # createsuperuser ne demande que email + pwd
 
     class Meta:
         db_table = "users"

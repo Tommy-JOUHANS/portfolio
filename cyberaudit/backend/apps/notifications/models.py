@@ -4,6 +4,7 @@ notifications/models.py — Modèle Notification.
 Une notification = un email à envoyer à un utilisateur, lié facultativement
 à une AuditRequest. Cycle de vie :  queued → sent  (ou failed après 3 retry).
 """
+
 import uuid
 
 from django.conf import settings

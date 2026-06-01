@@ -25,13 +25,14 @@ from .serializers import ChangePasswordSerializer, RegisterSerializer, UserSeria
 # Helpers
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def _token_response(user):
     """Retourne access + refresh + données utilisateur."""
     refresh = RefreshToken.for_user(user)
     return {
-        "access":  str(refresh.access_token),
+        "access": str(refresh.access_token),
         "refresh": str(refresh),
-        "user":    UserSerializer(user).data,
+        "user": UserSerializer(user).data,
     }
 
 
@@ -39,10 +40,12 @@ def _token_response(user):
 # POST /api/auth/register/
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class RegisterView(APIView):
     """Création d'un compte client + retour des tokens JWT."""
+
     permission_classes = [AllowAny]
-    throttle_scope = "login"          # 5 req/min (config settings.py)
+    throttle_scope = "login"  # 5 req/min (config settings.py)
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -55,13 +58,15 @@ class RegisterView(APIView):
 # POST /api/auth/login/
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class LoginView(APIView):
     """Vérification des identifiants + génération des tokens JWT."""
+
     permission_classes = [AllowAny]
     throttle_scope = "login"
 
     def post(self, request):
-        email    = request.data.get("email", "").strip().lower()
+        email = request.data.get("email", "").strip().lower()
         password = request.data.get("password", "")
 
         # Recherche de l'utilisateur (même message si email inconnu ou mdp faux
@@ -93,8 +98,10 @@ class LoginView(APIView):
 # POST /api/auth/logout/
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class LogoutView(APIView):
     """Blacklist le refresh token pour invalider la session."""
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -119,17 +126,17 @@ class LogoutView(APIView):
 # GET / PATCH / DELETE /api/auth/me/
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class MeView(APIView):
     """Profil de l'utilisateur connecté — lecture, modification, suppression."""
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         return Response(UserSerializer(request.user).data)
 
     def patch(self, request):
-        serializer = UserSerializer(
-            request.user, data=request.data, partial=True
-        )
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -145,14 +152,14 @@ class MeView(APIView):
 # POST /api/auth/change-password/
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class ChangePasswordView(APIView):
     """Changement de mot de passe après vérification de l'ancien."""
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = ChangePasswordSerializer(
-            data=request.data, context={"request": request}
-        )
+        serializer = ChangePasswordSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         request.user.set_password(serializer.validated_data["new_password"])
         request.user.save(update_fields=["password"])

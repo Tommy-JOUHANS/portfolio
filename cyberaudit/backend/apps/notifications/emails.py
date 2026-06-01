@@ -6,12 +6,14 @@ resend.api_key = settings.RESEND_API_KEY
 
 
 def send_email(to: str, subject: str, html: str) -> dict:
-    return resend.Emails.send({
-        "from": settings.DEFAULT_FROM_EMAIL,
-        "to": [to],
-        "subject": subject,
-        "html": html,
-    })
+    return resend.Emails.send(
+        {
+            "from": settings.DEFAULT_FROM_EMAIL,
+            "to": [to],
+            "subject": subject,
+            "html": html,
+        }
+    )
 
 
 def send_welcome_email(user) -> dict:
@@ -33,10 +35,10 @@ def send_welcome_email(user) -> dict:
 
 def send_audit_status_email(user, audit) -> dict:
     labels = {
-        "pending":     "En attente",
+        "pending": "En attente",
         "in_progress": "En cours",
-        "completed":   "Terminé",
-        "cancelled":   "Annulé",
+        "completed": "Terminé",
+        "cancelled": "Annulé",
     }
     label = labels.get(audit.status, audit.status)
     html = f"""

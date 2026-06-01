@@ -15,14 +15,21 @@ from .models import User
 # Profil utilisateur (lecture seule / PATCH partiel)
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class UserSerializer(serializers.ModelSerializer):
     """Représentation publique d'un utilisateur (jamais le mot de passe)."""
 
     class Meta:
-        model  = User
+        model = User
         fields = [
-            "id", "email", "first_name", "last_name",
-            "company_name", "role", "is_active", "created_at",
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "company_name",
+            "role",
+            "is_active",
+            "created_at",
         ]
         read_only_fields = ["id", "email", "role", "is_active", "created_at"]
 
@@ -30,6 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
 # ─────────────────────────────────────────────────────────────────────────────
 # Inscription
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     """Crée un nouveau compte client avec validation du mot de passe Django."""
@@ -42,7 +50,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model  = User
+        model = User
         fields = ["email", "password", "first_name", "last_name", "company_name"]
 
     def create(self, validated_data):
@@ -53,6 +61,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 # ─────────────────────────────────────────────────────────────────────────────
 # Changement de mot de passe
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     """Valide l'ancien mot de passe et impose le nouveau."""

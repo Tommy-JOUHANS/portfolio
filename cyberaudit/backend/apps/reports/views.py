@@ -4,6 +4,7 @@ reports/views.py — Endpoints PDF.
   GET  /api/audits/{id}/report/           owner/admin → streame le PDF
   GET  /api/audits/{id}/report/data/      owner/admin → JSON du rapport
 """
+
 from django.http import FileResponse, Http404
 from rest_framework import status
 from rest_framework.exceptions import NotFound, PermissionDenied
@@ -31,6 +32,7 @@ class GenerateReportView(APIView):
     SÉCURITÉ : security_score et grade envoyés par le client sont IGNORÉS.
     On les recalcule depuis les findings (anti-tampering).
     """
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request, audit_id):
@@ -54,7 +56,7 @@ class GenerateReportView(APIView):
                 "security_score": security_score,
                 "grade": grade,
                 "findings": findings,
-                "pdf_path": "",          # reset → on regénère
+                "pdf_path": "",  # reset → on regénère
                 "generated_at": None,
             },
         )
@@ -76,6 +78,7 @@ class GenerateReportView(APIView):
 
 class ReportDownloadView(APIView):
     """GET /api/audits/{id}/report/ — Owner ou admin, streame le PDF."""
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request, audit_id):
@@ -104,6 +107,7 @@ class ReportDownloadView(APIView):
 
 class ReportDataView(APIView):
     """GET /api/audits/{id}/report/data/ — JSON du rapport (owner ou admin)."""
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request, audit_id):
@@ -115,4 +119,5 @@ class ReportDataView(APIView):
         except AuditReport.DoesNotExist:
             raise NotFound("Aucun rapport pour cette demande.") from None
         from .serializers import AuditReportSerializer
+
         return Response(AuditReportSerializer(report).data)

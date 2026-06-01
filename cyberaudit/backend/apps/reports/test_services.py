@@ -1,4 +1,5 @@
 """Tests du calculateur de score (services.py)."""
+
 from apps.reports.services import (
     compute_score,
     compute_score_and_grade,
@@ -13,15 +14,17 @@ def test_score_empty_is_100():
 
 def test_score_per_severity():
     assert compute_score([{"severity": "Critical"}]) == 75
-    assert compute_score([{"severity": "High"}])     == 90
-    assert compute_score([{"severity": "Medium"}])   == 96
-    assert compute_score([{"severity": "Low"}])      == 99
+    assert compute_score([{"severity": "High"}]) == 90
+    assert compute_score([{"severity": "Medium"}]) == 96
+    assert compute_score([{"severity": "Low"}]) == 99
 
 
 def test_score_combined():
     findings = [
-        {"severity": "Critical"}, {"severity": "High"},
-        {"severity": "Medium"},   {"severity": "Low"},
+        {"severity": "Critical"},
+        {"severity": "High"},
+        {"severity": "Medium"},
+        {"severity": "Low"},
     ]
     # 100 - (25 + 10 + 4 + 1) = 60
     assert compute_score(findings) == 60
@@ -46,8 +49,15 @@ def test_normalize_severity():
 
 
 def test_sanitize_drops_unknown_and_normalizes():
-    raw = [{"severity": "high", "asset": "VPN", "evil": "<script>",
-            "description": "x", "recommendation": "y"}]
+    raw = [
+        {
+            "severity": "high",
+            "asset": "VPN",
+            "evil": "<script>",
+            "description": "x",
+            "recommendation": "y",
+        }
+    ]
     clean = sanitize_findings(raw)
     assert "evil" not in clean[0]
     assert clean[0]["severity"] == "High"

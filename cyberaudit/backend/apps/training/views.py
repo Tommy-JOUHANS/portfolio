@@ -6,6 +6,7 @@ training/views.py — Endpoints /api/training/.
   POST /modules/{id}/start/   marque le module comme commencé
   POST /modules/{id}/complete/ marque comme terminé
 """
+
 from django.http import Http404
 from django.utils import timezone
 from rest_framework import generics
@@ -22,6 +23,7 @@ from .serializers import (
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
+
 def _published_module_or_404(pk):
     try:
         return TrainingModule.objects.get(pk=pk, published_at__isnull=False)
@@ -31,8 +33,10 @@ def _published_module_or_404(pk):
 
 # ── List / Detail ────────────────────────────────────────────────────────────
 
+
 class TrainingModuleListView(generics.ListAPIView):
     """GET /api/training/modules/ — Liste des modules publiés."""
+
     serializer_class = TrainingModuleListSerializer
     permission_classes = [IsAuthenticated]
 
@@ -42,6 +46,7 @@ class TrainingModuleListView(generics.ListAPIView):
 
 class TrainingModuleDetailView(generics.RetrieveAPIView):
     """GET /api/training/modules/{id}/ — Détail d'un module avec son contenu."""
+
     serializer_class = TrainingModuleDetailSerializer
     permission_classes = [IsAuthenticated]
 
@@ -51,14 +56,17 @@ class TrainingModuleDetailView(generics.RetrieveAPIView):
 
 # ── Actions de progression ───────────────────────────────────────────────────
 
+
 class StartModuleView(APIView):
     """POST /api/training/modules/{id}/start/ — Marque comme commencé (idempotent)."""
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
         module = _published_module_or_404(pk)
         progress, _ = TrainingProgress.objects.get_or_create(
-            user=request.user, module=module,
+            user=request.user,
+            module=module,
         )
         # Idempotent : ne reset pas un module déjà commencé/terminé
         if progress.status == TrainingProgress.Status.TO_START:
@@ -70,12 +78,14 @@ class StartModuleView(APIView):
 
 class CompleteModuleView(APIView):
     """POST /api/training/modules/{id}/complete/ — Marque comme terminé."""
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
         module = _published_module_or_404(pk)
         progress, _ = TrainingProgress.objects.get_or_create(
-            user=request.user, module=module,
+            user=request.user,
+            module=module,
         )
         now = timezone.now()
         progress.status = TrainingProgress.Status.COMPLETED

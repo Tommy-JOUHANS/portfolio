@@ -1,6 +1,7 @@
 """
 reports/tests.py — Tests AuditReport (modèle, endpoints, tâche Celery).
 """
+
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -11,6 +12,7 @@ from apps.reports.models import AuditReport
 from apps.reports.tasks import generate_pdf_task
 
 # ── Modèle AuditReport ───────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestAuditReportModel:
@@ -31,6 +33,7 @@ class TestAuditReportModel:
 
 
 # ── POST /api/audits/{id}/generate-report/ ───────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestGenerateReportEndpoint:
@@ -70,6 +73,7 @@ class TestGenerateReportEndpoint:
 
 # ── GET /api/audits/{id}/report/ ─────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestReportDownloadEndpoint:
     def _url(self, audit_id):
@@ -104,7 +108,7 @@ class TestReportDownloadEndpoint:
     def test_pdf_not_generated_returns_202(self, auth_client, client_user):
         pack = AuditPack.objects.get(code="audit")
         audit = AuditRequest.objects.create(client=client_user, pack=pack)
-        AuditReport.objects.create(audit_request=audit)   # pdf_path vide
+        AuditReport.objects.create(audit_request=audit)  # pdf_path vide
         resp = auth_client.get(self._url(audit.id))
         assert resp.status_code == status.HTTP_202_ACCEPTED
 
@@ -117,11 +121,16 @@ class TestReportDownloadEndpoint:
 
 # ── Tâche Celery generate_pdf_task ───────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestGeneratePdfTask:
     @patch("weasyprint.HTML")
     def test_task_creates_pdf_and_notifies(
-        self, mock_html, client_user, settings, tmp_path,
+        self,
+        mock_html,
+        client_user,
+        settings,
+        tmp_path,
     ):
         settings.MEDIA_ROOT = str(tmp_path)
         pack = AuditPack.objects.get(code="audit")
@@ -136,8 +145,10 @@ class TestGeneratePdfTask:
         assert report.generated_at is not None
 
         from apps.notifications.models import Notification
+
         notif = Notification.objects.filter(
-            user=client_user, type="report_ready",
+            user=client_user,
+            type="report_ready",
         ).first()
         assert notif is not None
         assert audit.reference in notif.subject

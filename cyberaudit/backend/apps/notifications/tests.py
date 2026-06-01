@@ -2,6 +2,7 @@
 notifications/tests.py — Tests du modèle, de la tâche Celery,
 de l'endpoint /me/ et des hooks déclenchés par audits.
 """
+
 import pytest
 from django.core import mail
 
@@ -9,6 +10,7 @@ from apps.notifications.models import Notification
 from apps.notifications.tasks import send_notification_email
 
 # ── Modèle ───────────────────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestNotificationModel:
@@ -34,6 +36,7 @@ class TestNotificationModel:
 
 
 # ── Tâche Celery ─────────────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestSendNotificationEmail:

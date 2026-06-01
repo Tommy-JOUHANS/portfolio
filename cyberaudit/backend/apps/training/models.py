@@ -4,6 +4,7 @@ training/models.py — Modules de sensibilisation cyber + progression utilisateu
   TrainingModule    : catalogue de modules (anti-phishing, MFA, etc.)
   TrainingProgress  : 1 ligne par couple (user, module) — UNIQUE
 """
+
 from django.conf import settings
 from django.db import models
 

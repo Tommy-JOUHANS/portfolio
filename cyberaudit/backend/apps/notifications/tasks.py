@@ -6,6 +6,7 @@ notifications/tasks.py — Tâches Celery pour l'envoi d'emails.
       → met à jour le statut (sent / failed) et sent_at
       → retry automatique 3 fois avec backoff exponentiel
 """
+
 from celery import shared_task
 from django.core.mail import send_mail
 from django.utils import timezone

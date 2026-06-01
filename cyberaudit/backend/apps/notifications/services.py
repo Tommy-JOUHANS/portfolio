@@ -3,6 +3,7 @@ notifications/services.py — Helpers pour créer + envoyer une notification.
 
 Évite la duplication "create() puis .delay()" dans chaque endpoint.
 """
+
 from .models import Notification
 from .tasks import send_notification_email
 

@@ -8,6 +8,7 @@ Workflow :
   4. Met à jour le modèle (pdf_path, generated_at)
   5. Crée + envoie une notification "report_ready" au client
 """
+
 from pathlib import Path
 
 from celery import shared_task

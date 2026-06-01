@@ -4,6 +4,7 @@ config/celery.py — Instance Celery du projet CyberAudit.
 Démarrage du worker en dev :
     celery -A config worker -l info
 """
+
 import os
 
 from celery import Celery

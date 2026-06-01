@@ -1,6 +1,7 @@
 """
 audits/views.py — Endpoints /api/packs/ et /api/audits/ avec RBAC + notifications.
 """
+
 from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -18,6 +19,7 @@ from .serializers import (
 
 # ── Packs (publics) ──────────────────────────────────────────────────────────
 
+
 class PackListView(generics.ListAPIView):
     queryset = AuditPack.objects.all()
     serializer_class = AuditPackSerializer
@@ -31,6 +33,7 @@ class PackDetailView(generics.RetrieveAPIView):
 
 
 # ── Demandes d'audit ─────────────────────────────────────────────────────────
+
 
 class AuditRequestListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
@@ -87,8 +90,8 @@ class AuditRequestDetailView(generics.RetrieveUpdateDestroyAPIView):
         return super().update(request, *args, **kwargs)
 
     def perform_update(self, serializer):
-        old_status = serializer.instance.status     # avant save
-        audit = serializer.save()                    # après save
+        old_status = serializer.instance.status  # avant save
+        audit = serializer.save()  # après save
 
         # ↓ NOTIF : informer le client si le statut a changé.
         if old_status != audit.status:

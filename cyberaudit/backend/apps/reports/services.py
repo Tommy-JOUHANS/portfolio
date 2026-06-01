@@ -20,7 +20,7 @@ GRADE_THRESHOLDS = [
     (55, "C"),
     (40, "D"),
     (20, "E"),
-    (0,  "F"),
+    (0, "F"),
 ]
 
 ALLOWED_FINDING_FIELDS = ("severity", "asset", "description", "recommendation")

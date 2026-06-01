@@ -11,6 +11,7 @@ Couverture :
   - PATCH /api/audits/{id}/ : admin OK / client 403
   - DELETE /api/audits/{id}/ : admin → archive / client 403
 """
+
 import pytest
 from rest_framework import status
 
@@ -18,12 +19,16 @@ from apps.audits.models import AuditPack, AuditRequest
 
 # ── Modèle AuditPack ─────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestAuditPackModel:
     def test_four_packs_seeded(self):
         assert AuditPack.objects.count() == 4
         assert set(AuditPack.objects.values_list("code", flat=True)) == {
-            "audit", "security", "protection", "premium",
+            "audit",
+            "security",
+            "protection",
+            "premium",
         }
 
     def test_ordered_by_price(self):
@@ -32,6 +37,7 @@ class TestAuditPackModel:
 
 
 # ── Modèle AuditRequest ──────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestAuditRequestModel:
@@ -56,6 +62,7 @@ class TestAuditRequestModel:
 
 # ── GET /api/packs/ ──────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestPackListView:
     URL = "/api/packs/"
@@ -68,26 +75,35 @@ class TestPackListView:
 
 # ── POST /api/audits/ ────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestAuditRequestCreate:
     URL = "/api/audits/"
 
     def test_client_can_create(self, auth_client):
         pack = AuditPack.objects.get(code="audit")
-        resp = auth_client.post(self.URL, {
-            "pack": pack.pk,
-            "scope_notes": "Audit du serveur de fichiers.",
-        }, format="json")
+        resp = auth_client.post(
+            self.URL,
+            {
+                "pack": pack.pk,
+                "scope_notes": "Audit du serveur de fichiers.",
+            },
+            format="json",
+        )
         assert resp.status_code == status.HTTP_201_CREATED
         assert resp.data["status"] == "pending"
         assert resp.data["reference"].startswith("DOSSIER-")
 
     def test_admin_cannot_create(self, admin_auth_client):
         pack = AuditPack.objects.get(code="audit")
-        resp = admin_auth_client.post(self.URL, {
-            "pack": pack.pk,
-            "scope_notes": "tentative",
-        }, format="json")
+        resp = admin_auth_client.post(
+            self.URL,
+            {
+                "pack": pack.pk,
+                "scope_notes": "tentative",
+            },
+            format="json",
+        )
         assert resp.status_code == status.HTTP_403_FORBIDDEN
 
     def test_anonymous_returns_401(self, api_client):
@@ -97,12 +113,16 @@ class TestAuditRequestCreate:
 
 # ── GET /api/audits/ ─────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestAuditRequestList:
     URL = "/api/audits/"
 
     def test_client_sees_only_own_requests(
-        self, auth_client, client_user, make_client_user,
+        self,
+        auth_client,
+        client_user,
+        make_client_user,
     ):
         pack = AuditPack.objects.get(code="audit")
         other = make_client_user(email="other@example.com")
@@ -113,7 +133,10 @@ class TestAuditRequestList:
         assert len(resp.data) == 1
 
     def test_admin_sees_all_requests(
-        self, admin_auth_client, client_user, make_client_user,
+        self,
+        admin_auth_client,
+        client_user,
+        make_client_user,
     ):
         pack = AuditPack.objects.get(code="audit")
         other = make_client_user(email="other@example.com")
@@ -125,6 +148,7 @@ class TestAuditRequestList:
 
 
 # ── GET /api/audits/{id}/ ────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestAuditRequestDetail:
@@ -140,6 +164,7 @@ class TestAuditRequestDetail:
 
     def test_other_client_gets_404(self, api_client, make_client_user):
         from rest_framework_simplejwt.tokens import RefreshToken
+
         client_a = make_client_user(email="a@example.com")
         client_b = make_client_user(email="b@example.com")
         pack = AuditPack.objects.get(code="audit")
@@ -159,6 +184,7 @@ class TestAuditRequestDetail:
 
 # ── PATCH /api/audits/{id}/ ──────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestAuditRequestUpdate:
     def _url(self, pk):
@@ -168,7 +194,9 @@ class TestAuditRequestUpdate:
         pack = AuditPack.objects.get(code="audit")
         req = AuditRequest.objects.create(client=client_user, pack=pack)
         resp = admin_auth_client.patch(
-            self._url(req.id), {"status": "in_progress"}, format="json",
+            self._url(req.id),
+            {"status": "in_progress"},
+            format="json",
         )
         assert resp.status_code == status.HTTP_200_OK
         req.refresh_from_db()
@@ -178,12 +206,15 @@ class TestAuditRequestUpdate:
         pack = AuditPack.objects.get(code="audit")
         req = AuditRequest.objects.create(client=client_user, pack=pack)
         resp = auth_client.patch(
-            self._url(req.id), {"status": "completed"}, format="json",
+            self._url(req.id),
+            {"status": "completed"},
+            format="json",
         )
         assert resp.status_code == status.HTTP_403_FORBIDDEN
 
 
 # ── DELETE /api/audits/{id}/ ─────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestAuditRequestDelete:

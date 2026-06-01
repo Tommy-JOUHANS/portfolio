@@ -4,6 +4,7 @@ audits/models.py — Modèles AuditPack et AuditRequest.
   AuditPack    : catalogue figé des 4 packs (Audit / Security / Protection / Premium).
   AuditRequest : demande d'audit soumise par un client, suivie par un admin.
 """
+
 import uuid
 from datetime import datetime
 

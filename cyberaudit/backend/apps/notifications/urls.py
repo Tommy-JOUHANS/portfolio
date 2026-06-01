@@ -1,4 +1,5 @@
 """notifications/urls.py — Routes /api/notifications/."""
+
 from django.urls import path
 
 from .views import NotificationListView

@@ -18,6 +18,7 @@ from rest_framework import status
 # Modèle User
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestUserModel:
     def test_create_user_hashes_password(self, make_client_user):
@@ -40,7 +41,7 @@ class TestUserModel:
 
     def test_uuid_primary_key(self, make_client_user):
         user = make_client_user()
-        assert len(str(user.id)) == 36   # format UUID standard
+        assert len(str(user.id)) == 36  # format UUID standard
 
     def test_admin_user_is_staff(self, make_admin_user):
         admin = make_admin_user()
@@ -49,14 +50,14 @@ class TestUserModel:
 
     def test_create_user_without_email_raises_error(self):
         from apps.accounts.models import User
+
         with pytest.raises(ValueError, match="email"):
             User.objects.create_user(email="", password="Test1234!")
 
     def test_create_superuser_sets_flags(self):
         from apps.accounts.models import User
-        admin = User.objects.create_superuser(
-            email="super@example.com", password="Admin1234!"
-        )
+
+        admin = User.objects.create_superuser(email="super@example.com", password="Admin1234!")
         assert admin.is_staff is True
         assert admin.is_superuser is True
         assert admin.role == User.Role.ADMIN
@@ -65,6 +66,7 @@ class TestUserModel:
 # ─────────────────────────────────────────────────────────────────────────────
 # POST /api/auth/register/
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestRegisterView:
@@ -104,40 +106,51 @@ class TestRegisterView:
 # POST /api/auth/login/
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestLoginView:
     URL = "/api/auth/login/"
 
     def test_login_returns_tokens_and_user(self, api_client, client_user):
-        resp = api_client.post(self.URL, {
-            "email": "marie@example.com",
-            "password": "Secur1ty!",
-        })
+        resp = api_client.post(
+            self.URL,
+            {
+                "email": "marie@example.com",
+                "password": "Secur1ty!",
+            },
+        )
         assert resp.status_code == status.HTTP_200_OK
         assert "access" in resp.data
         assert resp.data["user"]["role"] == "client"
 
     def test_login_wrong_password_returns_401(self, api_client, client_user):
-        resp = api_client.post(self.URL, {
-            "email": "marie@example.com",
-            "password": "WrongPassword!",
-        })
+        resp = api_client.post(
+            self.URL,
+            {
+                "email": "marie@example.com",
+                "password": "WrongPassword!",
+            },
+        )
         assert resp.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_login_inactive_account_returns_403(self, api_client, make_client_user):
         user = make_client_user(email="inactive@example.com")
         user.is_active = False
         user.save()
-        resp = api_client.post(self.URL, {
-            "email": "inactive@example.com",
-            "password": "Secur1ty!",
-        })
+        resp = api_client.post(
+            self.URL,
+            {
+                "email": "inactive@example.com",
+                "password": "Secur1ty!",
+            },
+        )
         assert resp.status_code == status.HTTP_403_FORBIDDEN
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # GET / PATCH /api/auth/me/
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestMeView:
@@ -162,12 +175,14 @@ class TestMeView:
 # POST /api/auth/logout/
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestLogoutView:
     URL = "/api/auth/logout/"
 
     def test_logout_blacklists_token(self, auth_client, client_user):
         from rest_framework_simplejwt.tokens import RefreshToken
+
         refresh = str(RefreshToken.for_user(client_user))
         resp = auth_client.post(self.URL, {"refresh": refresh})
         assert resp.status_code == status.HTTP_204_NO_CONTENT
@@ -181,20 +196,27 @@ class TestLogoutView:
 # POST /api/auth/change-password/
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestChangePasswordView:
     URL = "/api/auth/change-password/"
 
     def test_change_password_success(self, auth_client):
-        resp = auth_client.post(self.URL, {
-            "old_password": "Secur1ty!",
-            "new_password": "N3wPassw0rd!",
-        })
+        resp = auth_client.post(
+            self.URL,
+            {
+                "old_password": "Secur1ty!",
+                "new_password": "N3wPassw0rd!",
+            },
+        )
         assert resp.status_code == status.HTTP_200_OK
 
     def test_change_password_wrong_old_returns_400(self, auth_client):
-        resp = auth_client.post(self.URL, {
-            "old_password": "WrongOld!",
-            "new_password": "N3wPassw0rd!",
-        })
+        resp = auth_client.post(
+            self.URL,
+            {
+                "old_password": "WrongOld!",
+                "new_password": "N3wPassw0rd!",
+            },
+        )
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
