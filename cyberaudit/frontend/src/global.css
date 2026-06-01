@@ -14,6 +14,12 @@
 /* automatiquement les classes bg-brand, text-brand, border-brand, etc.    */
 /* ---------------------------------------------------------------------- */
 @theme {
+  --breakpoint-xs: 30rem;
+  
+  --breakpoint-2xl: 100rem;
+
+  --breakpoint-3xl: 120rem;
+
   /* Violet principal de la charte CyberAudit (header, footer, boutons).   */
   --color-brand: #052173;
   /* Violet fonce utilise pour les etats survol (hover) des boutons.       */
