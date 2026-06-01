@@ -26,7 +26,7 @@ def _published_module_or_404(pk):
     try:
         return TrainingModule.objects.get(pk=pk, published_at__isnull=False)
     except TrainingModule.DoesNotExist:
-        raise Http404
+        raise Http404 from None
 
 
 # ── List / Detail ────────────────────────────────────────────────────────────

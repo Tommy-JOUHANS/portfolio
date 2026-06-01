@@ -15,3 +15,9 @@ python_files = ["test_*.py", "*_test.py"]
 addopts = "--cov=apps --cov-report=term-missing"
 [tool.coverage.run]
 omit = ["*/migrations/*", "*/tests/*", "manage.py"]
+
+[tool.ruff.lint.per-file-ignores]
+"apps/accounts/tests.py" = ["S105", "S106"]
+"apps/training/urls.py" = ["E501"]
+"apps/reports/models.py" = ["E501"]
+"config/settings.py" = ["S105"]

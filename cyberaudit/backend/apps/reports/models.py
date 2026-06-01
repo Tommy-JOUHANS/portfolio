@@ -28,7 +28,7 @@ class AuditReport(models.Model):
     verdict = models.CharField(max_length=255, blank=True)
     grade = models.CharField(max_length=2, choices=Grade.choices, default=Grade.C)
     security_score = models.PositiveSmallIntegerField(default=50)  # 0-100
-    findings = models.JSONField(default=list, blank=True)  # [{severity, asset, description, recommendation}, ...]
+    findings = models.JSONField(default=list, blank=True)  # noqa: E501
     pdf_path = models.CharField(max_length=255, blank=True)
     generated_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

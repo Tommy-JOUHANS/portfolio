@@ -22,7 +22,7 @@ def _get_audit_or_404(audit_id):
     try:
         return AuditRequest.objects.get(pk=audit_id)
     except AuditRequest.DoesNotExist:
-        raise Http404
+        raise Http404 from None
 
 
 class GenerateReportView(APIView):
@@ -82,11 +82,11 @@ class ReportDownloadView(APIView):
         audit = _get_audit_or_404(audit_id)
         # Anti-énumération : non-owner & non-admin → 404 (pas 403)
         if request.user.role != "admin" and audit.client_id != request.user.id:
-            raise Http404
+            raise Http404 from None
         try:
             report = audit.report
         except AuditReport.DoesNotExist:
-            raise NotFound("Aucun rapport pour cette demande.")
+            raise NotFound("Aucun rapport pour cette demande.") from None
         if not report.pdf_path:
             return Response(
                 {"detail": "PDF en cours de génération."},
@@ -95,7 +95,7 @@ class ReportDownloadView(APIView):
         try:
             f = open(report.pdf_path, "rb")
         except FileNotFoundError:
-            raise NotFound("Fichier PDF introuvable sur disque.")
+            raise NotFound("Fichier PDF introuvable sur disque.") from None
         response = FileResponse(f, content_type="application/pdf")
         response["Content-Disposition"] = f'attachment; filename="{audit.reference}.pdf"'
         response["Cache-Control"] = "no-store, private"
@@ -109,10 +109,10 @@ class ReportDataView(APIView):
     def get(self, request, audit_id):
         audit = _get_audit_or_404(audit_id)
         if request.user.role != "admin" and audit.client_id != request.user.id:
-            raise Http404
+            raise Http404 from None
         try:
             report = audit.report
         except AuditReport.DoesNotExist:
-            raise NotFound("Aucun rapport pour cette demande.")
+            raise NotFound("Aucun rapport pour cette demande.") from None
         from .serializers import AuditReportSerializer
         return Response(AuditReportSerializer(report).data)
