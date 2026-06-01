@@ -21,7 +21,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
 from .serializers import ChangePasswordSerializer, RegisterSerializer, UserSerializer
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Helpers
 # ─────────────────────────────────────────────────────────────────────────────

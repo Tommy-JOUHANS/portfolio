@@ -16,7 +16,6 @@ from rest_framework import status
 
 from apps.audits.models import AuditPack, AuditRequest
 
-
 # ── Modèle AuditPack ─────────────────────────────────────────────────────────
 
 @pytest.mark.django_db

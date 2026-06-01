@@ -20,7 +20,6 @@ from .serializers import (
     TrainingProgressSerializer,
 )
 
-
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 def _published_module_or_404(pk):

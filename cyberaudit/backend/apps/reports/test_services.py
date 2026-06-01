@@ -1,7 +1,9 @@
 """Tests du calculateur de score (services.py)."""
 from apps.reports.services import (
-    compute_score, compute_score_and_grade,
-    normalize_severity, sanitize_findings,
+    compute_score,
+    compute_score_and_grade,
+    normalize_severity,
+    sanitize_findings,
 )
 
 

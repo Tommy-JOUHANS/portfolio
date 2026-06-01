@@ -11,7 +11,6 @@ from rest_framework import serializers
 
 from .models import User
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Profil utilisateur (lecture seule / PATCH partiel)
 # ─────────────────────────────────────────────────────────────────────────────

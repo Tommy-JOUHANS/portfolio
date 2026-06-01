@@ -12,8 +12,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.audits.models import AuditRequest
+
 from .models import AuditReport
-from .services import sanitize_findings, compute_score_and_grade
+from .services import compute_score_and_grade, sanitize_findings
 from .tasks import generate_pdf_task
 
 

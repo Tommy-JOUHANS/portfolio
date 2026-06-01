@@ -10,7 +10,6 @@ from apps.audits.models import AuditPack, AuditRequest
 from apps.reports.models import AuditReport
 from apps.reports.tasks import generate_pdf_task
 
-
 # ── Modèle AuditReport ───────────────────────────────────────────────────────
 
 @pytest.mark.django_db

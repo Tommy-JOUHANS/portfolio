@@ -1,5 +1,6 @@
 """reports/serializers.py — Sérialiseur lecture pour AuditReport."""
 from rest_framework import serializers
+
 from .models import AuditReport
 
 

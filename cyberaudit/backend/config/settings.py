@@ -1,7 +1,8 @@
 import os
-from pathlib import Path
 from datetime import timedelta
-from decouple import config, Csv
+from pathlib import Path
+
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-v^4z+19l+j126&rq8lmg&@%@v5z69*90kp^enk+p1ob51(a6x_"

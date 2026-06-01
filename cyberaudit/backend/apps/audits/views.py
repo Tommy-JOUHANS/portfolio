@@ -16,7 +16,6 @@ from .serializers import (
     AuditRequestSerializer,
 )
 
-
 # ── Packs (publics) ──────────────────────────────────────────────────────────
 
 class PackListView(generics.ListAPIView):

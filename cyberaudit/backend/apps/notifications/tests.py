@@ -4,12 +4,9 @@ de l'endpoint /me/ et des hooks déclenchés par audits.
 """
 import pytest
 from django.core import mail
-from rest_framework import status
 
-from apps.audits.models import AuditPack, AuditRequest
 from apps.notifications.models import Notification
 from apps.notifications.tasks import send_notification_email
-
 
 # ── Modèle ───────────────────────────────────────────────────────────────────
 

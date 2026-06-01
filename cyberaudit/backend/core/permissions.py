@@ -3,7 +3,7 @@ core/permissions.py — Classes de permissions RBAC réutilisables.
 
 Référence : doc technique Stage 3 §4.3 (RBAC frontend + backend cohérent).
 """
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
 class IsAdmin(BasePermission):

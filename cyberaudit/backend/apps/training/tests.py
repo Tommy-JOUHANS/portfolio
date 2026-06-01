@@ -7,7 +7,6 @@ from rest_framework import status
 
 from apps.training.models import TrainingModule, TrainingProgress
 
-
 # ── Modèles ──────────────────────────────────────────────────────────────────
 
 @pytest.mark.django_db
