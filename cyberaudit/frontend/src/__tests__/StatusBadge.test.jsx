@@ -4,22 +4,22 @@ import { render, screen } from "@testing-library/react";
 import StatusBadge from "../components/dashboard/StatusBadge.jsx";
 
 describe("StatusBadge", () => {
-  it('affiche "Pending" pour le statut pending', () => {
+  it("affiche \"Pending\" pour le statut pending", () => {
     render(<StatusBadge status="pending" />);
     expect(screen.getByText("Pending")).toBeInTheDocument();
   });
 
-  it('affiche "In Progress" pour le statut in_progress', () => {
+  it("affiche \"In Progress\" pour le statut in_progress", () => {
     render(<StatusBadge status="in_progress" />);
     expect(screen.getByText("In Progress")).toBeInTheDocument();
   });
 
-  it('affiche "Completed" pour le statut completed', () => {
+  it("affiche \"Completed\" pour le statut completed", () => {
     render(<StatusBadge status="completed" />);
     expect(screen.getByText("Completed")).toBeInTheDocument();
   });
 
-  it('affiche "Archived" pour le statut archived', () => {
+  it("affiche \"Archived\" pour le statut archived", () => {
     render(<StatusBadge status="archived" />);
     expect(screen.getByText("Archived")).toBeInTheDocument();
   });

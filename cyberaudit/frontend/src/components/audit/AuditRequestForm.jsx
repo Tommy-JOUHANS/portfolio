@@ -22,12 +22,7 @@ export default function AuditRequestForm() {
       setPackages(Array.isArray(packs) ? packs : (packs.results ?? []));
     }
     load();
-    setForm((prev) => ({
-      ...prev,
-      username: user.first_name,
-      companyName: user.company_name,
-    }));
-  }, [user.first_name, user.company_name]);
+  }, []);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -80,7 +75,7 @@ export default function AuditRequestForm() {
       }).catch((err) => console.error("[emailService] Accusé non envoyé :", err));
 
       navigate(`/audit/confirmation/${created.reference}`);
-    } catch (err) {
+    } catch {
       setErrors({ submit: "Erreur lors de l'envoi. Réessayez." });
     } finally {
       setSubmitting(false);
