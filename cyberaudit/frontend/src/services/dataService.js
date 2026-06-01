@@ -150,3 +150,18 @@ export async function getNotificationsByUserId(_userId) {
     created_at: n.created_at,
   }));
 }
+
+/** Génère/met à jour le rapport (admin only).
+ *  Le score et le grade sont calculés côté serveur depuis les findings.
+ *  Renvoie { id, status: "generating", security_score, grade, findings_count }
+ */
+export async function generateReportFromFindings(reference, { summary, verdict, findings }) {
+  const audit = await getRequestByReference(reference);
+  if (!audit) throw new Error(`Demande introuvable : ${reference}`);
+  const { data } = await api.post(`/audits/${audit.id}/generate-report/`, {
+    summary: summary || "",
+    verdict: verdict || "",
+    findings: Array.isArray(findings) ? findings : [],
+  });
+  return data;
+}
