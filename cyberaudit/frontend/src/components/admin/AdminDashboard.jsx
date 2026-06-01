@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getAllRequests } from "../../services/dataService.js";
+import api from "../../services/api.js";
 import StatCard from "../dashboard/StatCard.jsx";
 import StatusBadge from "../dashboard/StatusBadge.jsx";
 
@@ -20,9 +20,17 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     async function load() {
-      const data = await getAllRequests();
-      setRequests(Array.isArray(data) ? data : []);
-      setLoading(false);
+      try {
+        const { data } = await api.get("/audits/");
+        // L'API peut renvoyer une liste directe ou un objet paginé { results: [] }
+        const list = Array.isArray(data) ? data : (data.results ?? []);
+        setRequests(list);
+      } catch (err) {
+        console.error("Erreur chargement demandes admin :", err);
+        setRequests([]);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, []);
