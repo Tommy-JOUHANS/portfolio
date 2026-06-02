@@ -71,9 +71,29 @@ export default function ReportViewerPage() {
   const [verdict, setVerdict]       = useState("");
   const [draft, setDraft]           = useState({ ...EMPTY_FINDING });
   const [submitting, setSubmitting] = useState(false);
+  const [progressMsg, setProgressMsg] = useState("");
 
   const currentUser = getCurrentUser();
   const isAdmin = currentUser?.role === "admin";
+
+  // Cycle les messages du loader pendant la génération du PDF.
+  useEffect(() => {
+    if (!submitting) { setProgressMsg(""); return; }
+    const messages = [
+      "Calcul du score de sécurité…",
+      "Sauvegarde des vulnérabilités…",
+      "Rendu HTML du rapport…",
+      "Génération du PDF avec WeasyPrint…",
+      "Finalisation…",
+    ];
+    let i = 0;
+    setProgressMsg(messages[0]);
+    const interval = setInterval(() => {
+      i = (i + 1) % messages.length;
+      setProgressMsg(messages[i]);
+    }, 800);
+    return () => clearInterval(interval);
+  }, [submitting]);
 
   useEffect(() => {
     async function load() {
@@ -163,6 +183,22 @@ export default function ReportViewerPage() {
 
   return (
     <div className="flex flex-col gap-5">
+      {/* ── Modal loader pendant la génération du PDF ──────────────────────── */}
+      {submitting && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="mx-4 max-w-md rounded-xl bg-white p-8 shadow-2xl">
+            <div className="flex flex-col items-center gap-4">
+              <div className="h-14 w-14 animate-spin rounded-full border-4 border-gray-200 border-t-brand" />
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-brand">Génération du rapport en cours</h3>
+                <p className="mt-2 text-sm text-gray-500">{progressMsg || "Initialisation…"}</p>
+                <p className="mt-3 text-xs text-gray-400">Cela prend environ 3 secondes.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold text-brand">
