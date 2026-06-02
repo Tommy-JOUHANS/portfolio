@@ -5,8 +5,11 @@ Env requis :
     ADMIN_PASSWORD (obligatoire)
     ADMIN_EMAIL (optionnel, défaut admin@cyberaudit.fr)
 """
+
 import os
+
 from django.core.management.base import BaseCommand
+
 from apps.accounts.models import User
 
 
@@ -18,15 +21,13 @@ class Command(BaseCommand):
         password = os.environ.get("ADMIN_PASSWORD")
 
         if not password:
-            self.stdout.write(self.style.WARNING(
-                "⚠️  ADMIN_PASSWORD non défini → skip création admin"
-            ))
+            self.stdout.write(
+                self.style.WARNING("⚠️  ADMIN_PASSWORD non défini → skip création admin")
+            )
             return
 
         if User.objects.filter(email=email).exists():
-            self.stdout.write(self.style.SUCCESS(
-                f"ℹ️  Admin {email} existe déjà → skip"
-            ))
+            self.stdout.write(self.style.SUCCESS(f"ℹ️  Admin {email} existe déjà → skip"))
             return
 
         User.objects.create_user(
@@ -39,6 +40,4 @@ class Command(BaseCommand):
             is_staff=True,
             is_superuser=True,
         )
-        self.stdout.write(self.style.SUCCESS(
-            f"✅ Compte admin créé : {email} (role=admin)"
-        ))
+        self.stdout.write(self.style.SUCCESS(f"✅ Compte admin créé : {email} (role=admin)"))

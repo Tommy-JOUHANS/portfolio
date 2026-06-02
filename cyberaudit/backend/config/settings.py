@@ -5,6 +5,7 @@ Dev   : valeurs par défaut suffisent (SQLite, DEBUG=True, CORS local).
 Prod  : variables d'env Railway prennent le dessus.
 """
 
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -84,7 +85,6 @@ TEMPLATES = [
 # ── Base de données ──────────────────────────────────────────────────────────
 # En prod : Railway expose DATABASE_URL=postgres://...  → on l'utilise.
 # En dev  : pas de DATABASE_URL → fallback SQLite local.
-import os
 _DATABASE_URL = os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 DATABASES = {
     "default": dj_database_url.parse(_DATABASE_URL, conn_max_age=600),
@@ -139,8 +139,7 @@ SIMPLE_JWT = {
 
 # ── CORS ─────────────────────────────────────────────────────────────────────
 _default_cors = (
-    "http://localhost:5173,http://127.0.0.1:5173,"
-    "http://localhost:3000,http://127.0.0.1:3000"
+    "http://localhost:5173,http://127.0.0.1:5173," "http://localhost:3000,http://127.0.0.1:3000"
 )
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
