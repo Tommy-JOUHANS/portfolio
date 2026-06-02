@@ -77,8 +77,9 @@ export default function ReportViewerPage() {
   const isAdmin = currentUser?.role === "admin";
 
   // Cycle les messages du loader pendant la génération du PDF.
+  // setState uniquement dans le callback setInterval (lint react-hooks/set-state-in-effect compliant).
   useEffect(() => {
-    if (!submitting) { setProgressMsg(""); return; }
+    if (!submitting) return;
     const messages = [
       "Calcul du score de sécurité…",
       "Sauvegarde des vulnérabilités…",
@@ -87,11 +88,12 @@ export default function ReportViewerPage() {
       "Finalisation…",
     ];
     let i = 0;
-    setProgressMsg(messages[0]);
-    const interval = setInterval(() => {
-      i = (i + 1) % messages.length;
+    const tick = () => {
       setProgressMsg(messages[i]);
-    }, 800);
+      i = (i + 1) % messages.length;
+    };
+    const interval = setInterval(tick, 600);
+    tick();  // affiche le premier message immédiatement
     return () => clearInterval(interval);
   }, [submitting]);
 
