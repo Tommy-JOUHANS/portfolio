@@ -19,11 +19,8 @@ SECRET_KEY = config(
     default="django-insecure-v^4z+19l+j126&rq8lmg&@%@v5z69*90kp^enk+p1ob51(a6x_",
 )
 DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
-ALLOWED_HOSTS = config(
-    "DJANGO_ALLOWED_HOSTS",
-    default="localhost,127.0.0.1,*.railway.app,*.up.railway.app",
-    cast=lambda v: [s.strip() for s in v.split(",") if s.strip()],
-)
+# ALLOWED_HOSTS hardcodé temporairement pour Railway (la variable d'env ne passe pas).
+ALLOWED_HOSTS = ["*"]
 
 # Railway termine HTTPS au proxy : on annonce HTTPS à Django.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
