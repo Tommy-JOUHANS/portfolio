@@ -7,44 +7,43 @@ MODULES = [
     {
         "slug": "anti-phishing",
         "title": "Anti-phishing",
-        "description": "Reconnaître et signaler les emails suspects.",
+        "description": "Recognize and report suspicious emails.",
         "content_md": (
             "# Anti-phishing\n\n"
-            "Apprenez à identifier les signaux d'alerte : "
-            "expéditeur inconnu, urgence artificielle, liens étranges, fautes…"
+            "Learn to spot warning signs: unknown sender, fake urgency, strange links, typos…"
         ),
         "duration_min": 10,
         "level": "beginner",
     },
     {
         "slug": "mfa",
-        "title": "Mots de passe forts & MFA",
-        "description": "Créer des mots de passe solides et activer la double authentification.",
-        "content_md": "# MFA\n\n12 caractères mini, gestionnaire de mots de passe, MFA partout.",
+        "title": "Strong passwords & MFA",
+        "description": "Create solid passwords and enable two-factor authentication.",
+        "content_md": "# MFA\n\n12 characters minimum, use a password manager, enable MFA everywhere.",
         "duration_min": 8,
         "level": "beginner",
     },
     {
         "slug": "wifi-vpn",
-        "title": "Wi-Fi public & VPN",
-        "description": "Rester en sécurité sur les réseaux extérieurs.",
-        "content_md": "# Wi-Fi & VPN\n\nÉvitez les hotspots ouverts, utilisez un VPN.",
+        "title": "Public Wi-Fi & VPN",
+        "description": "Stay safe on outside networks.",
+        "content_md": "# Wi-Fi & VPN\n\nAvoid open hotspots, always use a VPN on public networks.",
         "duration_min": 12,
         "level": "intermediate",
     },
     {
         "slug": "data-backup",
-        "title": "Sauvegarde des données",
-        "description": "Bonnes pratiques pour sauvegarder les données métier.",
-        "content_md": "# Backup\n\nRègle 3-2-1, sauvegardes chiffrées hors-site.",
+        "title": "Data backup",
+        "description": "Best practices to back up business data.",
+        "content_md": "# Backup\n\n3-2-1 rule, encrypted off-site backups.",
         "duration_min": 15,
         "level": "intermediate",
     },
     {
         "slug": "incident-response",
-        "title": "Réaction aux incidents",
-        "description": "Que faire quand quelque chose se passe mal.",
-        "content_md": "# Incident response\n\nIdentifier, contenir, éradiquer, restaurer, retour d'expérience.",
+        "title": "Incident response",
+        "description": "What to do when something goes wrong.",
+        "content_md": "# Incident response\n\nIdentify, contain, eradicate, restore, lessons learned.",
         "duration_min": 20,
         "level": "advanced",
     },
