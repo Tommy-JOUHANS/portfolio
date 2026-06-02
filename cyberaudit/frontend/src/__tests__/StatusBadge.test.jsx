@@ -24,9 +24,9 @@ describe("StatusBadge", () => {
     expect(screen.getByText("Archived")).toBeInTheDocument();
   });
 
-  it("affiche le statut brut pour une valeur inconnue", () => {
+  it("retombe sur Pending pour un statut inconnu (fail-safe)", () => {
     render(<StatusBadge status="unknown_status" />);
-    expect(screen.getByText("unknown_status")).toBeInTheDocument();
+    expect(screen.getByText("Pending")).toBeInTheDocument();
   });
 
   it("applique les classes couleur bleues pour in_progress", () => {
@@ -41,9 +41,9 @@ describe("StatusBadge", () => {
     expect(badge.className).toContain("green");
   });
 
-  it("applique les classes couleur violettes pour archived", () => {
+  it("applique les classes couleur grises pour archived", () => {
     render(<StatusBadge status="archived" />);
     const badge = screen.getByText("Archived");
-    expect(badge.className).toContain("purple");
+    expect(badge.className).toContain("gray");
   });
 });
