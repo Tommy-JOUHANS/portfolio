@@ -42,7 +42,7 @@ export default function ClientDashboard() {
       setRequests(Array.isArray(reqs) ? reqs : []);
       setNotifications(Array.isArray(notifs) ? notifs : []);
     } catch {
-      setError("Impossible de charger vos données.");
+      setError("Unable to load your data. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -61,7 +61,7 @@ export default function ClientDashboard() {
         validateStatus: (s) => s < 500,
       });
       if (response.status === 202) {
-        setNotice("Le rapport est en cours de génération. Réessayez dans quelques instants.");
+        setNotice("The report is being generated. Please try again in a few moments.");
         return;
       }
       const url = URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
@@ -70,7 +70,7 @@ export default function ClientDashboard() {
       document.body.appendChild(a); a.click();
       document.body.removeChild(a); URL.revokeObjectURL(url);
     } catch {
-      setNotice("Erreur lors du téléchargement.");
+      setNotice("Error occurred while downloading the report.");
     } finally {
       setDownloading(null);
     }
@@ -89,7 +89,7 @@ export default function ClientDashboard() {
     <div className="flex h-64 items-center justify-center">
       <div className="flex flex-col items-center gap-3">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-brand" />
-        <p className="text-sm text-gray-400">Chargement…</p>
+        <p className="text-sm text-gray-400">Loading…</p>
       </div>
     </div>
   );
@@ -107,7 +107,7 @@ export default function ClientDashboard() {
         <div className="flex items-center gap-3 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
           <span className="flex-1">{error}</span>
           <button onClick={loadData} className="rounded-md bg-red-100 px-3 py-1 font-semibold hover:bg-red-200">
-            Réessayer
+            Try again
           </button>
         </div>
       )}
@@ -157,7 +157,7 @@ export default function ClientDashboard() {
             </thead>
             <tbody>
               {filteredRequests.length === 0 ? (
-                <tr><td colSpan={5} className="px-3 py-6 text-center text-gray-400">Aucune demande à afficher.</td></tr>
+                <tr><td colSpan={5} className="px-3 py-6 text-center text-gray-400">No requests to display.</td></tr>
               ) : (
                 filteredRequests.map((r) => (
                   <tr key={r.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
@@ -170,7 +170,7 @@ export default function ClientDashboard() {
                         <button type="button" disabled={downloading === r.id}
                           onClick={() => handleDownload(r)}
                           className="font-medium text-brand hover:underline disabled:opacity-50">
-                          {downloading === r.id ? "Téléchargement…" : "Download report"}
+                          {downloading === r.id ? "Downloading…" : "Download report"}
                         </button>
                       ) : (
                         <Link to={`/audit/confirmation/${r.reference}`}
@@ -190,7 +190,7 @@ export default function ClientDashboard() {
       <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
         <h2 className="text-lg font-bold text-gray-800">Recent notifications</h2>
         {notifications.length === 0 ? (
-          <p className="mt-3 text-sm text-gray-400">Aucune notification.</p>
+          <p className="mt-3 text-sm text-gray-400">No notifications.</p>
         ) : (
           <ul className="mt-3 flex flex-col gap-2">
             {notifications.map((n) => (

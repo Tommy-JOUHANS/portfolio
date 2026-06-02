@@ -35,7 +35,7 @@ function saveSession(access, refresh, user) {
  */
 function extractErrorMessage(error) {
   const data = error.response?.data;
-  if (!data) return error.message || "Erreur réseau.";
+  if (!data) return error.message || "Network error.";
 
   if (data.non_field_errors) return data.non_field_errors[0];
   if (data.detail) return data.detail;
@@ -47,7 +47,7 @@ function extractErrorMessage(error) {
     return Array.isArray(msg) ? msg[0] : msg;
   }
 
-  return "Une erreur est survenue.";
+  return "An error has occurred.";
 }
 
 // ── register ─────────────────────────────────────────────────────────────────

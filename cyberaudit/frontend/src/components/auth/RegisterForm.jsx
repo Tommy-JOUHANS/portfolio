@@ -176,7 +176,7 @@ export default function RegisterForm() {
             type="button"
             onClick={() => setShowPassword((visible) => !visible)}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-brand "
-            aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {/* Icone oeil barre (visible) ou oeil ouvert (masque).        */}
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -188,7 +188,7 @@ export default function RegisterForm() {
         ) : (
           // Sinon : rappel discret de la regle de robustesse a respecter.
           <span className="text-xs text-gray-500">
-            10 caracteres min., 1 majuscule, 1 minuscule, 1 chiffre, 1 special.
+            10 characters min., 1 uppercase, 1 lowercase, 1 digit, 1 special.
           </span>
         )}
       </div>

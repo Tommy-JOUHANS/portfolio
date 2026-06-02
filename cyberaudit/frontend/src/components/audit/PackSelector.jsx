@@ -61,7 +61,7 @@ export default function PackSelector({ packages, selectedCode, onSelect }) {
         {/* Si aucun pack n'est selectionne : message d'invitation.       */}
         {!selectedPack ? (
           <p className="text-gray-400">
-            Selectionnez un pack pour afficher le detail des services.
+            Select a package to view service details.
           </p>
         ) : (
           // Sinon : liste de description (couples terme / valeur).

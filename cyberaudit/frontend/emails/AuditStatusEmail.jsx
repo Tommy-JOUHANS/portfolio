@@ -5,10 +5,10 @@ import {
 } from "@react-email/components";
 
 const STATUS_LABELS = {
-  pending:     "En attente",
-  in_progress: "En cours",
-  completed:   "Terminé",
-  cancelled:   "Annulé",
+  pending:     "Pending",
+  in_progress: "In Progress",
+  completed:   "Completed",
+  cancelled:   "Cancelled",
 };
 
 const STATUS_COLORS = {
@@ -30,13 +30,13 @@ export default function AuditStatusEmail({
   return (
     <Html>
       <Head />
-      <Preview>Votre audit #{auditId} : {label}</Preview>
+      <Preview>Your audit #{auditId} : {label}</Preview>
       <Body style={styles.body}>
         <Container style={styles.container}>
-          <Heading style={styles.h1}>Mise à jour de votre audit</Heading>
-          <Text style={styles.text}>Bonjour {firstName},</Text>
+          <Heading style={styles.h1}>Audit Status Update</Heading>
+          <Text style={styles.text}>Hello {firstName},</Text>
           <Text style={styles.text}>
-            Le statut de votre audit <strong>#{auditId}</strong> a été mis à jour :
+            The status of your audit <strong>#{auditId}</strong> has been updated:
           </Text>
           <Section style={{ ...styles.badge, borderLeft: `4px solid ${color}` }}>
             <Text style={{ margin: 0, fontWeight: 600, color }}>
@@ -45,10 +45,10 @@ export default function AuditStatusEmail({
           </Section>
           <Section style={{ textAlign: "center", marginTop: 24 }}>
             <Button href={dashboardUrl} style={styles.button}>
-              Voir mon audit
+              View My Audits
             </Button>
           </Section>
-          <Text style={styles.footer}>L'équipe CyberAudit</Text>
+          <Text style={styles.footer}>The CyberAudit Team</Text>
         </Container>
       </Body>
     </Html>

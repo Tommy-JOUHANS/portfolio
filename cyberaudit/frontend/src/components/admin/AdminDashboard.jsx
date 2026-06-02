@@ -26,7 +26,7 @@ export default function AdminDashboard() {
         const list = Array.isArray(data) ? data : (data.results ?? []);
         setRequests(list);
       } catch (err) {
-        console.error("Erreur chargement demandes admin :", err);
+        console.error("Error loading admin requests :", err);
         setRequests([]);
       } finally {
         setLoading(false);

@@ -32,7 +32,7 @@ export default class ErrorBoundary extends Component {
   componentDidCatch(error, info) {
     // En production on enverrait ceci a Sentry (cf. doc section 4.5.2) ;
     // ici on se contente d'un affichage dans la console du navigateur.
-    console.error("ErrorBoundary a capture une erreur :", error, info);
+    console.error("ErrorBoundary captured an error :", error, info);
   }
 
   // render : decrit ce que le composant affiche a l'ecran.
@@ -44,11 +44,11 @@ export default class ErrorBoundary extends Component {
         <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-cream p-6 text-center">
           {/* Titre de l'ecran d'erreur, en violet de la charte.          */}
           <h1 className="text-2xl font-bold text-brand">
-            Une erreur est survenue
+            An error has occurred
           </h1>
           {/* Phrase d'explication pour l'utilisateur.                    */}
           <p className="text-gray-600">
-            L'application a rencontre un probleme inattendu.
+            The application encountered an unexpected problem.
           </p>
           {/* Bouton qui recharge entierement la page pour repartir sain. */}
           <button
@@ -56,7 +56,7 @@ export default class ErrorBoundary extends Component {
             onClick={() => window.location.reload()}
             className="rounded-lg bg-brand px-5 py-2 font-semibold text-white transition hover:bg-brand-dark"
           >
-            Recharger la page
+            Reload page
           </button>
         </div>
       );

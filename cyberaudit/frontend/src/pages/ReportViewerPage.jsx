@@ -81,11 +81,11 @@ export default function ReportViewerPage() {
   useEffect(() => {
     if (!submitting) return;
     const messages = [
-      "Calcul du score de sécurité…",
-      "Sauvegarde des vulnérabilités…",
-      "Rendu HTML du rapport…",
-      "Génération du PDF avec WeasyPrint…",
-      "Finalisation…",
+      "Calculating the security score…",
+      "Backing up vulnerabilities…",
+      "Rendering the report in HTML…",
+      "Generating the PDF with WeasyPrint…",
+      "Finalizing…",
     ];
     let i = 0;
     const tick = () => {
@@ -131,7 +131,7 @@ export default function ReportViewerPage() {
       if (audit.status !== "completed") {
         await updateRequest(reference, { status: "completed" });
       }
-      setNotice(`Rapport généré (score ${result.security_score}/100, grade ${result.grade}). PDF en cours…`);
+      setNotice(`Report generated (score ${result.security_score}/100, grade ${result.grade}). PDF in progress…`);
       setTimeout(() => setNotice(""), 5000);  // efface le notice après 5 sec
       const [fresh, freshAudit] = await Promise.all([
         getReportByReference(reference),
@@ -139,29 +139,29 @@ export default function ReportViewerPage() {
       ]);
       setReport(fresh); setAudit(freshAudit); setEditMode(false);
     } catch (e) {
-      setNotice("Erreur lors de la génération : " + (e.response?.data?.detail || e.message));
+      setNotice("Error during generation : " + (e.response?.data?.detail || e.message));
     } finally { setSubmitting(false); }
   }
 
   async function handleDownloadPdf() {
-    if (!audit?.id) { setNotice("ID audit introuvable."); return; }
+    if (!audit?.id) { setNotice("Audit ID not found."); return; }
     setDownloading(true); setNotice("");
     try {
       const response = await api.get(`/audits/${audit.id}/report/`, {
         responseType: "blob", validateStatus: (s) => s < 500,
       });
       if (response.status === 202) {
-        setNotice("PDF en cours de génération. Réessayez dans quelques secondes."); return;
+        setNotice("PDF in progress. Please try again in a few seconds."); return;
       }
       if (response.status >= 400) {
-        setNotice("Aucun PDF disponible."); return;
+        setNotice("No PDF available."); return;
       }
       const url = URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
       const a = document.createElement("a");
-      a.href = url; a.download = `rapport-${reference}.pdf`;
+      a.href = url; a.download = `report-${reference}.pdf`;
       document.body.appendChild(a); a.click();
       document.body.removeChild(a); URL.revokeObjectURL(url);
-    } catch { setNotice("Erreur lors du téléchargement."); }
+    } catch { setNotice("Error during download."); }
     finally { setDownloading(false); }
   }
 
@@ -173,7 +173,7 @@ export default function ReportViewerPage() {
 
   if (!report && !editMode) return (
     <div className="rounded-xl border border-gray-100 bg-white p-8 text-center shadow-sm">
-      <p className="text-gray-600">Aucun rapport disponible pour « {reference} ».</p>
+      <p className="text-gray-600">No report available for « {reference} ».</p>
       <Link to="/dashboard" className="mt-4 inline-block rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">
         Back to list
       </Link>
@@ -192,9 +192,9 @@ export default function ReportViewerPage() {
             <div className="flex flex-col items-center gap-4">
               <div className="h-14 w-14 animate-spin rounded-full border-4 border-gray-200 border-t-brand" />
               <div className="text-center">
-                <h3 className="text-lg font-bold text-brand">Génération du rapport en cours</h3>
-                <p className="mt-2 text-sm text-gray-500">{progressMsg || "Initialisation…"}</p>
-                <p className="mt-3 text-xs text-gray-400">Cela prend environ 3 secondes.</p>
+                <h3 className="text-lg font-bold text-brand">Generating report</h3>
+                <p className="mt-2 text-sm text-gray-500">{progressMsg || "Initializing…"}</p>
+                <p className="mt-3 text-xs text-gray-400">This takes about 3 seconds.</p>
               </div>
             </div>
           </div>
@@ -218,7 +218,7 @@ export default function ReportViewerPage() {
           {!editMode && report && (
             <button onClick={handleDownloadPdf} disabled={downloading}
               className="rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-green-700 disabled:opacity-50">
-              {downloading ? "Téléchargement…" : "Download PDF"}
+              {downloading ? "Downloading…" : "Download PDF"}
             </button>
           )}
         </div>
@@ -249,14 +249,14 @@ export default function ReportViewerPage() {
           {/* SUMMARY + VERDICT */}
           <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
             <h2 className="mb-3 font-bold text-brand">Executive summary & verdict</h2>
-            <label className="text-xs font-semibold text-gray-600">Verdict (1 ligne)</label>
+            <label className="text-xs font-semibold text-gray-600">Verdict (1 line)</label>
             <input type="text" value={verdict} onChange={(e) => setVerdict(e.target.value)}
-              placeholder="Niveau de risque général : Acceptable / Préoccupant / Critique"
+              placeholder="Overall risk level: Acceptable / Concerning / Critical"
               className="mb-3 mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand focus:outline-none"
               maxLength={255} />
             <label className="text-xs font-semibold text-gray-600">Executive summary</label>
             <textarea value={summary} onChange={(e) => setSummary(e.target.value)}
-              placeholder="Synthèse de l'audit : périmètre testé, méthodologie, principaux constats…"
+              placeholder="Executive summary: tested scope, methodology, main findings…"
               rows={5}
               className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand focus:outline-none" />
           </div>
@@ -275,21 +275,21 @@ export default function ReportViewerPage() {
               <div>
                 <label className="text-xs font-semibold text-gray-600">Asset / system *</label>
                 <input type="text" value={draft.asset} onChange={(e) => setDraft({ ...draft, asset: e.target.value })}
-                  placeholder="ex: VPN public, Serveur AD, WordPress admin…"
+                  placeholder="ex: Public VPN, AD Server, WordPress admin…"
                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand focus:outline-none"
                   maxLength={200} />
               </div>
               <div className="sm:col-span-2">
                 <label className="text-xs font-semibold text-gray-600">Description</label>
                 <textarea value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })}
-                  placeholder="Quel est le problème ? Quelles preuves ? Quel impact potentiel ?"
+                  placeholder="What is the issue? What evidence is there? What is the potential impact?"
                   rows={2}
                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand focus:outline-none" />
               </div>
               <div className="sm:col-span-2">
                 <label className="text-xs font-semibold text-gray-600">Recommendation</label>
                 <textarea value={draft.recommendation} onChange={(e) => setDraft({ ...draft, recommendation: e.target.value })}
-                  placeholder="Comment corriger / mitiger ?"
+                  placeholder="How to fix / mitigate?"
                   rows={2}
                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand focus:outline-none" />
               </div>
@@ -306,7 +306,7 @@ export default function ReportViewerPage() {
               Vulnerabilities to be reported ({findings.length})
             </h2>
             {findings.length === 0 ? (
-              <p className="text-sm text-gray-400">Aucune vulnérabilité ajoutée.</p>
+              <p className="text-sm text-gray-400">No vulnerabilities added.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[640px] text-left text-sm">
@@ -384,7 +384,7 @@ export default function ReportViewerPage() {
               Vulnerabilities identified ({(report.findings || []).length})
             </h2>
             {(!report.findings || report.findings.length === 0) ? (
-              <p className="text-sm text-gray-400">Aucune vulnérabilité enregistrée.</p>
+              <p className="text-sm text-gray-400">No vulnerabilities recorded.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[640px] text-left text-sm">

@@ -91,7 +91,7 @@ export function validateRegisterForm(form) {
       errors[field] = MISSING_FIELD_MESSAGE;
     // Champ trop long -> message specifique sur la limite de 50 caracteres.
     } else if (!isWithinMaxLength(form[field])) {
-      errors[field] = `Maximum ${MAX_FIELD_LENGTH} caracteres.`;
+      errors[field] = `Maximum ${MAX_FIELD_LENGTH} characters.`;
     }
   });
 
@@ -99,9 +99,9 @@ export function validateRegisterForm(form) {
   if (!isRequired(form.email)) {
     errors.email = MISSING_FIELD_MESSAGE;
   } else if (!isWithinMaxLength(form.email)) {
-    errors.email = `Maximum ${MAX_FIELD_LENGTH} caracteres.`;
+    errors.email = `Maximum ${MAX_FIELD_LENGTH} characters.`;
   } else if (!isEmailValid(form.email)) {
-    errors.email = "Format attendu : nom@domaine.fr";
+    errors.email = "Expected format: name@domain.fr";
   }
 
   // Verification du champ mot de passe : present, puis suffisamment robuste.
@@ -109,7 +109,7 @@ export function validateRegisterForm(form) {
     errors.password = MISSING_FIELD_MESSAGE;
   } else if (!isPasswordStrong(form.password)) {
     errors.password =
-      "10 caracteres min., avec majuscule, minuscule, chiffre et caractere special.";
+      "10 characters min., with uppercase, lowercase, digit and special character.";
   }
 
   // On renvoie la liste des erreurs (objet vide si le formulaire est valide).
@@ -128,7 +128,7 @@ export function validateLoginForm(form) {
   if (!isRequired(form.email)) {
     errors.email = MISSING_FIELD_MESSAGE;
   } else if (!isEmailValid(form.email)) {
-    errors.email = "Format attendu : nom@domaine.fr";
+    errors.email = "Expected format: name@domain.fr";
   }
 
   // Mot de passe : seule la presence est exigee a la connexion.
