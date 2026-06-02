@@ -29,3 +29,8 @@ tzlocal==5.3.1
 vine==5.1.0
 wcwidth==0.7.0
 weasyprint==62.3
+
+# ── Production deps (Railway) ───────────────────
+gunicorn==23.0.0
+whitenoise==6.8.2
+dj-database-url==2.3.0

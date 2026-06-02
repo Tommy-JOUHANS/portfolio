@@ -1,0 +1,11 @@
+
+# Python virtual environments — JAMAIS en git
+.venv/
+venv/
+**/.venv/
+**/venv/
+__pycache__/
+*.pyc
+
+# Backups locaux
+*.bak

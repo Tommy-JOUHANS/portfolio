@@ -1,13 +1,38 @@
-import os
+"""
+Django settings — env-aware (dev local + prod Railway).
+
+Dev   : valeurs par défaut suffisent (SQLite, DEBUG=True, CORS local).
+Prod  : variables d'env Railway prennent le dessus.
+"""
+
 from datetime import timedelta
 from pathlib import Path
 
+import dj_database_url
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = "django-insecure-v^4z+19l+j126&rq8lmg&@%@v5z69*90kp^enk+p1ob51(a6x_"
-DEBUG = True
-ALLOWED_HOSTS = ["*"]
+
+# ── Sécurité ─────────────────────────────────────────────────────────────────
+SECRET_KEY = config(
+    "DJANGO_SECRET_KEY",
+    default="django-insecure-v^4z+19l+j126&rq8lmg&@%@v5z69*90kp^enk+p1ob51(a6x_",
+)
+DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
+ALLOWED_HOSTS = config(
+    "DJANGO_ALLOWED_HOSTS",
+    default="localhost,127.0.0.1,*.railway.app,*.up.railway.app",
+    cast=lambda v: [s.strip() for s in v.split(",") if s.strip()],
+)
+
+# Railway termine HTTPS au proxy : on annonce HTTPS à Django.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+CSRF_TRUSTED_ORIGINS = config(
+    "DJANGO_CSRF_TRUSTED_ORIGINS",
+    default="https://*.railway.app,https://*.up.railway.app,https://*.vercel.app",
+    cast=lambda v: [s.strip() for s in v.split(",") if s.strip()],
+)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -30,6 +55,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    # WhiteNoise sert les fichiers statiques en prod (Railway).
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -57,15 +84,13 @@ TEMPLATES = [
     }
 ]
 
+# ── Base de données ──────────────────────────────────────────────────────────
+# En prod : Railway expose DATABASE_URL=postgres://...  → on l'utilise.
+# En dev  : pas de DATABASE_URL → fallback SQLite local.
+import os
+_DATABASE_URL = os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 DATABASES = {
-    "default": {
-        "ENGINE":   "django.db.backends.postgresql",
-        "NAME":     config("DB_NAME",     default="cyberaudit"),
-        "USER":     config("DB_USER",     default="cyberaudit"),
-        "PASSWORD": config("DB_PASSWORD", default="cyberaudit2026"),
-        "HOST":     config("DB_HOST",     default="localhost"),
-        "PORT":     config("DB_PORT",     default="5432"),
-    }
+    "default": dj_database_url.parse(_DATABASE_URL, conn_max_age=600),
 }
 
 AUTH_USER_MODEL = "accounts.User"
@@ -81,7 +106,15 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
+
+# ── Static files (collectstatic + WhiteNoise) ────────────────────────────────
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
@@ -107,23 +140,33 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "user_id",
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+# ── CORS ─────────────────────────────────────────────────────────────────────
+_default_cors = (
+    "http://localhost:5173,http://127.0.0.1:5173,"
+    "http://localhost:3000,http://127.0.0.1:3000"
+)
+CORS_ALLOWED_ORIGINS = config(
+    "CORS_ALLOWED_ORIGINS",
+    default=_default_cors,
+    cast=lambda v: [s.strip() for s in v.split(",") if s.strip()],
+)
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.vercel\.app$",
+    r"^https://.*\.railway\.app$",
+    r"^https://.*\.up\.railway\.app$",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-# ── Email ─────────────────────────────────────────────────────────────────────
+# ── Email ────────────────────────────────────────────────────────────────────
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "CyberAudit <noreply@cyberaudit.fr>"
 RESEND_API_KEY = config("RESEND_API_KEY", default="")
 FRONTEND_URL = config("FRONTEND_URL", default="http://localhost:3000")
 
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://127.0.0.1:6379/1")
-# ── Celery ────────────────────────────────────────────────────────────────────
+# ── Celery (Redis) ───────────────────────────────────────────────────────────
+REDIS_URL = config("REDIS_URL", default="redis://127.0.0.1:6379/0")
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", default=REDIS_URL)
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default=REDIS_URL)
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ["json"]
@@ -132,6 +175,6 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 5 * 60
 CELERY_TASK_ALWAYS_EAGER = False
 
-# ── Médias (PDF rapports) ─────────────────────────────────────────────────────
+# ── Médias (PDF rapports) ────────────────────────────────────────────────────
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
