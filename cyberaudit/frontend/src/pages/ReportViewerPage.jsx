@@ -7,6 +7,7 @@ import {
   updateRequest,
 } from "../services/dataService.js";
 import api from "../services/api.js";
+import DOMPurify from "dompurify";
 
 const SEVERITIES = ["Critical", "High", "Medium", "Low"];
 const EMPTY_FINDING = { severity: "Medium", asset: "", description: "", recommendation: "" };
@@ -50,6 +51,12 @@ function previewScore(findings) {
     (s, f) => s + (SEV_WEIGHTS[(f.severity || "").toLowerCase()] ?? 1), 0);
   return Math.max(0, Math.min(100, 100 - d));
 }
+
+// Sanitize HTML user content (XSS defense in depth)
+function sanitize(text) {
+  return DOMPurify.sanitize(text || "", { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+}
+
 function previewGrade(score) {
   for (const [t, g] of GRADE_TH) if (score >= t) return g;
   return "F";
@@ -362,7 +369,7 @@ export default function ReportViewerPage() {
                 {report.grade}
               </span>
               <div className="min-w-[200px] flex-1">
-                <p className="text-sm text-gray-600">{report.verdict || "Audit completed"}</p>
+                <p className="text-sm text-gray-600">{sanitize(report.verdict) || "Audit completed"}</p>
                 <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-gray-200">
                   <div className={`h-full rounded-full ${scoreColor(report.security_score)}`}
                     style={{ width: `${report.security_score}%` }} />
@@ -375,7 +382,7 @@ export default function ReportViewerPage() {
           {/* Summary */}
           <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
             <h2 className="mb-2 font-bold text-brand">Executive summary</h2>
-            <p className="whitespace-pre-line text-sm text-gray-600">{report.summary || "—"}</p>
+            <p className="whitespace-pre-line text-sm text-gray-600">{sanitize(report.summary) || "—"}</p>
           </div>
 
           {/* Findings */}

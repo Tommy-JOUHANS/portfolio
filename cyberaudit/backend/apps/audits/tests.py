@@ -70,7 +70,7 @@ class TestPackListView:
     def test_list_public_returns_200_and_4_packs(self, api_client):
         resp = api_client.get(self.URL)
         assert resp.status_code == status.HTTP_200_OK
-        assert len(resp.data) == 4
+        assert len(resp.data["results"]) == 4
 
 
 # ── POST /api/audits/ ────────────────────────────────────────────────────────
@@ -130,7 +130,7 @@ class TestAuditRequestList:
         AuditRequest.objects.create(client=other, pack=pack)
         resp = auth_client.get(self.URL)
         assert resp.status_code == status.HTTP_200_OK
-        assert len(resp.data) == 1
+        assert len(resp.data["results"]) == 1
 
     def test_admin_sees_all_requests(
         self,
@@ -144,7 +144,7 @@ class TestAuditRequestList:
         AuditRequest.objects.create(client=other, pack=pack)
         resp = admin_auth_client.get(self.URL)
         assert resp.status_code == status.HTTP_200_OK
-        assert len(resp.data) == 2
+        assert len(resp.data["results"]) == 2
 
 
 # ── GET /api/audits/{id}/ ────────────────────────────────────────────────────

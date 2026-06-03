@@ -42,19 +42,19 @@ class TestTrainingList:
     def test_authenticated_sees_5_modules(self, auth_client):
         resp = auth_client.get(self.URL)
         assert resp.status_code == status.HTTP_200_OK
-        assert len(resp.data) == 5
+        assert len(resp.data["results"]) == 5
 
     def test_unpublished_modules_are_filtered_out(self, auth_client):
         # On crée un module non publié → ne doit PAS apparaître
         TrainingModule.objects.create(slug="brouillon", title="WIP", published_at=None)
         resp = auth_client.get(self.URL)
         assert resp.status_code == status.HTTP_200_OK
-        assert len(resp.data) == 5
-        assert "brouillon" not in {m["slug"] for m in resp.data}
+        assert len(resp.data["results"]) == 5
+        assert "brouillon" not in {m["slug"] for m in resp.data["results"]}
 
     def test_user_status_defaults_to_to_start(self, auth_client):
         resp = auth_client.get(self.URL)
-        for module in resp.data:
+        for module in resp.data["results"]:
             assert module["user_status"] == "to_start"
 
 
