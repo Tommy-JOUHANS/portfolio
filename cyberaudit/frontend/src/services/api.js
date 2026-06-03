@@ -43,7 +43,18 @@ api.interceptors.request.use((config) => {
 
 // ── Intercepteur réponse : refresh automatique si 401 ────────────────────────
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Auto-unwrap DRF pagination : {count, next, previous, results: [...]} -> [...]
+    if (
+      response.data
+      && typeof response.data === "object"
+      && Array.isArray(response.data.results)
+      && "count" in response.data
+    ) {
+      response.data = response.data.results;
+    }
+    return response;
+  },
   async (error) => {
     const original = error.config;
 
