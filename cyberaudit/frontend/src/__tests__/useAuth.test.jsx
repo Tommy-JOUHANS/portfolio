@@ -71,6 +71,6 @@ describe("useAuth", () => {
     // On s'attend à ce que le rendu lance une erreur
     expect(() =>
       renderHook(() => useAuth())
-    ).toThrow("useAuth doit etre utilise");
+    ).toThrow("useAuth must be used");
   });
 });

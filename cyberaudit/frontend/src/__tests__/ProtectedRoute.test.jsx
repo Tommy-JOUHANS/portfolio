@@ -34,7 +34,7 @@ const ADMIN     = { ready: true,  isAuthenticated: true,  user: { role: "admin" 
 describe("ProtectedRoute", () => {
   it("affiche un loader quand ready=false", () => {
     renderWithAuth(NOT_READY);
-    expect(screen.getByText("Chargement...")).toBeInTheDocument();
+    expect(screen.getByText("Loading...")).toBeInTheDocument();
   });
 
   it("redirige vers /login si non authentifié", () => {
