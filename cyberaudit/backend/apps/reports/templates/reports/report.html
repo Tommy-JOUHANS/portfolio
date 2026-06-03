@@ -27,32 +27,32 @@
 <body>
     <div class="cover">
         <h1>CyberAudit &amp; Solutions</h1>
-        <div class="reference">Rapport d'audit {{ audit.reference }}</div>
+        <div class="reference">Audit Report {{ audit.reference }}</div>
         <div class="meta">
-            <p><strong>Client :</strong> {{ client.first_name }} {{ client.last_name }}</p>
-            <p><strong>Entreprise :</strong> {{ client.company_name }}</p>
-            <p><strong>Pack :</strong> {{ pack.name }}</p>
-            <p><strong>Date :</strong> {{ report.generated_at|date:"d/m/Y"|default:"En cours" }}</p>
+            <p><strong>Client:</strong> {{ client.first_name }} {{ client.last_name }}</p>
+            <p><strong>Company:</strong> {{ client.company_name }}</p>
+            <p><strong>Pack:</strong> {{ pack.name }}</p>
+            <p><strong>Date:</strong> {{ report.generated_at|date:"d M Y"|default:"In progress" }}</p>
             <p style="margin-top: 40px; font-style: italic; color: #9ca3af;">
-                Document confidentiel — Diffusion restreinte
+                Confidential document — Restricted distribution
             </p>
         </div>
     </div>
 
-    <h2>Résumé exécutif</h2>
+    <h2>Executive Summary</h2>
     <div class="score-card">
         <div class="grade">{{ report.grade }}</div>
-        <div class="score">Score de sécurité : {{ report.security_score }}/100</div>
+        <div class="score">Security Score : {{ report.security_score }}/100</div>
     </div>
     <p>{{ report.summary|linebreaksbr }}</p>
-    {% if report.verdict %}<p><strong>Verdict :</strong> {{ report.verdict }}</p>{% endif %}
+    {% if report.verdict %}<p><strong>Verdict:</strong> {{ report.verdict }}</p>{% endif %}
 
-    <h2>Vulnérabilités identifiées</h2>
+    <h2>Identified Vulnerabilities</h2>
     {% if report.findings %}
     <table>
         <thead>
             <tr>
-                <th>Sévérité</th><th>Actif</th><th>Description</th><th>Recommandation</th>
+                <th>Severity</th><th>Asset</th><th>Description</th><th>Recommendation</th>
             </tr>
         </thead>
         <tbody>
@@ -67,12 +67,12 @@
         </tbody>
     </table>
     {% else %}
-    <p><em>Aucune vulnérabilité majeure détectée.</em></p>
+    <p><em>No major vulnerability detected.</em></p>
     {% endif %}
 
     <footer>
         CyberAudit &amp; Solutions —
-        Rapport généré le {{ report.generated_at|date:"d/m/Y à H:i"|default:"En cours" }} —
+        Report generated on {{ report.generated_at|date:"d M Y at H:i"|default:"In progress" }} —
         {{ audit.reference }}
     </footer>
 </body>
