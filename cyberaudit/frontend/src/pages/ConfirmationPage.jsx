@@ -30,7 +30,7 @@ export default function ConfirmationPage() {
 
   if (!request) return (
     <div className="rounded-xl border border-gray-100 bg-white p-8 text-center shadow-sm">
-      <p className="text-gray-600">Aucune demande trouvée pour "{reference}".</p>
+      <p className="text-gray-600">No requests found for "{reference}".</p>
       <Link to="/dashboard" className="mt-4 inline-block rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">
         Go to my Dashboard
       </Link>

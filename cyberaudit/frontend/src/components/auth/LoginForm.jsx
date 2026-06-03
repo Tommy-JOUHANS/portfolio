@@ -129,7 +129,7 @@ export default function LoginForm() {
             type="button"
             onClick={() => setShowPassword((visible) => !visible)}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-brand cursor-pointer"
-            aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {/* On affiche l'icone oeil barre ou oeil ouvert selon l'etat. */}
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -164,7 +164,7 @@ export default function LoginForm() {
         className="mt-1 rounded-md bg-brand py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-60 cursor-pointer"
       >
         {/* Le libelle change pendant le chargement.                       */}
-        {loading ? "Connexion..." : "Connection"}
+        {loading ? "Connection..." : "Connection"}
       </button>
     </form>
   );

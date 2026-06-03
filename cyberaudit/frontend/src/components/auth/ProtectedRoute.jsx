@@ -27,7 +27,7 @@ export default function ProtectedRoute({ allowedRoles = [] }) {
   if (!ready) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center text-brand">
-        Chargement...
+        Loading...
       </div>
     );
   }

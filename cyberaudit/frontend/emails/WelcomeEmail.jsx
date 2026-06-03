@@ -12,23 +12,22 @@ export default function WelcomeEmail({
   return (
     <Html>
       <Head />
-      <Preview>Bienvenue sur CyberAudit 🛡️</Preview>
+      <Preview>Welcome to CyberAudit 🛡️</Preview>
       <Body style={styles.body}>
         <Container style={styles.container}>
           <Heading style={styles.h1}>
-            Bienvenue sur CyberAudit, {firstName} !
+            Welcome to CyberAudit, {firstName} !
           </Heading>
           <Text style={styles.text}>
-            Votre compte a été créé avec succès. Vous pouvez dès maintenant
-            accéder à votre tableau de bord et soumettre une demande d'audit
-            de cybersécurité.
+            Your account has been successfully created.
+            You can now access your dashboard and submit a cybersecurity audit request..
           </Text>
           <Section style={{ textAlign: "center", marginTop: 24 }}>
             <Button href={dashboardUrl} style={styles.button}>
-              Accéder au tableau de bord
+              Access Dashboard
             </Button>
           </Section>
-          <Text style={styles.footer}>L'équipe CyberAudit</Text>
+          <Text style={styles.footer}>The CyberAudit Team</Text>
         </Container>
       </Body>
     </Html>

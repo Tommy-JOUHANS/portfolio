@@ -50,7 +50,7 @@ export default function AdminRequestDetailPage() {
 
   if (!request) return (
     <div className="rounded-xl border border-gray-100 bg-white p-8 text-center shadow-sm">
-      <p className="text-gray-600">Aucune demande trouvée pour "{reference}".</p>
+      <p className="text-gray-600">No requests found for"{reference}".</p>
       <Link to="/dashboard" className="mt-4 inline-block rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">
         Back to list
       </Link>
@@ -67,13 +67,13 @@ export default function AdminRequestDetailPage() {
       await updateRequest(reference, { status, assigned_to: assignedTo, internal_notes: internalNotes });
       await loadRequest();
       setNotice("Changes saved.");
-    } catch { setNotice("Erreur lors de la sauvegarde."); }
+    } catch { setNotice("Error occurred while saving changes."); }
     finally { setSaving(false); }
   }
 
 
   async function handleSendNotification() {
-    const STATUS_LABELS = { pending: "En attente", in_progress: "En cours", completed: "Terminé", archived: "Archivé" };
+    const STATUS_LABELS = { pending: "Pending", in_progress: "In Progress", completed: "Completed", archived: "Archived" };
     sendStatusNotification({
       to_email:   clientInfo.email,
       to_name:    clientInfo.first_name,
@@ -81,8 +81,8 @@ export default function AdminRequestDetailPage() {
       new_status: STATUS_LABELS[status] ?? status,
       message:    internalNotes,
     }).catch((err) => console.error("[emailService]", err));
-    await addRequestHistory(reference, user.first_name, `Notification envoyée — statut : ${STATUS_LABELS[status] ?? status}`);
-    setNotice("Notification envoyée au client.");
+    await addRequestHistory(reference, user.first_name, `Notification sent to — statut : ${STATUS_LABELS[status] ?? status}`);
+    setNotice("Notification sent to client.");
   }
 
   async function handleArchive() {
@@ -165,11 +165,11 @@ export default function AdminRequestDetailPage() {
       {/* Historique — non disponible via l'API REST */}
       <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
         <h2 className="mb-2 font-bold text-brand">History</h2>
-        <p className="text-sm text-gray-400">L'historique détaillé est géré côté backend (journal Django).</p>
+        <p className="text-sm text-gray-400">Detailed history is managed on the backend (Django log).</p>
         <div className="mt-2 flex flex-col gap-1 text-sm text-gray-600">
-          <p>Soumis le : {formatDateTime(request.submitted_at)}</p>
-          {request.updated_at && <p>Dernière mise à jour : {formatDateTime(request.updated_at)}</p>}
-          {request.completed_at && <p>Complété le : {formatDateTime(request.completed_at)}</p>}
+          <p>Submitted on : {formatDateTime(request.submitted_at)}</p>
+          {request.updated_at && <p>Last updated : {formatDateTime(request.updated_at)}</p>}
+          {request.completed_at && <p>Completed on : {formatDateTime(request.completed_at)}</p>}
         </div>
       </div>
     </div>

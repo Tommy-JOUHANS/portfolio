@@ -39,7 +39,7 @@ export async function sendAuditConfirmation({
 }) {
   if (!SERVICE_ID || !TEMPLATE_CONFIRM || !PUBLIC_KEY) {
     console.warn(
-      "[emailService] Variables VITE_EMAILJS_* manquantes — email non envoyé.",
+      "[emailService] Variables VITE_EMAILJS_* missing, email not sent.",
     );
     return;
   }
@@ -95,7 +95,7 @@ export async function sendStatusNotification({
 }) {
   if (!SERVICE_ID || !TEMPLATE_UPDATE || !PUBLIC_KEY) {
     console.warn(
-      "[emailService] Variables VITE_EMAILJS_* manquantes — email non envoyé.",
+      "[emailService] Variables VITE_EMAILJS_* missing, email not sent.",
     );
     return;
   }

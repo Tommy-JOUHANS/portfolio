@@ -72,11 +72,11 @@ export default function AuditRequestForm() {
         processing_time:   pack ? `${pack.duration_days} business days` : "-",
         message:           form.message,
         reference:         created.reference,
-      }).catch((err) => console.error("[emailService] Accusé non envoyé :", err));
+      }).catch((err) => console.error("[emailService] Acknowledgment not sent :", err));
 
       navigate(`/audit/confirmation/${created.reference}`);
     } catch {
-      setErrors({ submit: "Erreur lors de l'envoi. Réessayez." });
+      setErrors({ submit: "Error sending. Please try again." });
     } finally {
       setSubmitting(false);
     }
@@ -120,7 +120,7 @@ export default function AuditRequestForm() {
 
       <button type="submit" disabled={submitting}
         className="self-start rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-50">
-        {submitting ? "Envoi en cours…" : "Sent the audit request"}
+        {submitting ? "Shipment in progress…" : "Sent the audit request"}
       </button>
     </form>
   );

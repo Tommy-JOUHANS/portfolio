@@ -54,7 +54,7 @@ export async function getRequestByReference(reference) {
 /** Crée une nouvelle demande d'audit. */
 export async function createRequest({ packCode, message }) {
   const pack = await getPackageByCode(packCode);
-  if (!pack) throw new Error(`Pack introuvable : ${packCode}`);
+  if (!pack) throw new Error(`Pack not found: ${packCode}`);
   const { data } = await api.post("/audits/", {
     pack: pack.id,
     scope_notes: message || "",
@@ -65,7 +65,7 @@ export async function createRequest({ packCode, message }) {
 /** Met à jour une demande (admin uniquement). */
 export async function updateRequest(reference, changes) {
   const audit = await getRequestByReference(reference);
-  if (!audit) throw new Error(`Demande introuvable : ${reference}`);
+  if (!audit) throw new Error(`Request not found: ${reference}`);
   const payload = {};
   if (changes.status !== undefined) payload.status = changes.status;
   if (changes.internal_notes !== undefined) payload.internal_notes = changes.internal_notes;
@@ -77,7 +77,7 @@ export async function updateRequest(reference, changes) {
 /** Archive une demande (soft delete, admin uniquement). */
 export async function archiveRequest(reference) {
   const audit = await getRequestByReference(reference);
-  if (!audit) throw new Error(`Demande introuvable : ${reference}`);
+  if (!audit) throw new Error(`Request not found : ${reference}`);
   await api.delete(`/audits/${audit.id}/`);
   return { ...audit, status: "archived" };
 }
@@ -103,10 +103,10 @@ export async function getReportByReference(reference) {
 
 export async function generateReport(reference, _author, findings = {}) {
   const audit = await getRequestByReference(reference);
-  if (!audit) throw new Error(`Demande introuvable : ${reference}`);
+  if (!audit) throw new Error(`Request not found: ${reference}`);
   const { data } = await api.post(`/audits/${audit.id}/generate-report/`, {
-    summary: findings.summary || "Audit en cours de finalisation.",
-    verdict: findings.verdict || "À déterminer",
+    summary: findings.summary || "Audit in the process of being finalized.",
+    verdict: findings.verdict || "To be determined",
     grade: findings.grade || "C",
     security_score: findings.security_score ?? 50,
     findings: findings.findings || [],
@@ -157,7 +157,7 @@ export async function getNotificationsByUserId(_userId) {
  */
 export async function generateReportFromFindings(reference, { summary, verdict, findings }) {
   const audit = await getRequestByReference(reference);
-  if (!audit) throw new Error(`Demande introuvable : ${reference}`);
+  if (!audit) throw new Error(`Request not found: ${reference}`);
   const { data } = await api.post(`/audits/${audit.id}/generate-report/`, {
     summary: summary || "",
     verdict: verdict || "",
