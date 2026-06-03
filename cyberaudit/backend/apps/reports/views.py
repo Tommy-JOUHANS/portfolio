@@ -37,7 +37,7 @@ class GenerateReportView(APIView):
 
     def post(self, request, audit_id):
         if request.user.role != "admin":
-            raise PermissionDenied("Seul un administrateur peut générer un rapport.")
+            raise PermissionDenied("Only an administrator can generate a report.")
 
         audit = _get_audit_or_404(audit_id)
 
@@ -89,16 +89,16 @@ class ReportDownloadView(APIView):
         try:
             report = audit.report
         except AuditReport.DoesNotExist:
-            raise NotFound("Aucun rapport pour cette demande.") from None
+            raise NotFound("No report for this request.") from None
         if not report.pdf_path:
             return Response(
-                {"detail": "PDF en cours de génération."},
+                {"detail": "PDF generation in progress."},
                 status=status.HTTP_202_ACCEPTED,
             )
         try:
             f = open(report.pdf_path, "rb")
         except FileNotFoundError:
-            raise NotFound("Fichier PDF introuvable sur disque.") from None
+            raise NotFound("PDF file not found on disk.") from None
         response = FileResponse(f, content_type="application/pdf")
         response["Content-Disposition"] = f'attachment; filename="{audit.reference}.pdf"'
         response["Cache-Control"] = "no-store, private"
@@ -117,7 +117,7 @@ class ReportDataView(APIView):
         try:
             report = audit.report
         except AuditReport.DoesNotExist:
-            raise NotFound("Aucun rapport pour cette demande.") from None
+            raise NotFound("No report for this request.") from None
         from .serializers import AuditReportSerializer
 
         return Response(AuditReportSerializer(report).data)

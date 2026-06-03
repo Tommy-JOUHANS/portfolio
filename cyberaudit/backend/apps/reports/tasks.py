@@ -71,14 +71,14 @@ def generate_pdf_task(self, report_id):
         user=report.audit_request.client,
         request=report.audit_request,
         type_=Notification.Type.REPORT_READY,
-        subject=f"Votre rapport d'audit est prêt — {report.audit_request.reference}",
+        subject=f"Your audit report is ready — {report.audit_request.reference}",
         message=(
-            f"Bonjour {report.audit_request.client.first_name},\n\n"
-            f"Le rapport de votre audit {report.audit_request.reference} "
-            f"est maintenant disponible (Grade {report.grade}, "
+            f"Hello {report.audit_request.client.first_name},\n\n"
+            f"Your audit report {report.audit_request.reference} "
+            f"is now available (Grade {report.grade}, "
             f"Score {report.security_score}/100).\n\n"
-            "Vous pouvez le télécharger depuis votre tableau de bord.\n\n"
-            "L'équipe CyberAudit & Solutions."
+            "You can download it from your dashboard.\n\n"
+            "The CyberAudit & Solutions team."
         ),
     )
 
