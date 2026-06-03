@@ -19,7 +19,7 @@ const STATUS_COLORS = {
 };
 
 export default function AuditStatusEmail({
-  firstName    = "Utilisateur",
+  firstName    = "User",
   auditId      = "42",
   status       = "in_progress",
   dashboardUrl = "http://localhost:5173/dashboard",
@@ -30,13 +30,13 @@ export default function AuditStatusEmail({
   return (
     <Html>
       <Head />
-      <Preview>Your audit #{auditId} : {label}</Preview>
+      <Preview>Votre audit #{auditId} : {label}</Preview>
       <Body style={styles.body}>
         <Container style={styles.container}>
-          <Heading style={styles.h1}>Audit Status Update</Heading>
-          <Text style={styles.text}>Hello {firstName},</Text>
+          <Heading style={styles.h1}>Mise à jour de votre audit</Heading>
+          <Text style={styles.text}>Bonjour {firstName},</Text>
           <Text style={styles.text}>
-            The status of your audit <strong>#{auditId}</strong> has been updated:
+            Le statut de votre audit <strong>#{auditId}</strong> a été mis à jour :
           </Text>
           <Section style={{ ...styles.badge, borderLeft: `4px solid ${color}` }}>
             <Text style={{ margin: 0, fontWeight: 600, color }}>
@@ -45,10 +45,10 @@ export default function AuditStatusEmail({
           </Section>
           <Section style={{ textAlign: "center", marginTop: 24 }}>
             <Button href={dashboardUrl} style={styles.button}>
-              View My Audits
+              Voir mon audit
             </Button>
           </Section>
-          <Text style={styles.footer}>The CyberAudit Team</Text>
+          <Text style={styles.footer}>L'équipe CyberAudit</Text>
         </Container>
       </Body>
     </Html>
