@@ -1,0 +1,154 @@
+{
+  "info": {
+    "name": "CyberAudit & Solutions API",
+    "description": "Postman collection for CyberAudit backend API (auth, audits, reports, training)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "BASE_URL", "value": "https://backend-production-46c13.up.railway.app/api" },
+    { "key": "ACCESS_TOKEN", "value": "" },
+    { "key": "AUDIT_ID", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{BASE_URL}}/auth/register/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"test@example.com\",\"password\":\"TestPass123!\",\"first_name\":\"Test\",\"last_name\":\"User\",\"company_name\":\"Test SAS\"}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{BASE_URL}}/auth/login/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"admin@cyberaudit.fr\",\"password\":\"AdminCyber2026!\"}"
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" }],
+            "url": "{{BASE_URL}}/auth/me/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Packs",
+      "item": [
+        {
+          "name": "List packs",
+          "request": { "method": "GET", "url": "{{BASE_URL}}/packs/" }
+        }
+      ]
+    },
+    {
+      "name": "Audits",
+      "item": [
+        {
+          "name": "List my audits",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" }],
+            "url": "{{BASE_URL}}/audits/"
+          }
+        },
+        {
+          "name": "Create audit",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{BASE_URL}}/audits/",
+            "body": { "mode": "raw", "raw": "{\"pack\":1,\"scope_notes\":\"Test audit\"}" }
+          }
+        },
+        {
+          "name": "Get audit by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" }],
+            "url": "{{BASE_URL}}/audits/{{AUDIT_ID}}/"
+          }
+        },
+        {
+          "name": "Update audit (admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{BASE_URL}}/audits/{{AUDIT_ID}}/",
+            "body": { "mode": "raw", "raw": "{\"status\":\"in_progress\"}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Generate report (admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{BASE_URL}}/audits/{{AUDIT_ID}}/generate-report/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"summary\":\"Test\",\"verdict\":\"OK\",\"findings\":[{\"severity\":\"Critical\",\"asset\":\"test\",\"description\":\"d\",\"recommendation\":\"r\"}]}"
+            }
+          }
+        },
+        {
+          "name": "Get report data",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" }],
+            "url": "{{BASE_URL}}/audits/{{AUDIT_ID}}/report/data/"
+          }
+        },
+        {
+          "name": "Download PDF",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" }],
+            "url": "{{BASE_URL}}/audits/{{AUDIT_ID}}/report/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Training",
+      "item": [
+        {
+          "name": "List modules",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" }],
+            "url": "{{BASE_URL}}/training/"
+          }
+        }
+      ]
+    }
+  ]
+}

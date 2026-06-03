@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
+    "csp.middleware.CSPMiddleware",
     "django.middleware.security.SecurityMiddleware",
     # WhiteNoise sert les fichiers statiques en prod (Railway).
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -152,6 +153,36 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://.*\.up\.railway\.app$",
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+
+# ── Security headers (HSTS) ──────────────────────────────────────────────────
+# En prod (Railway), activer via env vars :
+#   SECURE_HSTS_SECONDS=31536000 (1 an)
+#   SECURE_HSTS_INCLUDE_SUBDOMAINS=True
+#   SECURE_HSTS_PRELOAD=True
+#   SECURE_SSL_REDIRECT=True
+SECURE_HSTS_SECONDS = config("SECURE_HSTS_SECONDS", default=0, cast=int)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = config("SECURE_HSTS_INCLUDE_SUBDOMAINS", default=False, cast=bool)
+SECURE_HSTS_PRELOAD = config("SECURE_HSTS_PRELOAD", default=False, cast=bool)
+SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
+# ── Content Security Policy (CSP) ────────────────────────────────────────────
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": ("'self'",),
+        "script-src": ("'self'", "'unsafe-inline'"),
+        "style-src": ("'self'", "'unsafe-inline'", "https://fonts.googleapis.com"),
+        "font-src": ("'self'", "data:", "https://fonts.gstatic.com"),
+        "img-src": ("'self'", "data:", "https:"),
+        "connect-src": ("'self'",),
+        "frame-ancestors": ("'none'",),
+        "form-action": ("'self'",),
+        "base-uri": ("'self'",),
+        "object-src": ("'none'",),
+    }
+}
 
 # ── Email ────────────────────────────────────────────────────────────────────
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
