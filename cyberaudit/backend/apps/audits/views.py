@@ -51,7 +51,7 @@ class AuditRequestListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if self.request.user.role == "admin":
-            raise PermissionDenied("Only clients can submit an audit request.")
+            raise PermissionDenied("Seuls les clients peuvent soumettre une demande.")
         audit = serializer.save(client=self.request.user)
 
         # ↓ NOTIF : accusé de réception automatique au client.
@@ -59,13 +59,13 @@ class AuditRequestListCreateView(generics.ListCreateAPIView):
             user=audit.client,
             request=audit,
             type_=Notification.Type.REQUEST_RECEIVED,
-            subject=f"Audit request received — {audit.reference}",
+            subject=f"Demande d'audit reçue — {audit.reference}",
             message=(
-                f"Hello {audit.client.first_name},\n\n"
-                f"We have received your audit request ({audit.reference}) "
+                f"Bonjour {audit.client.first_name},\n\n"
+                f"Nous avons bien reçu votre demande d'audit ({audit.reference}) "
                 f"pour le pack « {audit.pack.name} ».\n"
                 "Vous recevrez une notification à chaque changement de statut.\n\n"
-                "The CyberAudit & Solutions team."
+                "L'équipe CyberAudit & Solutions."
             ),
         )
 
@@ -86,7 +86,7 @@ class AuditRequestDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def update(self, request, *args, **kwargs):
         if request.user.role != "admin":
-            raise PermissionDenied("Only an administrator can modify a request.")
+            raise PermissionDenied("Seul un administrateur peut modifier une demande.")
         return super().update(request, *args, **kwargs)
 
     def perform_update(self, serializer):
@@ -99,17 +99,17 @@ class AuditRequestDetailView(generics.RetrieveUpdateDestroyAPIView):
                 user=audit.client,
                 request=audit,
                 type_=Notification.Type.STATUS_CHANGED,
-                subject=f"Status updated — {audit.reference}",
+                subject=f"Statut mis à jour — {audit.reference}",
                 message=(
-                    f"Hello {audit.client.first_name},\n\n"
-                    f"The status of your request {audit.reference} est passé de "
-                    f"« {old_status} " to " {audit.status} ".\n\n"
-                    "The CyberAudit & Solutions team."
+                    f"Bonjour {audit.client.first_name},\n\n"
+                    f"Le statut de votre demande {audit.reference} est passé de "
+                    f"« {old_status} » à « {audit.status} ».\n\n"
+                    "L'équipe CyberAudit & Solutions."
                 ),
             )
 
     def perform_destroy(self, instance):
         if self.request.user.role != "admin":
-            raise PermissionDenied("Only an administrator can archive a request.")
+            raise PermissionDenied("Seul un administrateur peut archiver une demande.")
         instance.status = AuditRequest.Status.ARCHIVED
         instance.save(update_fields=["status", "updated_at"])
