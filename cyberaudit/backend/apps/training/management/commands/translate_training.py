@@ -1,11 +1,15 @@
 """Traduit les titres/descriptions des modules de training en anglais."""
-from django.core.management.base import BaseCommand
-from apps.training.models import TrainingModule
 
+from django.core.management.base import BaseCommand
+
+from apps.training.models import TrainingModule
 
 TRANSLATIONS = {
     "Anti-phishing": ("Anti-phishing", "Recognize and report suspicious emails."),
-    "Mots de passe forts & MFA": ("Strong passwords & MFA", "Create strong passwords and enable multi-factor authentication."),
+    "Mots de passe forts & MFA": (
+        "Strong passwords & MFA",
+        "Create strong passwords and enable multi-factor authentication.",
+    ),
     "Wi-Fi public & VPN": ("Public Wi-Fi & VPN", "Stay safe on external networks."),
     "Sauvegarde des donnees": ("Data backup", "Best practices for backing up business data."),
     "Sauvegarde des données": ("Data backup", "Best practices for backing up business data."),

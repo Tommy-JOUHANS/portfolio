@@ -59,7 +59,7 @@ class AuditRequestListCreateView(generics.ListCreateAPIView):
             message=(
                 f"Hello {audit.client.first_name},\n\n"
                 f"We have received your audit request ({audit.reference}) "
-                f"for the \"{audit.pack.name}\" pack.\n"
+                f'for the "{audit.pack.name}" pack.\n'
                 "You will receive a notification at each status change.\n\n"
                 "The CyberAudit & Solutions team."
             ),
@@ -98,7 +98,7 @@ class AuditRequestDetailView(generics.RetrieveUpdateDestroyAPIView):
                 message=(
                     f"Hello {audit.client.first_name},\n\n"
                     f"Your request {audit.reference} status changed from "
-                    f"\"{old_status}\" to \"{audit.status}\".\n\n"
+                    f'"{old_status}" to "{audit.status}".\n\n'
                     "The CyberAudit & Solutions team."
                 ),
             )
