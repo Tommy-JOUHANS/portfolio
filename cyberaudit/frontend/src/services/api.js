@@ -63,7 +63,8 @@ api.interceptors.response.use(
     const isAuthRoute =
       original.url?.includes("token/refresh") ||
       original.url?.includes("login") ||
-      original.url?.includes("register");
+      original.url?.includes("register") ||
+      original.url?.includes("logout");   // logout ne doit jamais être retenté
 
     if (is401 && !alreadyRetried && !isAuthRoute) {
       original._retry = true;
