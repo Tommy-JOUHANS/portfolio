@@ -65,11 +65,11 @@ export async function createRequest({ packCode, message }) {
 /** Met à jour une demande (admin uniquement). */
 export async function updateRequest(reference, changes) {
   const audit = await getRequestByReference(reference);
-  if (!audit) throw new Error(`Request not found: ${reference}`);
+  if (!audit) throw new Error(`Request not found : ${reference}`);
   const payload = {};
   if (changes.status !== undefined) payload.status = changes.status;
   if (changes.internal_notes !== undefined) payload.internal_notes = changes.internal_notes;
-  if (changes.assigned_to !== undefined) payload.assigned_to = changes.assigned_to;
+  // Ne pas envoyer assigned_to — le backend attend un UUID, pas un nom
   const { data } = await api.patch(`/audits/${audit.id}/`, payload);
   return data;
 }
