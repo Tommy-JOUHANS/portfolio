@@ -43,6 +43,7 @@ export default function Logo({ size = 52 }) {
     <div
       className="rounded-full overflow-hidden ring-2 ring-white/70 shadow-md flex-shrink-0"
       style={{ width: size, height: size }}
+      role="img"
       aria-label="Logo CyberAudit & Solutions"
     >
       <img
