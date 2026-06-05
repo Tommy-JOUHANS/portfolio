@@ -34,9 +34,9 @@ export default function Header() {
     <header className="static w-full bg-brand">
       {/* Conteneur centre, largeur maximale, logo a gauche / menu a droite. */}
        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-2 sm:py-3">
-        <Link to="/" aria-label="Accueil">
+        <Link to="/" aria-label="Accueil" className="flex-shrink-0">
           {/* Pastille circulaire de marque.                               */}
-          <Logo size={120} flex items-left/>
+          <Logo size={120}/>
         </Link>
 
         <nav className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm font-semibold tracking-wide text-white">
