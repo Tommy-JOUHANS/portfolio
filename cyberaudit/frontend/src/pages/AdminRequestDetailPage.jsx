@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import {
   getRequestByReference, updateRequest, archiveRequest,
-  addRequestHistory,
+  addRequestHistory, generateReport,
 } from "../services/dataService.js";
 import { sendStatusNotification } from "../services/emailService.js";
 import StatusBadge from "../components/dashboard/StatusBadge.jsx";
@@ -18,6 +18,7 @@ function formatDateTime(isoString) {
 export default function AdminRequestDetailPage() {
   const { reference } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [request, setRequest]           = useState(null);
   const [loading, setLoading]           = useState(true);
@@ -151,7 +152,19 @@ export default function AdminRequestDetailPage() {
           className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50">
           {saving ? "Saving…" : "Save changes"}
         </button>
-        <Link to={`/admin/report/${reference}`} className="inline-block rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 text-center">Generate PDF report</Link>
+        <button type="button"
+          onClick={async () => {
+            try {
+              setNotice("Generating report… please wait.");
+              await generateReport(reference, user.first_name);
+              navigate(`/admin/report/${reference}`);
+            } catch {
+              setNotice("Error occurred while generating the report.");
+            }
+          }}
+          className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700">
+          Generate PDF report
+        </button>
         <button type="button" onClick={handleSendNotification}
           className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100">
           Send notification
