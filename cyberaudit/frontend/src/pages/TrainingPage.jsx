@@ -67,7 +67,7 @@ export default function TrainingPage() {
           const statusInfo = STATUS_LABELS[module.status] || STATUS_LABELS.to_start;
           return (
             <div key={module.id} className="flex flex-col rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
-              <h3 className="font-bold text-brand">{module.title}</h3>
+              <h2 className="font-bold text-brand">{module.title}</h2>
               <p className="mt-1 flex-1 text-sm text-gray-600">{module.description}</p>
               <p className="mt-3 text-sm">
                 <span className="text-gray-500">Status: </span>
