@@ -5,6 +5,7 @@ import {
   getAllRequests,
   getNotificationsByUserId,
 } from "../../services/dataService.js";
+import api from "../../services/api.js";
 import StatCard from "./StatCard.jsx";
 import StatusBadge from "./StatusBadge.jsx";
 
@@ -55,7 +56,6 @@ export default function ClientDashboard() {
     setDownloading(request.id);
     setNotice("");
     try {
-      const { default: api } = await import("../../services/api.js");
       const response = await api.get(`/audits/${request.id}/report/`, {
         responseType: "blob",
         validateStatus: (s) => s < 500,
