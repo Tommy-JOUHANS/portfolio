@@ -8,7 +8,7 @@ import {
 import { sendStatusNotification } from "../services/emailService.js";
 import StatusBadge from "../components/dashboard/StatusBadge.jsx";
 
-const ASSIGNEES = ["", "Karim", "Sophie", "James"];
+const ASSIGNEES = ["", "Karim", "Sophie", "James", "Tommy"];
 
 function formatDateTime(isoString) {
   const d = new Date(isoString);
