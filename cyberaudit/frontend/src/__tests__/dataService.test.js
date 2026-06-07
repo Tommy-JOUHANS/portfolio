@@ -134,6 +134,6 @@ describe("createRequest()", () => {
     // On s'attend à ce qu'une erreur soit levée
     await expect(
       createRequest({ packCode: "inexistant", message: "" })
-    ).rejects.toThrow("Pack introuvable");
+    ).rejects.toThrow("Pack not found");
   });
 });
