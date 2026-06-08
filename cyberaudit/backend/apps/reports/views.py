@@ -98,16 +98,10 @@ class ReportDownloadView(APIView):
 
         # Priorité 1 : contenu stocké en base (fonctionne sur Railway)
         if report.pdf_content:
-            # BinaryField retourne un memoryview depuis PostgreSQL → .tobytes() fiable
-            if isinstance(report.pdf_content, memoryview):
-                pdf_data = report.pdf_content.tobytes()
-            else:
-                pdf_data = bytes(report.pdf_content)
-            if pdf_data:
-                response = HttpResponse(pdf_data, content_type="application/pdf")
-                response["Content-Disposition"] = f'attachment; filename="{audit.reference}.pdf"'
-                response["Cache-Control"] = "no-store, private"
-                return response
+            response = HttpResponse(bytes(report.pdf_content), content_type="application/pdf")
+            response["Content-Disposition"] = f'attachment; filename="{audit.reference}.pdf"'
+            response["Cache-Control"] = "no-store, private"
+            return response
 
         # Priorité 2 : fichier sur disque (fallback local)
         try:
