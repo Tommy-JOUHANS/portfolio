@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { sanitize } from "../utils/sanitize.js";
 import { useAuth } from "../hooks/useAuth.js";
 import {
   getRequestByReference, updateRequest, archiveRequest,
@@ -108,12 +109,12 @@ export default function AdminRequestDetailPage() {
         <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
           <h2 className="mb-3 border-b border-gray-100 pb-2 font-bold text-brand">Client information</h2>
           <dl className="flex flex-col gap-2 text-sm">
-            <div className="flex justify-between gap-3"><dt className="text-gray-500">Company :</dt><dd className="font-medium text-gray-800">{clientInfo.company_name ?? "—"}</dd></div>
-            <div className="flex justify-between gap-3"><dt className="text-gray-500">Contact :</dt><dd className="font-medium text-gray-800">{clientInfo.first_name} {clientInfo.last_name}</dd></div>
-            <div className="flex justify-between gap-3"><dt className="text-gray-500">Email :</dt><dd className="font-medium text-gray-800">{clientInfo.email ?? "—"}</dd></div>
+            <div className="flex justify-between gap-3"><dt className="text-gray-500">Company :</dt><dd className="font-medium text-gray-800">{sanitize(clientInfo.company_name) || "—"}</dd></div>
+            <div className="flex justify-between gap-3"><dt className="text-gray-500">Contact :</dt><dd className="font-medium text-gray-800">{sanitize(clientInfo.first_name)} {sanitize(clientInfo.last_name)}</dd></div>
+            <div className="flex justify-between gap-3"><dt className="text-gray-500">Email :</dt><dd className="font-medium text-gray-800">{sanitize(clientInfo.email) || "—"}</dd></div>
             <div className="flex justify-between gap-3"><dt className="text-gray-500">Submitted :</dt><dd className="font-medium text-gray-800">{formatDateTime(request.submitted_at)}</dd></div>
             <div className="flex justify-between gap-3"><dt className="text-gray-500">Pack :</dt><dd className="font-medium text-brand">{pack.name ?? "—"}</dd></div>
-            <div className="flex flex-col gap-1"><dt className="text-gray-500">Client message :</dt><dd className="rounded-md bg-cream p-2 text-gray-700">{request.scope_notes || "—"}</dd></div>
+            <div className="flex flex-col gap-1"><dt className="text-gray-500">Client message :</dt><dd className="rounded-md bg-cream p-2 text-gray-700">{sanitize(request.scope_notes) || "—"}</dd></div>
           </dl>
         </div>
 

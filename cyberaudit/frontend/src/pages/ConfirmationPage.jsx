@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CheckCircle2 } from "lucide-react";
 import { getRequestByReference } from "../services/dataService.js";
+import { sanitize } from "../utils/sanitize.js";
 
 function formatDateTime(isoString) {
   const d = new Date(isoString);
@@ -56,15 +57,15 @@ export default function ConfirmationPage() {
           </div>
           <div className="flex justify-between gap-4">
             <dt className="font-semibold text-brand">Contact :</dt>
-            <dd className="text-right text-gray-800">{clientInfo.first_name} {clientInfo.last_name}</dd>
+            <dd className="text-right text-gray-800">{sanitize(clientInfo.first_name)} {sanitize(clientInfo.last_name)}</dd>
           </div>
           <div className="flex justify-between gap-4">
             <dt className="font-semibold text-brand">Company Name :</dt>
-            <dd className="text-right text-gray-800">{clientInfo.company_name ?? "—"}</dd>
+            <dd className="text-right text-gray-800">{sanitize(clientInfo.company_name) || "—"}</dd>
           </div>
           <div className="flex justify-between gap-4">
             <dt className="font-semibold text-brand">Selected pack :</dt>
-            <dd className="text-right text-gray-800">{pack.name ?? "—"}</dd>
+            <dd className="text-right text-gray-800">{sanitize(pack.name) || "—"}</dd>
           </div>
           {pack.included_services && (
             <div className="flex justify-between gap-4">
@@ -88,7 +89,7 @@ export default function ConfirmationPage() {
           </div>
           <div className="flex justify-between gap-4">
             <dt className="font-semibold text-brand">Message :</dt>
-            <dd className="text-right text-gray-800">{request.scope_notes || "—"}</dd>
+            <dd className="text-right text-gray-800">{sanitize(request.scope_notes) || "—"}</dd>
           </div>
         </dl>
       </div>

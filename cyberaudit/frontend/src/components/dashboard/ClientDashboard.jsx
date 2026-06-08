@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth.js";
+import { sanitize } from "../../utils/sanitize.js";
 import {
   getAllRequests,
   getNotificationsByUserId,
@@ -99,7 +100,7 @@ export default function ClientDashboard() {
       <div>
         <h1 className="text-2xl font-bold text-brand">My Dashboard</h1>
         <p className="text-sm italic text-gray-500">
-          Welcome {user.first_name} — Real-time tracking of your audit requests
+          Welcome {sanitize(user.first_name)} — Real-time tracking of your audit requests
         </p>
       </div>
 
@@ -161,8 +162,8 @@ export default function ClientDashboard() {
               ) : (
                 filteredRequests.map((r) => (
                   <tr key={r.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
-                    <td className="px-3 py-3 font-medium text-gray-800">{r.reference}</td>
-                    <td className="px-3 py-3 text-gray-600">{r.pack?.name ?? "—"}</td>
+                    <td className="px-3 py-3 font-medium text-gray-800">{sanitize(r.reference)}</td>
+                    <td className="px-3 py-3 text-gray-600">{sanitize(r.pack?.name) || "—"}</td>
                     <td className="px-3 py-3 text-gray-600">{formatDate(r.submitted_at)}</td>
                     <td className="px-3 py-3"><StatusBadge status={r.status} /></td>
                     <td className="px-3 py-3">
@@ -195,7 +196,7 @@ export default function ClientDashboard() {
           <ul className="mt-3 flex flex-col gap-2">
             {notifications.map((n) => (
               <li key={n.id} className="rounded-md border-l-4 border-brand bg-cream px-3 py-2 text-sm text-gray-700">
-                {n.message} <span className="text-gray-400">({timeAgo(n.created_at)})</span>
+                {sanitize(n.message)} <span className="text-gray-400">({timeAgo(n.created_at)})</span>
               </li>
             ))}
           </ul>
