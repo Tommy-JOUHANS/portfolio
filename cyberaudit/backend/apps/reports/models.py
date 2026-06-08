@@ -31,7 +31,6 @@ class AuditReport(models.Model):
     security_score = models.PositiveSmallIntegerField(default=50)  # 0-100
     findings = models.JSONField(default=list, blank=True)  # noqa: E501
     pdf_path = models.CharField(max_length=255, blank=True)
-    pdf_content = models.BinaryField(null=True, blank=True)  # stocké en DB pour Railway
     generated_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

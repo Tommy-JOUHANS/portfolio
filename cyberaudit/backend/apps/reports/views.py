@@ -5,7 +5,7 @@ reports/views.py — Endpoints PDF.
   GET  /api/audits/{id}/report/data/      owner/admin → JSON du rapport
 """
 
-from django.http import FileResponse, Http404, HttpResponse
+from django.http import FileResponse, Http404
 from rest_framework import status
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
@@ -90,20 +90,11 @@ class ReportDownloadView(APIView):
             report = audit.report
         except AuditReport.DoesNotExist:
             raise NotFound("No report for this request.") from None
-        if not report.pdf_content and not report.pdf_path:
+        if not report.pdf_path:
             return Response(
                 {"detail": "PDF generation in progress."},
                 status=status.HTTP_202_ACCEPTED,
             )
-
-        # Priorité 1 : contenu stocké en base (fonctionne sur Railway)
-        if report.pdf_content:
-            response = HttpResponse(bytes(report.pdf_content), content_type="application/pdf")
-            response["Content-Disposition"] = f'attachment; filename="{audit.reference}.pdf"'
-            response["Cache-Control"] = "no-store, private"
-            return response
-
-        # Priorité 2 : fichier sur disque (fallback local)
         try:
             f = open(report.pdf_path, "rb")
         except FileNotFoundError:

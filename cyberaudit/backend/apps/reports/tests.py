@@ -136,15 +136,13 @@ class TestGeneratePdfTask:
         pack = AuditPack.objects.get(code="audit")
         audit = AuditRequest.objects.create(client=client_user, pack=pack)
         report = AuditReport.objects.create(audit_request=audit, grade="A", security_score=92)
-        # write_pdf doit retourner de vrais bytes (pas un MagicMock)
-        mock_html.return_value.write_pdf.return_value = b"%PDF-1.4 fake content"
+        mock_html.return_value.write_pdf = MagicMock()
 
         generate_pdf_task(str(report.id))
 
         report.refresh_from_db()
+        assert report.pdf_path != ""
         assert report.generated_at is not None
-        # pdf_content stocké en base OU pdf_path sur disque
-        assert report.pdf_content is not None or report.pdf_path != ""
 
         from apps.notifications.models import Notification
 
