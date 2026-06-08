@@ -86,7 +86,7 @@ export default function HomePage() {
       <div className="mx-auto max-w-6xl px-6 py-10">
         {/* ---- Titre principal de la plateforme ------------------------ */}
         <h1 className="text-3xl font-extrabold text-brand sm:text-4xl">
-          CyberAudit &amp; Solution
+          CyberAudit &amp; Solutions
         </h1>
 
         {/* ---- Disposition en 2 colonnes sur grand ecran --------------- */}

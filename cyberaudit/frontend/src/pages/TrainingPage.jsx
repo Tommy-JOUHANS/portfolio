@@ -46,7 +46,7 @@ export default function TrainingPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold text-brand">Awareness &amp; Training</h1>
+        <h1 className="text-2xl font-bold text-brand">Awareness {"&"} Training</h1>
         <p className="text-sm italic text-gray-500">
           Build your team's cybersecurity reflexes - simple, useful, no jargon.
         </p>

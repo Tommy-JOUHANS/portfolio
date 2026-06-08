@@ -14,7 +14,7 @@ export default function Footer() {
     <footer className="bg-brand py-4 text-center">
       {/* Ligne de texte de la plateforme, en blanc et en gras.           */}
       <p className="text-sm font-semibold text-white">
-        Copyright <Copyright className="inline-block h-4 w-4" /> {year}. All rights reserved CyberAudit &amp; Solutions.
+        Copyright <Copyright className="inline-block h-4 w-4" /> {year}. All rights reserved CyberAudit {"&"} Solutions.
       </p>
     </footer>
   );

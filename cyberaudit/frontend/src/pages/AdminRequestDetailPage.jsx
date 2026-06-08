@@ -119,7 +119,7 @@ export default function AdminRequestDetailPage() {
 
         {/* Actions */}
         <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
-          <h2 className="mb-3 border-b border-gray-100 pb-2 font-bold text-brand">Status &amp; Actions</h2>
+          <h2 className="mb-3 border-b border-gray-100 pb-2 font-bold text-brand">Status {"&"} Actions</h2>
           <label className="flex flex-col gap-1 text-sm"><span className="text-gray-500">Current status :</span>
             <select value={status} onChange={(e) => setStatus(e.target.value)}
               className="rounded-md border border-gray-300 px-2 py-1.5 text-gray-800">
