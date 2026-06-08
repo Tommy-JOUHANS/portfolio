@@ -53,18 +53,23 @@ def generate_pdf_task(self, report_id):
         },
     )
 
-    # 2. WeasyPrint → PDF
-    media_root = Path(settings.MEDIA_ROOT) / "reports"
-    media_root.mkdir(parents=True, exist_ok=True)
-    pdf_filename = f"{report.audit_request.reference}.pdf"
-    pdf_path = media_root / pdf_filename
+    # 2. WeasyPrint → PDF en mémoire (bytes)
+    pdf_bytes = HTML(string=html_string).write_pdf()
 
-    HTML(string=html_string).write_pdf(str(pdf_path))
+    # 3. Sauvegarde sur disque (local) ET en base (Railway / production)
+    try:
+        media_root = Path(settings.MEDIA_ROOT) / "reports"
+        media_root.mkdir(parents=True, exist_ok=True)
+        pdf_filename = f"{report.audit_request.reference}.pdf"
+        pdf_path = media_root / pdf_filename
+        pdf_path.write_bytes(pdf_bytes)
+        report.pdf_path = str(pdf_path)
+    except Exception:
+        report.pdf_path = ""  # disque indisponible (Railway) → on garde la DB
 
-    # 3. Mise à jour du modèle
-    report.pdf_path = str(pdf_path)
+    report.pdf_content = pdf_bytes   # toujours stocké en base
     report.generated_at = timezone.now()
-    report.save(update_fields=["pdf_path", "generated_at"])
+    report.save(update_fields=["pdf_path", "pdf_content", "generated_at"])
 
     # 4. Notification au client
     create_and_send(
