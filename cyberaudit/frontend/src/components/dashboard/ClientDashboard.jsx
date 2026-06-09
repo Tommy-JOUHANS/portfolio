@@ -100,7 +100,7 @@ export default function ClientDashboard() {
       <div>
         <h1 className="text-2xl font-bold text-brand">My Dashboard</h1>
         <p className="text-sm italic text-gray-500">
-          Welcome {sanitize(user.first_name)} — Real-time tracking of your audit requests
+          Welcome {sanitize(user.first_name)}. Real-time tracking of your audit requests
         </p>
       </div>
 

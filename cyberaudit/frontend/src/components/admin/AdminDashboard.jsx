@@ -63,8 +63,8 @@ export default function AdminDashboard() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold text-brand">Admin Dashboard - Audit Requests</h1>
-        <p className="text-sm italic text-gray-500">CyberAudit operator view - Manage all SME requests</p>
+        <h1 className="text-2xl font-bold text-brand">Admin Dashboard. Audit Requests</h1>
+        <p className="text-sm italic text-gray-500">CyberAudit operator view. Manage all SME requests</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
