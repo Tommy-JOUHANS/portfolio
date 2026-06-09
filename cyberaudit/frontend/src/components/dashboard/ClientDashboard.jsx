@@ -65,6 +65,14 @@ export default function ClientDashboard() {
         setNotice("The report is being generated. Please try again in a few moments.");
         return;
       }
+      if (response.status === 404) {
+        setNotice("Report not available yet. Ask an administrator to generate it first.");
+        return;
+      }
+      if (response.status !== 200) {
+        setNotice("Unable to download the report. Please try again later.");
+        return;
+      }
       const url = URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
       const a = document.createElement("a");
       a.href = url; a.download = `rapport-${request.reference}.pdf`;
