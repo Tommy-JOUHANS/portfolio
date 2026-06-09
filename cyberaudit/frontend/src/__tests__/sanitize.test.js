@@ -7,7 +7,7 @@ describe("sanitize()", () => {
   });
 
   it("supprime les balises script", () => {
-    expect(sanitize('<script>alert("XSS")</script>')).toBe("");
+    expect(sanitize("<script>alert(\"XSS\")</script>")).toBe("");
   });
 
   it("supprime les balises HTML", () => {
@@ -15,7 +15,7 @@ describe("sanitize()", () => {
   });
 
   it("supprime les attributs onclick", () => {
-    expect(sanitize('<img src=x onerror=alert(1)>')).toBe("");
+    expect(sanitize("<img src=x onerror=alert(1)>")).toBe("");
   });
 
   it("retourne une chaîne vide si null", () => {
