@@ -7,12 +7,6 @@
 
 import emailjs from "@emailjs/browser";
 
-// ── Configuration (variables d'environnement Vite) ───────────────────────
-const SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const TEMPLATE_CONFIRM = import.meta.env.VITE_EMAILJS_TEMPLATE_CONFIRM;
-const TEMPLATE_UPDATE  = import.meta.env.VITE_EMAILJS_TEMPLATE_UPDATE;
-const PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
 // ── sendAuditConfirmation ─────────────────────────────────────────────────
 // Envoie un accusé de réception au client après soumission de sa demande.
 //
@@ -37,6 +31,11 @@ export async function sendAuditConfirmation({
   message,
   reference,
 }) {
+  // Lu à chaque appel pour que vi.stubEnv() fonctionne en tests unitaires.
+  const SERVICE_ID     = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const TEMPLATE_CONFIRM = import.meta.env.VITE_EMAILJS_TEMPLATE_CONFIRM;
+  const PUBLIC_KEY     = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
   if (!SERVICE_ID || !TEMPLATE_CONFIRM || !PUBLIC_KEY) {
     console.warn(
       "[emailService] Variables VITE_EMAILJS_* missing, email not sent.",
@@ -93,6 +92,11 @@ export async function sendStatusNotification({
   new_status,
   message = "",
 }) {
+  // Lu à chaque appel pour que vi.stubEnv() fonctionne en tests unitaires.
+  const SERVICE_ID    = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const TEMPLATE_UPDATE = import.meta.env.VITE_EMAILJS_TEMPLATE_UPDATE;
+  const PUBLIC_KEY    = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
   if (!SERVICE_ID || !TEMPLATE_UPDATE || !PUBLIC_KEY) {
     console.warn(
       "[emailService] Variables VITE_EMAILJS_* missing, email not sent.",
