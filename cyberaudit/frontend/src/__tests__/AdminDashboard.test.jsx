@@ -160,4 +160,12 @@ describe("AdminDashboard", () => {
       expect(editLinks.length).toBeGreaterThanOrEqual(1);
     });
   });
+
+  it("gère silencieusement une erreur API (setRequests à [])", async () => {
+    api.get.mockRejectedValue(new Error("Network error"));
+    renderDashboard();
+    await waitFor(() => {
+      expect(screen.getByText(/aucune demande/i)).toBeInTheDocument();
+    });
+  });
 });

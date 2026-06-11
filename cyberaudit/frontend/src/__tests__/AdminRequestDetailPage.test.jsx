@@ -17,7 +17,7 @@ vi.mock("../services/dataService.js", () => ({
   getRequestByReference: vi.fn(),
   updateRequest:         vi.fn(),
   archiveRequest:        vi.fn(),
-  addRequestHistory:     vi.fn(),
+  addRequestHistory:     vi.fn().mockResolvedValue(null),
   generateReport:        vi.fn(),
 }));
 
@@ -29,8 +29,10 @@ import {
   getRequestByReference,
   updateRequest,
   archiveRequest,
+  addRequestHistory,
   generateReport,
 } from "../services/dataService.js";
+import { sendStatusNotification } from "../services/emailService.js";
 
 // ── Données fictives ──────────────────────────────────────────────────────────
 const FAKE_REQUEST = {
@@ -212,5 +214,35 @@ describe("AdminRequestDetailPage", () => {
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith("/admin/report/DOSSIER-2026-0099");
     });
+  });
+
+  it("affiche un notice d'erreur si generateReport échoue", async () => {
+    getRequestByReference.mockResolvedValue(FAKE_REQUEST);
+    generateReport.mockRejectedValue(new Error("Backend error"));
+    renderPage();
+    await waitFor(() => screen.getByRole("button", { name: /generate pdf report/i }));
+
+    fireEvent.click(screen.getByRole("button", { name: /generate pdf report/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/error occurred while generating/i)).toBeInTheDocument()
+    );
+  });
+
+  it("appelle sendStatusNotification et addRequestHistory via 'Send notification'", async () => {
+    getRequestByReference.mockResolvedValue(FAKE_REQUEST);
+    sendStatusNotification.mockResolvedValue(undefined);
+    renderPage();
+    await waitFor(() => screen.getByRole("button", { name: /send notification/i }));
+
+    fireEvent.click(screen.getByRole("button", { name: /send notification/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/notification sent to client/i)).toBeInTheDocument()
+    );
+    expect(sendStatusNotification).toHaveBeenCalledWith(
+      expect.objectContaining({ to_email: "alice@acme.fr" })
+    );
+    expect(addRequestHistory).toHaveBeenCalled();
   });
 });

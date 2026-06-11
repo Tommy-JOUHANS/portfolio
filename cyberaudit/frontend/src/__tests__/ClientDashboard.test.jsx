@@ -1,6 +1,6 @@
 // ─── Tests : ClientDashboard.jsx ─────────────────────────────────────────────
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 import ClientDashboard from "../components/dashboard/ClientDashboard.jsx";
@@ -16,6 +16,7 @@ vi.mock("../services/api.js", () => ({
 }));
 
 import { getAllRequests, getNotificationsByUserId } from "../services/dataService.js";
+import api from "../services/api.js";
 
 // ── Données fictives ──────────────────────────────────────────────────────────
 const FAKE_USER = {
@@ -156,5 +157,82 @@ describe("ClientDashboard", () => {
     await waitFor(() => {
       expect(screen.getByText(/unable to load/i)).toBeInTheDocument();
     });
+  });
+
+  // ── handleDownload ────────────────────────────────────────────────────────
+
+  it("handleDownload: affiche notice 202 (rapport en cours de génération)", async () => {
+    getAllRequests.mockResolvedValue(FAKE_REQUESTS);
+    getNotificationsByUserId.mockResolvedValue([]);
+    api.get.mockResolvedValue({ status: 202, data: null });
+
+    renderDashboard();
+    await waitFor(() => expect(screen.getByText("Download report")).toBeInTheDocument());
+
+    fireEvent.click(screen.getByText("Download report"));
+
+    await waitFor(() =>
+      expect(screen.getByText(/report is being generated/i)).toBeInTheDocument()
+    );
+  });
+
+  it("handleDownload: affiche notice 404 (rapport non disponible)", async () => {
+    getAllRequests.mockResolvedValue(FAKE_REQUESTS);
+    getNotificationsByUserId.mockResolvedValue([]);
+    api.get.mockResolvedValue({ status: 404, data: null });
+
+    renderDashboard();
+    await waitFor(() => expect(screen.getByText("Download report")).toBeInTheDocument());
+    fireEvent.click(screen.getByText("Download report"));
+
+    await waitFor(() =>
+      expect(screen.getByText(/report not available yet/i)).toBeInTheDocument()
+    );
+  });
+
+  it("handleDownload: affiche notice pour un statut inattendu (ex: 400)", async () => {
+    getAllRequests.mockResolvedValue(FAKE_REQUESTS);
+    getNotificationsByUserId.mockResolvedValue([]);
+    api.get.mockResolvedValue({ status: 400, data: null });
+
+    renderDashboard();
+    await waitFor(() => expect(screen.getByText("Download report")).toBeInTheDocument());
+    fireEvent.click(screen.getByText("Download report"));
+
+    await waitFor(() =>
+      expect(screen.getByText(/unable to download the report/i)).toBeInTheDocument()
+    );
+  });
+
+  it("handleDownload: déclenche le téléchargement si status 200", async () => {
+    global.URL.createObjectURL = vi.fn(() => "blob:test-url");
+    global.URL.revokeObjectURL = vi.fn();
+
+    getAllRequests.mockResolvedValue(FAKE_REQUESTS);
+    getNotificationsByUserId.mockResolvedValue([]);
+    api.get.mockResolvedValue({ status: 200, data: new Uint8Array([37, 80, 68, 70]) });
+
+    renderDashboard();
+    await waitFor(() => expect(screen.getByText("Download report")).toBeInTheDocument());
+    fireEvent.click(screen.getByText("Download report"));
+
+    await waitFor(() => {
+      expect(URL.createObjectURL).toHaveBeenCalled();
+      expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:test-url");
+    });
+  });
+
+  it("handleDownload: affiche notice d'erreur si api.get lance une exception", async () => {
+    getAllRequests.mockResolvedValue(FAKE_REQUESTS);
+    getNotificationsByUserId.mockResolvedValue([]);
+    api.get.mockRejectedValue(new Error("Network failure"));
+
+    renderDashboard();
+    await waitFor(() => expect(screen.getByText("Download report")).toBeInTheDocument());
+    fireEvent.click(screen.getByText("Download report"));
+
+    await waitFor(() =>
+      expect(screen.getByText(/error occurred while downloading/i)).toBeInTheDocument()
+    );
   });
 });

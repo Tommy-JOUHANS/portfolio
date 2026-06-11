@@ -253,4 +253,84 @@ describe("ReportViewerPage", () => {
       expect(screen.getByRole("button", { name: /edit report/i })).toBeInTheDocument();
     });
   });
+
+  // ── handleDownloadPdf — cas supplémentaires ───────────────────────────────
+
+  it("affiche 'Audit ID not found.' si l'audit est null quand Download PDF est cliqué", async () => {
+    setClientUser();
+    // rapport présent (bouton Download PDF visible) mais audit null
+    getReportByReference.mockResolvedValue(FAKE_REPORT);
+    getRequestByReference.mockResolvedValue(null);
+    renderPage();
+    await waitFor(() => screen.getByRole("button", { name: /download pdf/i }));
+
+    fireEvent.click(screen.getByRole("button", { name: /download pdf/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/audit id not found/i)).toBeInTheDocument()
+    );
+  });
+
+  it("affiche 'PDF being generated' si l'API retourne 202", async () => {
+    setClientUser();
+    getReportByReference.mockResolvedValue(FAKE_REPORT);
+    getRequestByReference.mockResolvedValue(FAKE_AUDIT);
+    api.get.mockResolvedValue({ status: 202, data: null });
+    renderPage();
+    await waitFor(() => screen.getByRole("button", { name: /download pdf/i }));
+
+    fireEvent.click(screen.getByRole("button", { name: /download pdf/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/pdf being generated/i)).toBeInTheDocument()
+    );
+  });
+
+  it("télécharge le PDF et crée un URL blob si status 200", async () => {
+    global.URL.createObjectURL = vi.fn(() => "blob:pdf-test");
+    global.URL.revokeObjectURL = vi.fn();
+
+    setClientUser();
+    getReportByReference.mockResolvedValue(FAKE_REPORT);
+    getRequestByReference.mockResolvedValue(FAKE_AUDIT);
+    api.get.mockResolvedValue({ status: 200, data: new Uint8Array([37, 80, 68, 70]) });
+    renderPage();
+    await waitFor(() => screen.getByRole("button", { name: /download pdf/i }));
+
+    fireEvent.click(screen.getByRole("button", { name: /download pdf/i }));
+
+    await waitFor(() => expect(URL.createObjectURL).toHaveBeenCalled());
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:pdf-test");
+  });
+
+  it("affiche la modal de génération (submitting) pendant generateReportFromFindings", async () => {
+    setAdminUser();
+    let resolveGenerate;
+    generateReportFromFindings.mockReturnValue(
+      new Promise((res) => { resolveGenerate = res; })
+    );
+    getReportByReference.mockResolvedValue(null);
+    getRequestByReference.mockResolvedValue(FAKE_AUDIT_PENDING);
+    renderPage();
+
+    await waitFor(() => screen.getByRole("button", { name: /generate report/i }));
+    fireEvent.click(screen.getByRole("button", { name: /generate report/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/report generation in progress/i)).toBeInTheDocument()
+    );
+
+    // Résoudre pour terminer proprement le test
+    resolveGenerate({ security_score: 85, grade: "A" });
+  });
+
+  it("affiche 'No vulnerability recorded.' si les findings sont vides en mode lecture", async () => {
+    setClientUser();
+    getReportByReference.mockResolvedValue({ ...FAKE_REPORT, findings: [] });
+    getRequestByReference.mockResolvedValue(FAKE_AUDIT);
+    renderPage();
+    await waitFor(() =>
+      expect(screen.getByText(/no vulnerability recorded/i)).toBeInTheDocument()
+    );
+  });
 });

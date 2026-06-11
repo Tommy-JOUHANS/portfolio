@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -102,29 +102,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// ========================================================================
 // PortalLayout.jsx - Mise en page commune aux portails connectes.
 // Place le menu lateral (Sidebar) a gauche et la page courante a droite.
@@ -133,29 +133,29 @@
 // ========================================================================
 &nbsp;
 // Outlet : emplacement ou React Router rend la route enfant active.
-<span class="cstat-no" title="statement not covered" >import { Outlet } from "react-router-dom";</span>
+import { Outlet } from "react-router-dom";
 // Sidebar : le menu lateral du portail.
-<span class="cstat-no" title="statement not covered" >import Sidebar from "./Sidebar.jsx";</span>
+import Sidebar from "./Sidebar.jsx";
 &nbsp;
 // PortalLayout : composant de mise en page du portail.
-<span class="cstat-no" title="statement not covered" >export default function PortalLayout() {</span>
+export default function PortalLayout() {
   // Rendu de la mise en page.
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     // Fond creme sur toute la zone du portail.
-<span class="cstat-no" title="statement not covered" >    &lt;div className="bg-cream"&gt;</span>
+    &lt;div className="bg-cream"&gt;
       {/* Conteneur centre ; colonne sur mobile, ligne sur grand ecran.   */}
-<span class="cstat-no" title="statement not covered" >      &lt;div className="mx-auto flex max-w-6xl flex-col sm:flex-row"&gt;</span>
+      &lt;div className="mx-auto flex max-w-6xl flex-col sm:flex-row"&gt;
         {/* Menu lateral (a gauche sur grand ecran, en haut sur mobile).  */}
-<span class="cstat-no" title="statement not covered" >        &lt;Sidebar /&gt;</span>
+        &lt;Sidebar /&gt;
         {/* Zone de contenu : occupe tout l'espace restant.               */}
-<span class="cstat-no" title="statement not covered" >        &lt;div className="min-w-0 flex-1 p-6"&gt;</span>
+        &lt;div className="min-w-0 flex-1 p-6"&gt;
           {/* Outlet : la page du portail (Dashboard, Audit, Training...). */}
-<span class="cstat-no" title="statement not covered" >          &lt;Outlet /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
+          &lt;Outlet /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
   );
-<span class="cstat-no" title="statement not covered" >}</span>
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -163,7 +163,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-11T18:22:57.865Z
+                at 2026-06-11T21:41:08.763Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

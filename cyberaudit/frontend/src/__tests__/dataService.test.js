@@ -16,9 +16,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 // Toutes les fonctions qui importent "api" recevront ce mock.
 vi.mock("../services/api.js", () => ({
   default: {
-    get:   vi.fn(),   // simule api.get(...)
-    post:  vi.fn(),   // simule api.post(...)
-    patch: vi.fn(),   // simule api.patch(...)
+    get:     vi.fn(),   // simule api.get(...)
+    post:    vi.fn(),   // simule api.post(...)
+    patch:   vi.fn(),   // simule api.patch(...)
+    delete:  vi.fn(),   // simule api.delete(...)
+    defaults: { baseURL: "http://localhost:8000/api" },
   },
 }));
 
@@ -29,6 +31,18 @@ import {
   getPackageByCode,
   getAllRequests,
   createRequest,
+  getRequestsByClientId,
+  getRequestByReference,
+  updateRequest,
+  archiveRequest,
+  addRequestHistory,
+  getReportByReference,
+  generateReport,
+  getReportDownloadUrl,
+  getTrainingModules,
+  updateModuleStatus,
+  getNotificationsByUserId,
+  generateReportFromFindings,
 } from "../services/dataService.js";
 
 // Données fictives qui représentent ce que l'API renverrait normalement.
@@ -135,5 +149,286 @@ describe("createRequest()", () => {
     await expect(
       createRequest({ packCode: "inexistant", message: "" })
     ).rejects.toThrow("Pack not found");
+  });
+});
+
+// ── getRequestsByClientId ────────────────────────────────────────────────────
+describe("getRequestsByClientId()", () => {
+  it("délègue à getAllRequests et retourne les demandes", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    const result = await getRequestsByClientId("some-user-id");
+    expect(Array.isArray(result)).toBe(true);
+    expect(result).toHaveLength(2);
+    expect(api.get).toHaveBeenCalledWith("/audits/");
+  });
+});
+
+// ── getRequestByReference ────────────────────────────────────────────────────
+describe("getRequestByReference()", () => {
+  it("retourne la demande correspondant à la référence", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    const result = await getRequestByReference("DOSSIER-2026-0001");
+    expect(result.id).toBe("uuid-1");
+  });
+
+  it("retourne null si la référence n'existe pas", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    const result = await getRequestByReference("INEXISTANT-9999");
+    expect(result).toBeNull();
+  });
+});
+
+// ── updateRequest ────────────────────────────────────────────────────────────
+describe("updateRequest()", () => {
+  it("envoie un PATCH avec le bon payload", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    const updated = { ...FAKE_REQUESTS[0], status: "completed" };
+    api.patch.mockResolvedValue({ data: updated });
+
+    const result = await updateRequest("DOSSIER-2026-0001", {
+      status: "completed",
+      internal_notes: "OK",
+    });
+
+    expect(api.patch).toHaveBeenCalledWith("/audits/uuid-1/", {
+      status: "completed",
+      internal_notes: "OK",
+    });
+    expect(result.status).toBe("completed");
+  });
+
+  it("lève une erreur si la référence n'existe pas", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    await expect(
+      updateRequest("INEXISTANT-9999", { status: "completed" })
+    ).rejects.toThrow("Request not found");
+  });
+});
+
+// ── archiveRequest ───────────────────────────────────────────────────────────
+describe("archiveRequest()", () => {
+  it("supprime la demande via api.delete et retourne un objet archivé", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    api.delete.mockResolvedValue({});
+
+    const result = await archiveRequest("DOSSIER-2026-0001");
+
+    expect(api.delete).toHaveBeenCalledWith("/audits/uuid-1/");
+    expect(result.status).toBe("archived");
+    expect(result.id).toBe("uuid-1");
+  });
+
+  it("lève une erreur si la référence n'existe pas", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    await expect(archiveRequest("INEXISTANT-9999")).rejects.toThrow("Request not found");
+  });
+});
+
+// ── addRequestHistory ────────────────────────────────────────────────────────
+describe("addRequestHistory()", () => {
+  it("délègue à getRequestByReference et retourne la demande", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    const result = await addRequestHistory("DOSSIER-2026-0001");
+    expect(result.reference).toBe("DOSSIER-2026-0001");
+  });
+});
+
+// ── getReportByReference ─────────────────────────────────────────────────────
+describe("getReportByReference()", () => {
+  const FAKE_REPORT = { id: "report-1", grade: "B", security_score: 72 };
+
+  it("retourne les données du rapport quand l'API répond", async () => {
+    api.get
+      .mockResolvedValueOnce({ data: FAKE_REQUESTS })   // getAllRequests → /audits/
+      .mockResolvedValueOnce({ data: FAKE_REPORT });    // /audits/uuid-1/report/data/
+
+    const result = await getReportByReference("DOSSIER-2026-0001");
+    expect(result.grade).toBe("B");
+  });
+
+  it("retourne null si la demande n'existe pas (reference inconnue)", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    const result = await getReportByReference("INEXISTANT-9999");
+    expect(result).toBeNull();
+  });
+
+  it("retourne null si le rapport répond 404", async () => {
+    api.get
+      .mockResolvedValueOnce({ data: FAKE_REQUESTS })
+      .mockRejectedValueOnce({ response: { status: 404 } });
+
+    const result = await getReportByReference("DOSSIER-2026-0001");
+    expect(result).toBeNull();
+  });
+
+  it("relance l'erreur pour les statuts non-404", async () => {
+    api.get
+      .mockResolvedValueOnce({ data: FAKE_REQUESTS })
+      .mockRejectedValueOnce({ response: { status: 500 } });
+
+    await expect(getReportByReference("DOSSIER-2026-0001")).rejects.toMatchObject({
+      response: { status: 500 },
+    });
+  });
+});
+
+// ── generateReport ───────────────────────────────────────────────────────────
+describe("generateReport()", () => {
+  it("génère un rapport via l'API et retourne les données", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    const reportData = { id: "report-1", status: "generating" };
+    api.post.mockResolvedValue({ data: reportData });
+
+    const result = await generateReport("DOSSIER-2026-0001", "admin", {
+      summary: "Résumé", verdict: "Bon", grade: "A", security_score: 90, findings: [],
+    });
+
+    expect(api.post).toHaveBeenCalledWith(
+      "/audits/uuid-1/generate-report/",
+      expect.objectContaining({ summary: "Résumé", grade: "A" })
+    );
+    expect(result.id).toBe("report-1");
+  });
+
+  it("utilise les valeurs par défaut quand findings est absent", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    api.post.mockResolvedValue({ data: { id: "report-2" } });
+
+    await generateReport("DOSSIER-2026-0001", "admin");
+
+    expect(api.post).toHaveBeenCalledWith(
+      "/audits/uuid-1/generate-report/",
+      expect.objectContaining({
+        verdict: "To be determined",
+        grade: "C",
+        security_score: 50,
+        findings: [],
+      })
+    );
+  });
+
+  it("lève une erreur si la demande n'existe pas", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    await expect(generateReport("INEXISTANT-9999", "admin", {})).rejects.toThrow("Request not found");
+  });
+});
+
+// ── getReportDownloadUrl ─────────────────────────────────────────────────────
+describe("getReportDownloadUrl()", () => {
+  it("retourne l'URL correcte avec le baseURL de l'instance axios", () => {
+    const url = getReportDownloadUrl("uuid-1");
+    expect(url).toContain("/audits/uuid-1/report/");
+    expect(url).toContain("http://localhost:8000/api");
+  });
+});
+
+// ── getTrainingModules ───────────────────────────────────────────────────────
+describe("getTrainingModules()", () => {
+  it("retourne les modules formatés avec statut user_status", async () => {
+    const raw = [
+      { id: 1, title: "Module 1", description: "Desc 1", user_status: "completed" },
+      { id: 2, title: "Module 2", description: "Desc 2" },  // pas de user_status → "to_start"
+    ];
+    api.get.mockResolvedValue({ data: raw });
+
+    const result = await getTrainingModules();
+
+    expect(result).toHaveLength(2);
+    expect(result[0]).toEqual({ id: 1, title: "Module 1", description: "Desc 1", status: "completed" });
+    expect(result[1].status).toBe("to_start");
+    expect(api.get).toHaveBeenCalledWith("/training/modules/");
+  });
+});
+
+// ── updateModuleStatus ───────────────────────────────────────────────────────
+describe("updateModuleStatus()", () => {
+  const RAW_MODULES = [{ id: 1, title: "Module 1", description: "Desc" }];
+
+  it("envoie POST à 'complete' si newStatus = 'completed'", async () => {
+    api.post.mockResolvedValue({});
+    api.get.mockResolvedValue({ data: RAW_MODULES });
+
+    await updateModuleStatus(1, "completed");
+
+    expect(api.post).toHaveBeenCalledWith("/training/modules/1/complete/");
+  });
+
+  it("envoie POST à 'start' si newStatus ≠ 'completed'", async () => {
+    api.post.mockResolvedValue({});
+    api.get.mockResolvedValue({ data: RAW_MODULES });
+
+    await updateModuleStatus(1, "in_progress");
+
+    expect(api.post).toHaveBeenCalledWith("/training/modules/1/start/");
+  });
+});
+
+// ── getNotificationsByUserId ─────────────────────────────────────────────────
+describe("getNotificationsByUserId()", () => {
+  it("retourne les notifications formatées avec user_id injecté", async () => {
+    const raw = [
+      {
+        id: "n1",
+        request_reference: "DOSSIER-2026-0001",
+        type: "status_update",
+        message: "Statut mis à jour",
+        created_at: "2026-06-01T08:00:00Z",
+      },
+    ];
+    api.get.mockResolvedValue({ data: raw });
+
+    const result = await getNotificationsByUserId("user-abc");
+
+    expect(result).toHaveLength(1);
+    expect(result[0].user_id).toBe("user-abc");
+    expect(result[0].message).toBe("Statut mis à jour");
+    expect(result[0].request_reference).toBe("DOSSIER-2026-0001");
+    expect(api.get).toHaveBeenCalledWith("/notifications/me/");
+  });
+});
+
+// ── generateReportFromFindings ───────────────────────────────────────────────
+describe("generateReportFromFindings()", () => {
+  it("génère un rapport à partir des findings", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    const reportResult = { security_score: 85, grade: "A" };
+    api.post.mockResolvedValue({ data: reportResult });
+
+    const result = await generateReportFromFindings("DOSSIER-2026-0001", {
+      summary: "Résumé exécutif",
+      verdict: "Risque acceptable",
+      findings: [{ severity: "Low", asset: "Server", description: "Minor", recommendation: "Fix" }],
+    });
+
+    expect(api.post).toHaveBeenCalledWith(
+      "/audits/uuid-1/generate-report/",
+      expect.objectContaining({
+        summary: "Résumé exécutif",
+        verdict: "Risque acceptable",
+        findings: expect.arrayContaining([expect.objectContaining({ severity: "Low" })]),
+      })
+    );
+    expect(result.grade).toBe("A");
+  });
+
+  it("normalise un findings non-tableau en tableau vide", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    api.post.mockResolvedValue({ data: { security_score: 70, grade: "B" } });
+
+    await generateReportFromFindings("DOSSIER-2026-0001", {
+      summary: "", verdict: "", findings: "not-an-array",
+    });
+
+    expect(api.post).toHaveBeenCalledWith(
+      "/audits/uuid-1/generate-report/",
+      expect.objectContaining({ findings: [] })
+    );
+  });
+
+  it("lève une erreur si la demande n'existe pas", async () => {
+    api.get.mockResolvedValue({ data: FAKE_REQUESTS });
+    await expect(
+      generateReportFromFindings("INEXISTANT-9999", { summary: "", verdict: "", findings: [] })
+    ).rejects.toThrow("Request not found");
   });
 });

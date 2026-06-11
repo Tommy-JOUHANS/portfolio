@@ -131,4 +131,20 @@ describe("validateRegisterForm", () => {
     const errors = validateRegisterForm({ ...valid, password: "weak" });
     expect(errors.password).toBeTruthy();
   });
+
+  it("signale companyName trop long (> 50 caractères)", () => {
+    const errors = validateRegisterForm({
+      ...valid,
+      companyName: "A".repeat(51),
+    });
+    expect(errors.companyName).toContain("Maximum");
+  });
+
+  it("signale email trop long (> 50 caractères)", () => {
+    const errors = validateRegisterForm({
+      ...valid,
+      email: "a".repeat(45) + "@b.com", // 52 chars total
+    });
+    expect(errors.email).toContain("Maximum");
+  });
 });

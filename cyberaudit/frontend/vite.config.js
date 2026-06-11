@@ -30,6 +30,8 @@ export default defineConfig({
         "src/__tests__/",
         "src/main.jsx",
         "*.config.*",
+        "dist/**",
+        "emails/**",
       ],
     },
   },
