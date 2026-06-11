@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -98,25 +98,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// ========================================================================
 // DashboardPage.jsx - Page tableau de bord, affichee apres la connexion.
 // Conforme a la doc (section "Component tree") : DashboardPage choisit
@@ -125,25 +125,25 @@
 // ========================================================================
 &nbsp;
 // useAuth : pour connaitre le role de l'utilisateur connecte.
-<span class="cstat-no" title="statement not covered" >import { useAuth } from "../hooks/useAuth.js";</span>
+import { useAuth } from "../hooks/useAuth.js";
 // ClientDashboard : le tableau de bord du client (ecran 4).
-<span class="cstat-no" title="statement not covered" >import ClientDashboard from "../components/dashboard/ClientDashboard.jsx";</span>
+import ClientDashboard from "../components/dashboard/ClientDashboard.jsx";
 // AdminDashboard : le tableau de bord de l'administrateur (ecran 8).
-<span class="cstat-no" title="statement not covered" >import AdminDashboard from "../components/admin/AdminDashboard.jsx";</span>
+import AdminDashboard from "../components/admin/AdminDashboard.jsx";
 &nbsp;
 // DashboardPage : composant de la page tableau de bord.
-<span class="cstat-no" title="statement not covered" >export default function DashboardPage() {</span>
+export default function DashboardPage() {
   // On recupere l'utilisateur connecte.
-<span class="cstat-no" title="statement not covered" >  const { user } = useAuth();</span>
+  const { user } = useAuth();
 &nbsp;
   // Si l'utilisateur est un client -&gt; on affiche le tableau de bord client.
-<span class="cstat-no" title="statement not covered" >  if (user.role === "client") {</span>
-<span class="cstat-no" title="statement not covered" >    return &lt;ClientDashboard /&gt;;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  if (user.role === "client") {
+    return &lt;ClientDashboard /&gt;;
+  }
 &nbsp;
   // Sinon (role admin) -&gt; on affiche le tableau de bord administrateur.
-<span class="cstat-no" title="statement not covered" >  return &lt;AdminDashboard /&gt;;</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+  return &lt;AdminDashboard /&gt;;
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -151,7 +151,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-03T12:48:08.167Z
+                at 2026-06-11T18:22:57.865Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
