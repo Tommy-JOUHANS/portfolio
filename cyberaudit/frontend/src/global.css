@@ -6,19 +6,29 @@
 /* Importe le moteur Tailwind CSS v4 (toutes les classes utilitaires).      */
 @import "tailwindcss";
 
-/* Charge le plugin daisyUI (composants pre-stylises bases sur Tailwind).   */
-@plugin "daisyui";
+/* Note : daisyUI n'est PAS charge ici car aucun composant daisyUI (.btn,   */
+/* .card, .navbar, etc.) n'est utilise dans l'application. Le conserver     */
+/* generait un motif en diagonale sur le <header> a certaines largeurs.     */
 
 /* ---------------------------------------------------------------------- */
-/* @theme : declare nos couleurs de marque ; Tailwind genere alors         */
-/* automatiquement les classes bg-brand, text-brand, border-brand, etc.    */
+/* @theme : breakpoints + couleurs de la charte CyberAudit.               */
+/*                                                                         */
+/* --breakpoint-*: initial  remet a zero TOUS les breakpoints Tailwind par */
+/* defaut (sm=640px, md=768px …). On redefinit ensuite exactement ceux     */
+/* dont on a besoin, avec les memes noms que Tailwind utilise en interne   */
+/* (xs, sm, md, lg, xl, 2xl, 3xl) pour que toutes les classes utilitaires */
+/* responsives (sm:, md:, lg: …) fonctionnent correctement.               */
 /* ---------------------------------------------------------------------- */
 @theme {
-  --breakpoint-xs: 30rem;
-  
-  --breakpoint-2xl: 100rem;
+  --breakpoint-*: initial;
 
-  --breakpoint-3xl: 120rem;
+  --breakpoint-xs:  30rem;   /* 480px  — smartphones larges                */
+  --breakpoint-sm:  40rem;   /* 640px  — petites tablettes                 */
+  --breakpoint-md:  48rem;   /* 768px  — tablettes                         */
+  --breakpoint-lg:  64rem;   /* 1024px — petits laptops                    */
+  --breakpoint-xl:  80rem;   /* 1280px — laptops standard                  */
+  --breakpoint-2xl: 100rem;  /* 1600px — grands écrans                     */
+  --breakpoint-3xl: 120rem;  /* 1920px — très grands écrans                */
 
   /* Violet principal de la charte CyberAudit (header, footer, boutons).   */
   --color-brand: #052173;
@@ -36,12 +46,45 @@
 /* Styles de base appliques aux elements HTML racine.                      */
 /* ---------------------------------------------------------------------- */
 
-/* Force la hauteur pleine page pour permettre un footer colle en bas.     */
+/* Force la hauteur pleine page pour permettre un footer colle en bas.
+   On utilise 100dvh (dynamic viewport height) plutot que 100vh ou 100% :
+   - 100vh inclut les barres du navigateur mobile → decalage au scroll
+   - 100dvh s'adapte dynamiquement quand la barre d'adresse apparait/disparait
+   Le fallback 100vh est maintenu pour les navigateurs anterieurs a 2022.  */
 html,
 body,
 #root {
-  /* La hauteur occupe 100% de la fenetre du navigateur.                   */
-  min-height: 100%;
+  min-height: 100vh;    /* fallback navigateurs anciens                    */
+  min-height: 100dvh;   /* navigateurs modernes (Safari 15.4+, Chrome 108+)*/
+}
+
+/* IMPORTANT : la couleur de fond doit etre sur html ET body.
+   Sur mobile (iOS Safari, Chrome Android), quand on deplace la page en
+   dehors de ses limites (overscroll / rubber-banding), c'est le fond de
+   l'element <html> qui s'affiche. Sans cette regle, il reste blanc par
+   defaut et des bandes blanches apparaissent aux extremites de la page.   */
+html {
+  background-color: var(--color-cream);
+}
+
+/* Garde defensif : certains plugins CSS (dont daisyUI, si re-active plus
+   tard) injectent un background-image sur <header>. Cette regle s'assure
+   que le fond reste toujours uni (bg-brand applique par Tailwind).        */
+header {
+  background-image: none;
+}
+
+/* ── Zoom proportionnel ──────────────────────────────────────────────── */
+/* En dessous de 1186px les breakpoints responsives normaux gèrent la     */
+/* mise en page (mobile → tablette → laptop).                             */
+/* Au-delà de 1186px, on scale le font-size de html proportionnellement   */
+/* au viewport : comme Tailwind v4 utilise des rem pour les paddings,     */
+/* gaps, font-sizes et max-widths, TOUT le layout grossit ensemble.       */
+/*   1.349vw = 16px à 1186px  →  20.7px à 1536px  →  25.9px à 1920px    */
+@media (min-width: 74.125rem) {   /* 74.125rem × 16px = 1186px           */
+  html {
+    font-size: 1.349vw;
+  }
 }
 
 /* Reglages generaux du corps de page.                                     */

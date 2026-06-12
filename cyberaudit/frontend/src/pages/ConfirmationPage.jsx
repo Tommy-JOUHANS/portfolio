@@ -49,47 +49,50 @@ export default function ConfirmationPage() {
         <h1 className="text-xl font-bold text-green-700">Request Submitted Successfully</h1>
       </div>
 
-      <div className="mt-6 w-full max-w-xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      {/* Carte récapitulatif : @container pour adapter le padding
+          à la largeur réelle de la carte (pas du viewport).              */}
+      <div className="@container mt-6 w-full max-w-xl rounded-xl border border-gray-200 bg-white p-4 shadow-sm @sm:p-6">
         <dl className="flex flex-col gap-3 text-sm">
-          <div className="flex justify-between gap-4">
+          {/* Chaque ligne : empilée sur mobile (flex-col), côte à côte sur sm+ */}
+          <div className="flex flex-col gap-0.5 @sm:flex-row @sm:justify-between @sm:gap-4">
             <dt className="font-semibold text-brand">Case number :</dt>
-            <dd className="text-right text-gray-800">{request.reference}</dd>
+            <dd className="text-gray-800 @sm:text-right">{request.reference}</dd>
           </div>
-          <div className="flex justify-between gap-4">
+          <div className="flex flex-col gap-0.5 @sm:flex-row @sm:justify-between @sm:gap-4">
             <dt className="font-semibold text-brand">Contact :</dt>
-            <dd className="text-right text-gray-800">{sanitize(clientInfo.first_name)} {sanitize(clientInfo.last_name)}</dd>
+            <dd className="text-gray-800 @sm:text-right">{sanitize(clientInfo.first_name)} {sanitize(clientInfo.last_name)}</dd>
           </div>
-          <div className="flex justify-between gap-4">
+          <div className="flex flex-col gap-0.5 @sm:flex-row @sm:justify-between @sm:gap-4">
             <dt className="font-semibold text-brand">Company Name :</dt>
-            <dd className="text-right text-gray-800">{sanitize(clientInfo.company_name) || "—"}</dd>
+            <dd className="text-gray-800 @sm:text-right">{sanitize(clientInfo.company_name) || "—"}</dd>
           </div>
-          <div className="flex justify-between gap-4">
+          <div className="flex flex-col gap-0.5 @sm:flex-row @sm:justify-between @sm:gap-4">
             <dt className="font-semibold text-brand">Selected pack :</dt>
-            <dd className="text-right text-gray-800">{sanitize(pack.name) || "—"}</dd>
+            <dd className="text-gray-800 @sm:text-right">{sanitize(pack.name) || "—"}</dd>
           </div>
           {pack.included_services && (
-            <div className="flex justify-between gap-4">
+            <div className="flex flex-col gap-0.5 @sm:flex-row @sm:justify-between @sm:gap-4">
               <dt className="font-semibold text-brand">Services included :</dt>
-              <dd className="text-right text-gray-800">
+              <dd className="text-gray-800 @sm:text-right">
                 {pack.included_services}<br />{pack.for_whom}<br />{pack.perimeter}
               </dd>
             </div>
           )}
-          <div className="flex justify-between gap-4">
+          <div className="flex flex-col gap-0.5 @sm:flex-row @sm:justify-between @sm:gap-4">
             <dt className="font-semibold text-brand">Price :</dt>
-            <dd className="text-right font-bold text-gray-800">{pack.price} EUR</dd>
+            <dd className="font-bold text-gray-800 sm:text-right">{pack.price} EUR</dd>
           </div>
-          <div className="flex justify-between gap-4">
+          <div className="flex flex-col gap-0.5 @sm:flex-row @sm:justify-between @sm:gap-4">
             <dt className="font-semibold text-brand">Submission date :</dt>
-            <dd className="text-right text-gray-800">{formatDateTime(request.submitted_at)}</dd>
+            <dd className="text-gray-800 @sm:text-right">{formatDateTime(request.submitted_at)}</dd>
           </div>
-          <div className="flex justify-between gap-4">
+          <div className="flex flex-col gap-0.5 @sm:flex-row @sm:justify-between @sm:gap-4">
             <dt className="font-semibold text-brand">Estimated processing time :</dt>
-            <dd className="text-right text-gray-800">{pack.duration_days} business days</dd>
+            <dd className="text-gray-800 @sm:text-right">{pack.duration_days} business days</dd>
           </div>
-          <div className="flex justify-between gap-4">
+          <div className="flex flex-col gap-0.5 @sm:flex-row @sm:justify-between @sm:gap-4">
             <dt className="font-semibold text-brand">Message :</dt>
-            <dd className="text-right text-gray-800">{sanitize(request.scope_notes) || "—"}</dd>
+            <dd className="text-gray-800 @sm:text-right">{sanitize(request.scope_notes) || "—"}</dd>
           </div>
         </dl>
       </div>

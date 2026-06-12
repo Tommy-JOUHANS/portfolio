@@ -82,19 +82,32 @@ export default function HomePage() {
   return (
     // Section pleine largeur sur fond creme.
     <section className="bg-cream">
-      {/* Conteneur centre a largeur maximale, avec marges interieures.   */}
-      <div className="mx-auto max-w-6xl px-6 py-10">
-        {/* ---- Titre principal de la plateforme ------------------------ */}
-        <h1 className="text-3xl font-extrabold text-brand sm:text-4xl">
+      {/* Conteneur centre a largeur maximale.
+          Mobile  (< 640px)  : px-4 py-8   — marges reduites, ecran etroit
+          Tablette (≥ 640px) : px-6 py-10  — standard
+          Desktop  (≥ 1280px): py-14       — plus d'air vertical           */}
+      <div className="mx-auto max-w-[74.125rem] px-4 py-8 sm:px-6 sm:py-10 xl:py-14">
+        {/* ---- Titre principal de la plateforme
+              Mobile  : text-2xl — lisible sur petit ecran
+              xs      : text-3xl (≥ 480px)
+              sm      : text-4xl (≥ 640px)
+              lg      : text-5xl (≥ 1024px) — impact sur grand ecran       */}
+        <h1 className="text-2xl font-extrabold text-brand xs:text-3xl sm:text-4xl lg:text-5xl">
           CyberAudit &amp; Solutions
         </h1>
 
-        {/* ---- Disposition en 2 colonnes sur grand ecran --------------- */}
-        <div className="mt-6 grid gap-8 lg:grid-cols-2">
+        {/* ---- Disposition en 2 colonnes.
+              Mobile  (< 768px)  : 1 colonne empilee
+              Tablette (≥ 768px) : 2 colonnes cote a cote (md:grid-cols-2)
+              Avant : lg:grid-cols-2 (> 1024px) — trop tardif pour tablette */}
+        <div className="mt-6 grid gap-6 sm:gap-8 md:grid-cols-2">
           {/* ===== Colonne de gauche : presentation et services ======== */}
-          <div className="flex flex-col gap-6">
-            {/* Bloc "Presentation de l'entreprise".                      */}
-            <article className="rounded-xl bg-white p-6 shadow-sm">
+          {/* @container : meme principe que la colonne droite.
+              Les articles reagissent a la largeur de LEUR colonne.        */}
+          <div className="@container flex flex-col gap-5 sm:gap-6">
+            {/* Bloc "Presentation de l'entreprise".
+                Padding : p-4 par defaut, @sm:p-6 quand la colonne >= 640px */}
+            <article className="rounded-xl bg-white p-4 shadow-sm @sm:p-6">
               {/* Titre du bloc.                                          */}
               <h2 className="text-lg font-bold text-brand">
                 Presentation of the company
@@ -111,7 +124,7 @@ export default function HomePage() {
             </article>
 
             {/* Bloc "Nos services".                                      */}
-            <article className="rounded-xl bg-white p-6 shadow-sm">
+            <article className="rounded-xl bg-white p-4 shadow-sm @sm:p-6">
               {/* Titre du bloc.                                          */}
               <h2 className="text-lg font-bold text-brand">Our services</h2>
               {/* Texte de description.                                   */}
@@ -123,7 +136,7 @@ export default function HomePage() {
             </article>
 
             {/* Bloc d'appel a l'action : creer un compte / se connecter. */}
-            <article className="rounded-xl bg-brand p-6 text-white shadow-sm">
+            <article className="rounded-xl bg-brand p-4 text-white shadow-sm @sm:p-6">
               {/* Titre de l'encart.                                      */}
               <h2 className="text-lg font-bold">Ready to get started?</h2>
               {/* Texte incitatif.                                        */}
@@ -152,7 +165,12 @@ export default function HomePage() {
           </div>
 
           {/* ===== Colonne de droite : les 4 blocs de services ========= */}
-          <div className="flex flex-col gap-4">
+          {/* @container : la colonne de droite est un conteneur de requetes.
+              Les cartes de service a l'interieur reagissent a la largeur de
+              CETTE colonne plutot qu'au viewport. Sur mobile (1 col), la
+              colonne fait la largeur totale. Sur md+ (2 cols), la colonne
+              fait ~50% du conteneur → les cartes s'adaptent correctement.  */}
+          <div className="@container flex flex-col gap-3 sm:gap-4">
             {/* On genere un bloc par service grace a une boucle map().   */}
             {SERVICES.map((service) => {
               // On stocke le composant icone dans une variable a majuscule
@@ -161,9 +179,11 @@ export default function HomePage() {
               // Rendu d'un bloc de service.
               return (
                 // Cle unique = titre du service.
+                // Padding : p-4 par defaut, @sm:p-5 quand la colonne >= 640px
+                // (container query relative a la colonne de droite)
                 <article
                   key={service.title}
-                  className="rounded-xl bg-white p-5 shadow-sm"
+                  className="rounded-xl bg-white p-4 shadow-sm @sm:p-5"
                 >
                   {/* Ligne titre : icone + intitule du service.          */}
                   <div className="flex items-center gap-2">
@@ -185,8 +205,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ---- Tableau des 4 packs proposes ---------------------------- */}
-        <div className="mt-10">
+        {/* ---- Tableau des 4 packs proposes
+              Mobile  : mt-8 — moins d'espace sur petit ecran
+              sm+     : mt-10 — standard                                   */}
+        <div className="mt-8 sm:mt-10">
           {/* Titre de la section packs.                                  */}
           <h2 className="text-xl font-bold text-brand">Our packages</h2>
           {/* Conteneur a defilement horizontal sur petits ecrans.        */}

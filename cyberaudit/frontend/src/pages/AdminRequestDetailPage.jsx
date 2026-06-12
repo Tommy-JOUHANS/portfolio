@@ -104,9 +104,13 @@ export default function AdminRequestDetailPage() {
 
       {notice && <p className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">{notice}</p>}
 
-      <div className="grid gap-5 lg:grid-cols-2">
+      {/* Grille : 1 col mobile, 2 cols quand la zone de contenu >= 768px.
+          @md:grid-cols-2 = container query relative au @container PortalLayout.
+          Avec la sidebar (224px), le viewport doit faire ~992px pour que la zone
+          de contenu atteigne 768px → les 2 colonnes ont vraiment de la place.  */}
+      <div className="grid gap-4 sm:gap-5 @md:grid-cols-2">
         {/* Infos client */}
-        <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm @sm:p-5">
           <h2 className="mb-3 border-b border-gray-100 pb-2 font-bold text-brand">Client information</h2>
           <dl className="flex flex-col gap-2 text-sm">
             <div className="flex justify-between gap-3"><dt className="text-gray-500">Company :</dt><dd className="font-medium text-gray-800">{sanitize(clientInfo.company_name) || "—"}</dd></div>
@@ -119,7 +123,7 @@ export default function AdminRequestDetailPage() {
         </div>
 
         {/* Actions */}
-        <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm @sm:p-5">
           <h2 className="mb-3 border-b border-gray-100 pb-2 font-bold text-brand">Status {"&"} Actions</h2>
           <label className="flex flex-col gap-1 text-sm"><span className="text-gray-500">Current status :</span>
             <select value={status} onChange={(e) => setStatus(e.target.value)}
@@ -148,9 +152,12 @@ export default function AdminRequestDetailPage() {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      {/* Boutons d'action :
+          Mobile  : chaque bouton pleine largeur (w-full)
+          sm+     : boutons auto, côte à côte (sm:w-auto flex-wrap)        */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
         <button type="button" onClick={handleSave} disabled={saving}
-          className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50">
+          className="w-full rounded-md bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50 sm:w-auto sm:py-2">
           {saving ? "Saving…" : "Save changes"}
         </button>
         <button type="button"
@@ -163,21 +170,21 @@ export default function AdminRequestDetailPage() {
               setNotice("Error occurred while generating the report.");
             }
           }}
-          className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700">
+          className="w-full rounded-md bg-green-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-700 sm:w-auto sm:py-2">
           Generate PDF report
         </button>
         <button type="button" onClick={handleSendNotification}
-          className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100">
+          className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-100 sm:w-auto sm:py-2">
           Send notification
         </button>
         <button type="button" onClick={handleArchive}
-          className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100">
+          className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-100 sm:w-auto sm:py-2">
           Archive request
         </button>
       </div>
 
       {/* Historique — non disponible via l'API REST */}
-      <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+      <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm @sm:p-5">
         <h2 className="mb-2 font-bold text-brand">History</h2>
         <p className="text-sm text-gray-400">Detailed history is managed on the backend (Django log).</p>
         <div className="mt-2 flex flex-col gap-1 text-sm text-gray-600">

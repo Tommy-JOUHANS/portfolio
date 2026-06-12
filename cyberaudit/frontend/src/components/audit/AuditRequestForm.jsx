@@ -118,8 +118,9 @@ export default function AuditRequestForm() {
 
       {errors.submit && <span className="text-sm text-red-600">{errors.submit}</span>}
 
+      {/* Bouton : pleine largeur sur mobile (w-full), auto sur sm+ */}
       <button type="submit" disabled={submitting}
-        className="self-start rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-50">
+        className="w-full rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-50 sm:w-auto sm:self-start">
         {submitting ? "Shipment in progress…" : "Sent the audit request"}
       </button>
     </form>

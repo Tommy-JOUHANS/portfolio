@@ -17,9 +17,13 @@ export default function RegisterPage() {
   // Rendu de la page.
   return (
     // Section pleine largeur sur fond creme, contenu centre horizontalement.
-    <section className="flex justify-center bg-cream px-4 py-12">
-      {/* Carte blanche centrale, coins arrondis, ombre douce.            */}
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm">
+    // py-8 sur mobile (ecran court), sm:py-12 a partir de 640px
+    <section className="flex justify-center bg-cream px-4 py-8 sm:py-12">
+      {/* Carte blanche centrale, coins arrondis, ombre douce.
+          Mobile (< 480px)  : p-5  — evite que la carte touche les bords
+          xs     (≥ 480px)  : p-6
+          sm+    (≥ 640px)  : p-8  — standard confortable                  */}
+      <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-sm xs:p-6 sm:p-8">
         {/* ---- En-tete de la carte : icone + titre + sous-titre -------- */}
         <div className="flex flex-col items-center gap-2 text-center">
           {/* Pastille ronde violet clair contenant l'icone utilisateur.  */}

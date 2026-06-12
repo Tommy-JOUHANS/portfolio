@@ -69,7 +69,7 @@ function App() {
   return (
     <ErrorBoundary>
       {/* Colonne pleine hauteur : Header en haut, Footer colle en bas.    */}
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-dvh flex-col">
         {/* Barre de navigation superieure, presente sur toutes les pages. */}
         <Header />
 

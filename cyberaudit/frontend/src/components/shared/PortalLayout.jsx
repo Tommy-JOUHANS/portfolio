@@ -16,12 +16,20 @@ export default function PortalLayout() {
   return (
     // Fond creme sur toute la zone du portail.
     <div className="bg-cream">
-      {/* Conteneur centre ; colonne sur mobile, ligne sur grand ecran.   */}
-      <div className="mx-auto flex max-w-6xl flex-col sm:flex-row">
-        {/* Menu lateral (a gauche sur grand ecran, en haut sur mobile).  */}
+      {/* Conteneur centre.
+          Mobile  (< 768px)  : flex-col — Sidebar en haut, contenu dessous
+          Tablette (≥ 768px) : flex-row — Sidebar a gauche, contenu a droite
+          Avant : sm:flex-row (640px) — trop etroit pour avoir sidebar + contenu */}
+      <div className="mx-auto flex max-w-[74.125rem] flex-col md:flex-row">
+        {/* Menu lateral (a gauche sur tablette+, en haut sur mobile).    */}
         <Sidebar />
-        {/* Zone de contenu : occupe tout l'espace restant.               */}
-        <div className="min-w-0 flex-1 p-6">
+        {/* Zone de contenu : occupe tout l'espace restant.
+            Mobile  : p-4 — marge reduite sur petit ecran
+            sm+     : p-6 — standard
+            @container : declare ce div comme contexte de container query
+            pour que les composants portail (grilles, cartes) s'adaptent
+            a la largeur reelle disponible (sans la sidebar sur desktop).  */}
+        <div className="@container min-w-0 flex-1 p-4 sm:p-6">
           {/* Outlet : la page du portail (Dashboard, Audit, Training...). */}
           <Outlet />
         </div>

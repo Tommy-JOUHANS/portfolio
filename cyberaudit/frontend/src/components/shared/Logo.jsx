@@ -50,7 +50,7 @@ export default function Logo({ size = 52 }) {
         src="/logo.png"
         alt="Logo CyberAudit & Solutions"
         onError={() => setImageFailed(true)}
-        className="w-full h-full object-cover scale-[1.26] translate-y-[-10px]"
+        className="w-full h-full object-cover scale-[1.24] translate-y-[-5px]"
         style={{ 
           transformOrigin: "center center",
          }}

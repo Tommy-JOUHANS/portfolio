@@ -67,14 +67,19 @@ export default function AdminDashboard() {
         <p className="text-sm italic text-gray-500">CyberAudit operator view. Manage all SME requests</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* 4 StatCards : 2 cols sur mobile, 4 cols sur lg+.
+          @container : contexte de container query pour les StatCards.
+          La structure de la grille (2→4 cols) reste en viewport queries
+          car c'est la structure de PAGE. Seuls les INTERNALS des StatCards
+          utilisent @xs: pour s'adapter a l'espace disponible.            */}
+      <div className="@container grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard label="Pending"     value={countByStatus("pending")}     accentClass="text-amber-500" />
         <StatCard label="In Progress" value={countByStatus("in_progress")} accentClass="text-blue-600"  />
         <StatCard label="Completed"   value={countByStatus("completed")}   accentClass="text-green-600" />
         <StatCard label="Archived"    value={countByStatus("archived")}    accentClass="text-gray-600"  />
       </div>
 
-      <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+      <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm @sm:p-5">
         <div className="flex flex-wrap items-end gap-3">
           <span className="text-sm font-semibold text-gray-700">Filters :</span>
           <label className="flex flex-col text-xs text-gray-500">Status

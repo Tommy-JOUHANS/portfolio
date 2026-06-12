@@ -125,13 +125,17 @@ export default function ClientDashboard() {
         <div className="rounded-md bg-amber-50 px-4 py-2 text-sm text-amber-700">{notice}</div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      {/* 3 StatCards : 1 col sur mobile, 3 cols dès xs (480px viewport).
+          @container : declare la grille comme contexte de container query
+          → les StatCards internes utilisent @xs: pour ajuster leur padding
+          et taille de texte selon la largeur reelle de CETTE grille.      */}
+      <div className="@container grid gap-3 xs:grid-cols-3 sm:gap-4">
         <StatCard label="Open requests"     value={openCount}      accentClass="text-amber-500" />
         <StatCard label="Completed"         value={completedCount} accentClass="text-green-600" />
         <StatCard label="Reports available" value={completedCount} accentClass="text-brand"     />
       </div>
 
-      <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+      <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm @sm:p-5">
         <h2 className="text-lg font-bold text-gray-800">My audit requests</h2>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <span className="text-sm text-gray-500">Filter :</span>
@@ -196,7 +200,7 @@ export default function ClientDashboard() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+      <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm @sm:p-5">
         <h2 className="text-lg font-bold text-gray-800">Recent notifications</h2>
         {notifications.length === 0 ? (
           <p className="mt-3 text-sm text-gray-400">No notifications.</p>

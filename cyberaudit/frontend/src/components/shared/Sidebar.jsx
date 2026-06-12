@@ -35,15 +35,23 @@ export default function Sidebar() {
 
   // Rendu du menu lateral.
   return (
-    // <aside> : panneau blanc ; largeur fixe a partir de la taille "sm".
-    <aside className="w-full shrink-0 border-b border-gray-100 bg-white p-4 sm:w-56 sm:border-b-0 sm:border-r">
-      {/* Titre du portail.                                               */}
-      <h2 className="mb-4 px-2 text-lg font-bold text-gray-800">
+    // <aside> : panneau blanc.
+    // Mobile  (< 768px)  : barre horizontale en haut, largeur pleine
+    //   — nav en flex-row avec defilement horizontal (overflow-x-auto)
+    //   — pas de titre visible (gain de place), juste les liens
+    // Tablette (≥ 768px) : colonne laterale gauche, largeur fixe 224px
+    //   — bordure droite, titre du portail visible, liens verticaux
+    <aside className="w-full shrink-0 border-b border-gray-100 bg-white md:w-56 md:border-b-0 md:border-r">
+      {/* Titre du portail : masque sur mobile (gain de place),
+          affiche a partir de la tablette (md:block).                     */}
+      <h2 className="hidden px-4 pt-5 pb-3 text-lg font-bold text-gray-800 md:block md:px-6">
         {portalTitle}
       </h2>
 
-      {/* <nav> : liste verticale des liens du menu.                       */}
-      <nav className="flex flex-col gap-1">
+      {/* <nav> :
+          Mobile  : flex-row, defilement horizontal, padding compact
+          Tablette+: flex-col, liens verticaux                            */}
+      <nav className="flex flex-row gap-1 overflow-x-auto px-3 py-2 md:flex-col md:px-3 md:py-2">
         {/* On genere un lien par entree du menu choisi.                   */}
         {menu.map((item) => {
           // On stocke l'icone dans une variable a majuscule (composant).
@@ -51,6 +59,8 @@ export default function Sidebar() {
           // Rendu d'une entree de menu.
           return (
             // NavLink : la fonction className recoit { isActive }.
+            // Mobile  : liens cote a cote (flex-shrink-0 pour ne pas ecraser)
+            // Tablette+: liens empiles (comportement normal)
             <NavLink
               key={item.to}
               to={item.to}
@@ -58,7 +68,8 @@ export default function Sidebar() {
               end
               className={({ isActive }) =>
                 // Style commun + style different selon que le lien est actif.
-                `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition ${
+                // shrink-0 evite que les liens se compriment sur mobile
+                `flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap transition ${
                   isActive
                     ? "bg-brand text-white" // lien actif : fond violet
                     : "text-gray-600 hover:bg-brand-soft" // lien inactif
