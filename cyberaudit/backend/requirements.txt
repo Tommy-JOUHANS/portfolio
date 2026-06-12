@@ -34,3 +34,4 @@ wcwidth==0.7.0
 weasyprint>=66.0
 whitenoise==6.9.0
 django-csp==4.0
+resend>=1.0.0,<2.0.0

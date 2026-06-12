@@ -33,6 +33,7 @@ function Consumer() {
 let ctxRef = {};
 function MethodConsumer() {
   const ctx = useContext(AuthContext);
+  // eslint-disable-next-line react-hooks/globals
   ctxRef = ctx;
   return <span data-testid="user">{ctx.user?.email ?? "none"}</span>;
 }

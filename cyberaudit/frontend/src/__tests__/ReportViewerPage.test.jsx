@@ -287,8 +287,8 @@ describe("ReportViewerPage", () => {
   });
 
   it("télécharge le PDF et crée un URL blob si status 200", async () => {
-    global.URL.createObjectURL = vi.fn(() => "blob:pdf-test");
-    global.URL.revokeObjectURL = vi.fn();
+    globalThis.URL.createObjectURL = vi.fn(() => "blob:pdf-test");
+    globalThis.URL.revokeObjectURL = vi.fn();
 
     setClientUser();
     getReportByReference.mockResolvedValue(FAKE_REPORT);

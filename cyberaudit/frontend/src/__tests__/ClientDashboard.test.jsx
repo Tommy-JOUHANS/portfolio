@@ -205,8 +205,8 @@ describe("ClientDashboard", () => {
   });
 
   it("handleDownload: déclenche le téléchargement si status 200", async () => {
-    global.URL.createObjectURL = vi.fn(() => "blob:test-url");
-    global.URL.revokeObjectURL = vi.fn();
+    globalThis.URL.createObjectURL = vi.fn(() => "blob:test-url");
+    globalThis.URL.revokeObjectURL = vi.fn();
 
     getAllRequests.mockResolvedValue(FAKE_REQUESTS);
     getNotificationsByUserId.mockResolvedValue([]);
