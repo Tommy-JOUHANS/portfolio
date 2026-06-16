@@ -62,18 +62,11 @@ export default function TrainingPage() {
         </div>
       </div>
 
-      {/* Grille : 1 col mobile, 2 cols quand la zone de contenu atteint 640px,
-          3 cols quand elle atteint 1024px.
-          @sm: / @lg: = container queries relatives au @container de PortalLayout :
-          → la grille repond a l'espace REEL disponible (zone de contenu sans
-            la sidebar), pas au viewport global. Avec la sidebar visible (224px),
-            @sm: s'active a 640+224 = ~864px viewport au lieu de 640px.
-          → evite 2 colonnes trop etroites juste apres l'apparition de la sidebar. */}
-      <div className="grid gap-3 @sm:grid-cols-2 @sm:gap-4 @lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {modules.map((module) => {
           const statusInfo = STATUS_LABELS[module.status] || STATUS_LABELS.to_start;
           return (
-            <div key={module.id} className="flex flex-col rounded-xl border border-gray-100 bg-white p-4 shadow-sm @sm:p-5">
+            <div key={module.id} className="flex flex-col rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
               <h2 className="font-bold text-brand">{module.title}</h2>
               <p className="mt-1 flex-1 text-sm text-gray-600">{module.description}</p>
               <p className="mt-3 text-sm">
