@@ -78,3 +78,7 @@ generated_reports/
 *.pdf
 !Stages/**/*.pdf
 !docs/**/*.pdf
+
+# Vitest coverage reports
+coverage/
+**/coverage/
