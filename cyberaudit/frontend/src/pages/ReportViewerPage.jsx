@@ -222,11 +222,22 @@ export default function ReportViewerPage() {
           <Link to="/dashboard" className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-100">
             Back to list
           </Link>
-          {!editMode && report && (
+          {!editMode && report && report.pdf_path && (
             <button onClick={handleDownloadPdf} disabled={downloading}
               className="rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-green-700 disabled:opacity-50">
               {downloading ? "Downloading…" : "Download PDF"}
             </button>
+          )}
+          {!editMode && report && !report.pdf_path && isAdmin && (
+            <button onClick={() => setEditMode(true)}
+              className="rounded-md bg-amber-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-amber-600">
+              Generate PDF
+            </button>
+          )}
+          {!editMode && report && !report.pdf_path && !isAdmin && (
+            <span className="rounded-md bg-amber-50 px-3 py-1.5 text-xs italic text-amber-700">
+              PDF not generated yet
+            </span>
           )}
         </div>
       </div>
