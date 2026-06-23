@@ -22,6 +22,22 @@ function timeAgo(isoString) {
   return `il y a ${Math.floor(hours / 24)} j`;
 }
 
+// Detecte le type de notification a partir du message
+function getNotifType(message) {
+  const m = (message || "").toLowerCase();
+  if (m.includes("report") && m.includes("available")) return "report";
+  if (m.includes("status changed") || m.includes("statut")) return "status";
+  if (m.includes("received your") || m.includes("audit request")) return "received";
+  return "default";
+}
+
+const NOTIF_STYLES = {
+  report:   { icon: "✓", border: "border-green-500", bg: "bg-green-50",  iconBg: "bg-green-100", iconColor: "text-green-700" },
+  status:   { icon: "↻", border: "border-blue-500",  bg: "bg-blue-50",   iconBg: "bg-blue-100",  iconColor: "text-blue-700" },
+  received: { icon: "✉", border: "border-amber-500", bg: "bg-amber-50",  iconBg: "bg-amber-100", iconColor: "text-amber-700" },
+  default:  { icon: "•", border: "border-brand",     bg: "bg-cream",     iconBg: "bg-brand-soft", iconColor: "text-brand" },
+};
+
 export default function ClientDashboard() {
   const { user } = useAuth();
   const [requests, setRequests]           = useState([]);
@@ -32,6 +48,7 @@ export default function ClientDashboard() {
   const [statusFilter, setStatusFilter]   = useState("all");
   const [packFilter, setPackFilter]       = useState("all");
   const [downloading, setDownloading]     = useState(null);
+  const [showAllNotifs, setShowAllNotifs] = useState(false);
   const [pdfMap, setPdfMap]               = useState({});
 
   const loadData = useCallback(async () => {
@@ -237,17 +254,44 @@ export default function ClientDashboard() {
       </div>
 
       <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
-        <h2 className="text-lg font-bold text-gray-800">Recent notifications</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-gray-800">Recent notifications</h2>
+          {notifications.length > 0 && (
+            <span className="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-semibold text-brand">
+              {notifications.length}
+            </span>
+          )}
+        </div>
         {notifications.length === 0 ? (
-          <p className="mt-3 text-sm text-gray-400">No notifications.</p>
+          <p className="mt-3 text-sm text-gray-400">No notifications yet.</p>
         ) : (
-          <ul className="mt-3 flex flex-col gap-2">
-            {notifications.map((n) => (
-              <li key={n.id} className="rounded-md border-l-4 border-brand bg-cream px-3 py-2 text-sm text-gray-700">
-                {sanitize(n.message)} <span className="text-gray-400">({timeAgo(n.created_at)})</span>
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className="mt-3 flex flex-col gap-2">
+              {(showAllNotifs ? notifications : notifications.slice(0, 5)).map((n) => {
+                const style = NOTIF_STYLES[getNotifType(n.message)];
+                return (
+                  <li key={n.id} className={`flex items-start gap-3 rounded-lg border-l-4 ${style.border} ${style.bg} p-3 transition hover:shadow-sm`}>
+                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${style.iconBg} ${style.iconColor} text-base font-bold`}>
+                      {style.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm leading-snug text-gray-700">{sanitize(n.message)}</p>
+                      <p className="mt-1 text-xs italic text-gray-400">{timeAgo(n.created_at)}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            {notifications.length > 5 && (
+              <button
+                type="button"
+                onClick={() => setShowAllNotifs(!showAllNotifs)}
+                className="mt-3 w-full rounded-md border border-gray-200 py-2 text-sm font-semibold text-brand transition hover:bg-brand-soft"
+              >
+                {showAllNotifs ? "Show less" : `Show all (${notifications.length})`}
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>
