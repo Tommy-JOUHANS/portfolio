@@ -131,11 +131,12 @@ export default function AdminDashboard() {
                   <td className="px-3 py-3 text-gray-600">{formatDate(r.submitted_at)}</td>
                   <td className="px-3 py-3"><StatusBadge status={r.status} /></td>
                   <td className="px-3 py-3">
-                    {r.status === "completed" ? (
-                      <Link to={`/admin/report/${r.reference}`} className="font-medium text-brand hover:underline">View report</Link>
-                    ) : (
+                    <div className="flex flex-col gap-0.5">
                       <Link to={`/admin/request/${r.reference}`} className="font-medium text-brand hover:underline">View / Edit</Link>
-                    )}
+                      {r.status === "completed" && (
+                        <Link to={`/admin/report/${r.reference}`} className="text-xs text-gray-600 hover:underline">View report</Link>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
