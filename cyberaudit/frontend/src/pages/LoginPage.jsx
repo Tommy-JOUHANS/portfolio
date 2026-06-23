@@ -5,14 +5,24 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Lock } from "lucide-react";
 import LoginForm from "../components/auth/LoginForm.jsx";
+import { sendStatusNotification } from "../services/emailService.js";
 
 export default function LoginPage() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetEmail, setResetEmail]         = useState("");
   const [resetSubmitted, setResetSubmitted] = useState(false);
 
-  function handleResetSubmit(e) {
+  async function handleResetSubmit(e) {
     e.preventDefault();
+    // Notifie l'admin via EmailJS (best-effort, on n'attend pas le retour)
+    sendStatusNotification({
+      to_email:   "admin@cyberaudit.fr",
+      to_name:    "Admin",
+      reference:  "PASSWORD-RESET-REQUEST",
+      new_status: "Action required",
+      message:    `User ${resetEmail} requested a password reset. Please contact them and reset their password in Django admin.`,
+    }).catch((err) => console.error("[reset] EmailJS failed:", err));
+    // On affiche la confirmation immediatement (UX, on ne bloque pas sur le mail)
     setResetSubmitted(true);
   }
 
