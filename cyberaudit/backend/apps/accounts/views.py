@@ -1,15 +1,16 @@
 """
 accounts/views.py — Endpoints d'authentification JWT.
 """
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
 from .models import User
 from .serializers import ChangePasswordSerializer, RegisterSerializer, UserSerializer
 
@@ -145,7 +146,10 @@ class PasswordResetConfirmView(APIView):
         if not token_combined or "." not in token_combined:
             return Response({"detail": "Token invalide."}, status=status.HTTP_400_BAD_REQUEST)
         if len(new_password) < 8:
-            return Response({"detail": "Le mot de passe doit faire au moins 8 caractères."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Le mot de passe doit faire au moins 8 caractères."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         try:
             uid, token = token_combined.split(".", 1)
             user_pk = force_str(urlsafe_base64_decode(uid))
