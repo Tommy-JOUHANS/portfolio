@@ -30,7 +30,7 @@ api.interceptors.request.use((config) => {
     config.url?.includes("register");
 
   if (!isAuthRoute) {
-    const raw = localStorage.getItem(SESSION_KEY);
+    const raw = sessionStorage.getItem(SESSION_KEY);
     if (raw) {
       const session = JSON.parse(raw);
       if (session?.access) {
@@ -70,7 +70,7 @@ api.interceptors.response.use(
       original._retry = true;
 
       try {
-        const raw = localStorage.getItem(SESSION_KEY);
+        const raw = sessionStorage.getItem(SESSION_KEY);
         if (!raw) throw new Error("Pas de session");
 
         const session = JSON.parse(raw);
@@ -81,20 +81,20 @@ api.interceptors.response.use(
           refresh: session.refresh,
         });
 
-        // Mise à jour du token en localStorage
+        // Mise à jour du token en sessionStorage
         const updated = {
           ...session,
           access: data.access,
           refresh: data.refresh ?? session.refresh,
         };
-        localStorage.setItem(SESSION_KEY, JSON.stringify(updated));
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(updated));
 
         // Rejoue la requête originale avec le nouveau token
         original.headers.Authorization = `Bearer ${data.access}`;
         return api(original);
       } catch (_refreshError) {
         // Refresh échoué → déconnexion forcée
-        localStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(SESSION_KEY);
         window.location.href = "/login";
         return Promise.reject(_refreshError);
       }

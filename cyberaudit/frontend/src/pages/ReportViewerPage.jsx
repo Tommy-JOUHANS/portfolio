@@ -35,7 +35,7 @@ function gradeColor(grade) {
 
 function getCurrentUser() {
   try {
-    const raw = localStorage.getItem("cyberaudit:session");
+    const raw = sessionStorage.getItem("cyberaudit:session");
     return raw ? JSON.parse(raw).user : null;
   } catch {
     return null;

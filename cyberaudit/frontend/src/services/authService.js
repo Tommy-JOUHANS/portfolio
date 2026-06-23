@@ -5,11 +5,11 @@
 //   register()        → POST /api/auth/register/
 //   login()           → POST /api/auth/login/
 //   logout()          → POST /api/auth/logout/   (blacklist refresh token)
-//   getSession()      → lecture localStorage (restauration au démarrage)
+//   getSession()      → lecture sessionStorage (restauration au démarrage)
 //   getMe()           → GET  /api/auth/me/
 //   changePassword()  → POST /api/auth/change-password/
 //
-// Les tokens (access + refresh) sont persistés dans le localStorage sous
+// Les tokens (access + refresh) sont persistés dans le sessionStorage sous
 // la clé "cyberaudit:session". L'instance axios (api.js) les injecte
 // automatiquement dans chaque requête.
 // ========================================================================
@@ -21,10 +21,10 @@ const SESSION_KEY = "cyberaudit:session";
 
 // ── Helpers internes ──────────────────────────────────────────────────────────
 
-/** Sauvegarde la session en localStorage et la retourne. */
+/** Sauvegarde la session en sessionStorage et la retourne. */
 function saveSession(access, refresh, user) {
   const session = { access, refresh, user };
-  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
   return session;
 }
 
@@ -90,7 +90,7 @@ export async function login(email, password) {
 /** Blackliste le refresh token côté serveur puis vide la session locale. */
 export async function logout() {
   try {
-    const raw = localStorage.getItem(SESSION_KEY);
+    const raw = sessionStorage.getItem(SESSION_KEY);
     if (raw) {
       const session = JSON.parse(raw);
       if (session?.refresh) {
@@ -101,7 +101,7 @@ export async function logout() {
   } catch {
     // On vide quand même la session locale
   } finally {
-    localStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_KEY);
   }
 }
 
@@ -112,14 +112,14 @@ export async function logout() {
  * Rétro-compatible : si l'ancien format { token, user } est trouvé, le migre.
  */
 export function getSession() {
-  const raw = localStorage.getItem(SESSION_KEY);
+  const raw = sessionStorage.getItem(SESSION_KEY);
   if (!raw) return null;
 
   const session = JSON.parse(raw);
 
   // Migration depuis l'ancien format mock ({ token, user })
   if (session?.token && !session?.access) {
-    localStorage.removeItem(SESSION_KEY); // session mock invalide, on l'efface
+    sessionStorage.removeItem(SESSION_KEY); // session mock invalide, on l'efface
     return null;
   }
 
