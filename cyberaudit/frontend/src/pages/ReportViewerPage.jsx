@@ -172,7 +172,7 @@ export default function ReportViewerPage() {
           })
           .catch(() => {});
         if (attempts >= 15) clearInterval(poll);
-      }, 1000);
+      }, 3000);
     } catch (e) {
       setNotice("Error during generation: " + (e.response?.data?.detail || e.message));
     } finally { setSubmitting(false); }

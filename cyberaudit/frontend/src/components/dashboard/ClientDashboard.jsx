@@ -88,21 +88,27 @@ export default function ClientDashboard() {
     return () => { cancelled = true; };
   }, [requests]);
 
-  // Polling toutes les 5 sec pour detecter quand un nouveau PDF devient dispo
+  // Polling intelligent toutes les 30 sec : SEULEMENT pour les PDFs pas encore prets
   useEffect(() => {
     const interval = setInterval(() => {
-      const completed = requests.filter((r) => r.status === "completed");
-      if (completed.length === 0) return;
-      Promise.all(
-        completed.map((r) =>
-          api({ method: "HEAD", url: `/audits/${r.id}/report/`, validateStatus: () => true })
-            .then((res) => [r.id, res.status >= 200 && res.status < 300])
-            .catch(() => [r.id, false])
-        )
-      ).then((results) => {
-        setPdfMap(Object.fromEntries(results));
+      setPdfMap((currentMap) => {
+        const pending = requests.filter((r) => r.status === "completed" && !currentMap[r.id]);
+        if (pending.length === 0) return currentMap; // tout est pret, on arrete de poller
+        Promise.all(
+          pending.map((r) =>
+            api({ method: "HEAD", url: `/audits/${r.id}/report/`, validateStatus: () => true })
+              .then((res) => [r.id, res.status >= 200 && res.status < 300])
+              .catch(() => [r.id, false])
+          )
+        ).then((results) => {
+          const newlyReady = results.filter(([, isReady]) => isReady);
+          if (newlyReady.length > 0) {
+            setPdfMap((prev) => ({ ...prev, ...Object.fromEntries(newlyReady) }));
+          }
+        });
+        return currentMap;
       });
-    }, 5000);
+    }, 30000);
     return () => clearInterval(interval);
   }, [requests]);
 
