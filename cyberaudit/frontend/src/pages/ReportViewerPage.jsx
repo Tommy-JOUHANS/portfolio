@@ -156,6 +156,23 @@ export default function ReportViewerPage() {
         getRequestByReference(reference),
       ]);
       setReport(fresh); setAudit(freshAudit); setEditMode(false);
+
+      // Poll pour detecter quand le PDF est pret (max 15 sec)
+      let attempts = 0;
+      const poll = setInterval(() => {
+        attempts++;
+        api({ method: "HEAD", url: `/audits/${audit.id}/report/`, validateStatus: () => true })
+          .then((res) => {
+            if (res.status >= 200 && res.status < 300) {
+              setPdfReady(true);
+              setNotice("PDF ready! Click Download PDF.");
+              setTimeout(() => setNotice(""), 3000);
+              clearInterval(poll);
+            }
+          })
+          .catch(() => {});
+        if (attempts >= 15) clearInterval(poll);
+      }, 1000);
     } catch (e) {
       setNotice("Error during generation: " + (e.response?.data?.detail || e.message));
     } finally { setSubmitting(false); }
