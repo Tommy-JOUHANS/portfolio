@@ -70,6 +70,7 @@ export default function ReportViewerPage() {
   const [loading, setLoading] = useState(true);
   const [notice, setNotice]   = useState("");
   const [downloading, setDownloading] = useState(false);
+  const [pdfReady, setPdfReady] = useState(false);
 
   // édition
   const [editMode, setEditMode]     = useState(false);
@@ -103,6 +104,16 @@ export default function ReportViewerPage() {
     tick();  // affiche le premier message immédiatement
     return () => clearInterval(interval);
   }, [submitting]);
+
+  // Verifie si le PDF existe vraiment cote serveur (HEAD request)
+  useEffect(() => {
+    if (!audit?.id) return;
+    let cancelled = false;
+    api({ method: "HEAD", url: `/audits/${audit.id}/report/`, validateStatus: () => true })
+      .then((res) => { if (!cancelled) setPdfReady(res.status >= 200 && res.status < 300); })
+      .catch(() => { if (!cancelled) setPdfReady(false); });
+    return () => { cancelled = true; };
+  }, [audit?.id]);
 
   useEffect(() => {
     async function load() {
@@ -222,19 +233,19 @@ export default function ReportViewerPage() {
           <Link to="/dashboard" className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-100">
             Back to list
           </Link>
-          {!editMode && report && report.pdf_path && (
+          {!editMode && report && pdfReady && (
             <button onClick={handleDownloadPdf} disabled={downloading}
               className="rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-green-700 disabled:opacity-50">
               {downloading ? "Downloading…" : "Download PDF"}
             </button>
           )}
-          {!editMode && report && !report.pdf_path && isAdmin && (
+          {!editMode && report && !pdfReady && isAdmin && (
             <button onClick={() => setEditMode(true)}
               className="rounded-md bg-amber-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-amber-600">
               Generate PDF
             </button>
           )}
-          {!editMode && report && !report.pdf_path && !isAdmin && (
+          {!editMode && report && !pdfReady && !isAdmin && (
             <span className="rounded-md bg-amber-50 px-3 py-1.5 text-xs italic text-amber-700">
               PDF not generated yet
             </span>
