@@ -1,6 +1,7 @@
 """
 accounts/views.py — Endpoints d'authentification JWT.
 """
+
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -114,6 +115,7 @@ class ChangePasswordView(APIView):
 
 class PasswordResetRequestView(APIView):
     """Génère un token de reset password. Anti-énumération."""
+
     permission_classes = [AllowAny]
     throttle_scope = "login"
 
@@ -125,18 +127,21 @@ class PasswordResetRequestView(APIView):
             user = User.objects.get(email=email)
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            return Response({
-                "success": True,
-                "reset_token": f"{uid}.{token}",
-                "user_email": email,
-                "user_name": user.first_name or email.split("@")[0],
-            })
+            return Response(
+                {
+                    "success": True,
+                    "reset_token": f"{uid}.{token}",
+                    "user_email": email,
+                    "user_name": user.first_name or email.split("@")[0],
+                }
+            )
         except User.DoesNotExist:
             return Response({"success": True})
 
 
 class PasswordResetConfirmView(APIView):
     """Valide le token et change le mot de passe."""
+
     permission_classes = [AllowAny]
     throttle_scope = "login"
 
@@ -155,9 +160,13 @@ class PasswordResetConfirmView(APIView):
             user_pk = force_str(urlsafe_base64_decode(uid))
             user = User.objects.get(pk=user_pk)
         except (ValueError, User.DoesNotExist):
-            return Response({"detail": "Token invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Token invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST
+            )
         if not default_token_generator.check_token(user, token):
-            return Response({"detail": "Token invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Token invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST
+            )
         user.set_password(new_password)
         user.save(update_fields=["password"])
         return Response({"success": True, "detail": "Mot de passe modifié avec succès."})
