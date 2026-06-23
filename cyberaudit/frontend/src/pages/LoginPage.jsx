@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { Lock } from "lucide-react";
 import LoginForm from "../components/auth/LoginForm.jsx";
 import { sendStatusNotification } from "../services/emailService.js";
+import api from "../services/api.js";
 
 export default function LoginPage() {
   const [showResetModal, setShowResetModal] = useState(false);
@@ -14,14 +15,21 @@ export default function LoginPage() {
 
   async function handleResetSubmit(e) {
     e.preventDefault();
-    // Envoie un mail de confirmation au user lui-meme
-    sendStatusNotification({
-      to_email:   resetEmail,
-      to_name:    resetEmail.split("@")[0],
-      reference:  "PASSWORD-RESET",
-      new_status: "Reset Request Received",
-      message:    "We received your password reset request. An administrator will contact you within 24 hours to assist with resetting your password. If you did not request this, please ignore this email. For urgent help, contact admin@cyberaudit.fr.",
-    }).catch((err) => console.error("[reset] EmailJS failed:", err));
+    try {
+      const { data } = await api.post("/auth/password-reset/request/", { email: resetEmail });
+      if (data.reset_token) {
+        const resetUrl = `${window.location.origin}/reset-password/${data.reset_token}`;
+        sendStatusNotification({
+          to_email:   resetEmail,
+          to_name:    data.user_name || resetEmail.split("@")[0],
+          reference:  "PASSWORD-RESET",
+          new_status: "Reset Link",
+          message:    `Click this link to reset your password: ${resetUrl}\n\nThis link expires in 3 days. If you did not request this, please ignore this email.`,
+        }).catch((err) => console.error("[reset] EmailJS failed:", err));
+      }
+    } catch (err) {
+      console.error("[reset] Backend failed:", err);
+    }
     setResetSubmitted(true);
   }
 
