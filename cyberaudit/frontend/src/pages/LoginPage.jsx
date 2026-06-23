@@ -14,15 +14,14 @@ export default function LoginPage() {
 
   async function handleResetSubmit(e) {
     e.preventDefault();
-    // Notifie l'admin via EmailJS (best-effort, on n'attend pas le retour)
+    // Envoie un mail de confirmation au user lui-meme
     sendStatusNotification({
-      to_email:   "admin@cyberaudit.fr",
-      to_name:    "Admin",
-      reference:  "PASSWORD-RESET-REQUEST",
-      new_status: "Action required",
-      message:    `User ${resetEmail} requested a password reset. Please contact them and reset their password in Django admin.`,
+      to_email:   resetEmail,
+      to_name:    resetEmail.split("@")[0],
+      reference:  "PASSWORD-RESET",
+      new_status: "Reset Request Received",
+      message:    "We received your password reset request. An administrator will contact you within 24 hours to assist with resetting your password. If you did not request this, please ignore this email. For urgent help, contact admin@cyberaudit.fr.",
     }).catch((err) => console.error("[reset] EmailJS failed:", err));
-    // On affiche la confirmation immediatement (UX, on ne bloque pas sur le mail)
     setResetSubmitted(true);
   }
 
