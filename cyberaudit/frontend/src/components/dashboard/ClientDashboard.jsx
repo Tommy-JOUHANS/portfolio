@@ -32,6 +32,7 @@ export default function ClientDashboard() {
   const [statusFilter, setStatusFilter]   = useState("all");
   const [packFilter, setPackFilter]       = useState("all");
   const [downloading, setDownloading]     = useState(null);
+  const [pdfMap, setPdfMap]               = useState({});
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -52,6 +53,23 @@ export default function ClientDashboard() {
 
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadData(); }, [loadData]);
+
+  // Verifie quels dossiers Completed ont un PDF dispo (HEAD requests)
+  useEffect(() => {
+    const completed = requests.filter((r) => r.status === "completed");
+    if (completed.length === 0) return;
+    let cancelled = false;
+    Promise.all(
+      completed.map((r) =>
+        api({ method: "HEAD", url: `/audits/${r.id}/report/`, validateStatus: () => true })
+          .then((res) => [r.id, res.status >= 200 && res.status < 300])
+          .catch(() => [r.id, false])
+      )
+    ).then((results) => {
+      if (!cancelled) setPdfMap(Object.fromEntries(results));
+    });
+    return () => { cancelled = true; };
+  }, [requests]);
 
   async function handleDownload(request) {
     setDownloading(request.id);
@@ -128,7 +146,7 @@ export default function ClientDashboard() {
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard label="Open requests"     value={openCount}      accentClass="text-amber-500" />
         <StatCard label="Completed"         value={completedCount} accentClass="text-green-600" />
-        <StatCard label="Reports available" value={completedCount} accentClass="text-brand"     />
+        <StatCard label="Reports available" value={Object.values(pdfMap).filter(Boolean).length} accentClass="text-brand"     />
       </div>
 
       <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
@@ -176,11 +194,15 @@ export default function ClientDashboard() {
                     <td className="px-3 py-3"><StatusBadge status={r.status} /></td>
                     <td className="px-3 py-3">
                       {r.status === "completed" ? (
-                        <button type="button" disabled={downloading === r.id}
-                          onClick={() => handleDownload(r)}
-                          className="font-medium text-brand hover:underline disabled:opacity-50">
-                          {downloading === r.id ? "Downloading…" : "Download report"}
-                        </button>
+                        pdfMap[r.id] ? (
+                          <button type="button" disabled={downloading === r.id}
+                            onClick={() => handleDownload(r)}
+                            className="font-medium text-brand hover:underline disabled:opacity-50">
+                            {downloading === r.id ? "Downloading…" : "Download report"}
+                          </button>
+                        ) : (
+                          <span className="text-xs italic text-amber-600">PDF being prepared…</span>
+                        )
                       ) : (
                         <Link to={`/audit/confirmation/${r.reference}`}
                           className="font-medium text-brand hover:underline">
