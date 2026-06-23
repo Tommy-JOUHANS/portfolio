@@ -71,6 +71,24 @@ export default function ClientDashboard() {
     return () => { cancelled = true; };
   }, [requests]);
 
+  // Polling toutes les 5 sec pour detecter quand un nouveau PDF devient dispo
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const completed = requests.filter((r) => r.status === "completed");
+      if (completed.length === 0) return;
+      Promise.all(
+        completed.map((r) =>
+          api({ method: "HEAD", url: `/audits/${r.id}/report/`, validateStatus: () => true })
+            .then((res) => [r.id, res.status >= 200 && res.status < 300])
+            .catch(() => [r.id, false])
+        )
+      ).then((results) => {
+        setPdfMap(Object.fromEntries(results));
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [requests]);
+
   async function handleDownload(request) {
     setDownloading(request.id);
     setNotice("");
