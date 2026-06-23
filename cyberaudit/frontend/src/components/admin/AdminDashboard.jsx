@@ -131,10 +131,28 @@ export default function AdminDashboard() {
                   <td className="px-3 py-3 text-gray-600">{formatDate(r.submitted_at)}</td>
                   <td className="px-3 py-3"><StatusBadge status={r.status} /></td>
                   <td className="px-3 py-3">
-                    <div className="flex flex-col gap-0.5">
-                      <Link to={`/admin/request/${r.reference}`} className="font-medium text-brand hover:underline">View / Edit</Link>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <Link
+                        to={`/admin/request/${r.reference}`}
+                        title="Manage status and details"
+                        className="inline-flex items-center gap-1 rounded-md border border-brand bg-white px-2.5 py-1 text-xs font-semibold text-brand transition hover:bg-brand hover:text-white"
+                      >
+                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit
+                      </Link>
                       {r.status === "completed" && (
-                        <Link to={`/admin/report/${r.reference}`} className="text-xs text-gray-600 hover:underline">View report</Link>
+                        <Link
+                          to={`/admin/report/${r.reference}`}
+                          title="View vulnerability report"
+                          className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 transition hover:bg-gray-100"
+                        >
+                          <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Report
+                        </Link>
                       )}
                     </div>
                   </td>
