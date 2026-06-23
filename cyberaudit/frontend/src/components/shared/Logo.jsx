@@ -1,15 +1,3 @@
-// ========================================================================
-// Logo.jsx - Pastille circulaire de marque "CyberAudit & Solutions".
-//
-// Affiche l'image officielle du logo (public/logo.png) decoupee en cercle
-// (border-radius 50% via la classe Tailwind "rounded-full").
-// Si l'image est absente, un bouclier de secours est affiche a la place :
-// l'interface reste donc correcte meme avant l'ajout du fichier image.
-//
-// >> POUR AFFICHER TON LOGO : enregistre ton image sous
-//    frontend/public/logo.png  (Vite la sert automatiquement a l'URL /logo.png)
-// ========================================================================
-
 // useState : memorise si le chargement de l'image a echoue.
 import { useState } from "react";
 // ShieldCheck : icone bouclier utilisee comme logo de secours.
@@ -50,7 +38,7 @@ export default function Logo({ size = 52 }) {
         src="/logo.png"
         alt="Logo CyberAudit & Solutions"
         onError={() => setImageFailed(true)}
-        className="w-full h-full object-cover scale-[1.26] translate-y-[-10px]"
+        className="w-full h-full object-cover scale-[1.24] translate-y-[-5px]"
         style={{ 
           transformOrigin: "center center",
          }}
