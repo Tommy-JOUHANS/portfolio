@@ -10,6 +10,8 @@ import api from "../../services/api.js";
 import StatCard from "./StatCard.jsx";
 import StatusBadge from "./StatusBadge.jsx";
 
+const PAGE_SIZE = 5;
+
 function formatDate(isoString) {
   return new Date(isoString).toLocaleDateString("fr-FR");
 }
@@ -49,6 +51,7 @@ export default function ClientDashboard() {
   const [packFilter, setPackFilter]       = useState("all");
   const [downloading, setDownloading]     = useState(null);
   const [showAllNotifs, setShowAllNotifs] = useState(false);
+  const [currentPage, setCurrentPage]     = useState(1);
   const [pdfMap, setPdfMap]               = useState({});
 
   const loadData = useCallback(async () => {
@@ -152,6 +155,11 @@ export default function ClientDashboard() {
 
   const openCount      = requests.filter((r) => r.status === "pending" || r.status === "in_progress").length;
   const completedCount = requests.filter((r) => r.status === "completed").length;
+  const totalPages   = Math.max(1, Math.ceil(filteredRequests.length / PAGE_SIZE));
+  const safePage     = Math.min(currentPage, totalPages);
+  const startIndex   = (safePage - 1) * PAGE_SIZE;
+  const pageRequests = filteredRequests.slice(startIndex, startIndex + PAGE_SIZE);
+  function changeFilter(setter, value) { setter(value); setCurrentPage(1); }
 
   if (loading) return (
     <div className="flex h-64 items-center justify-center">
@@ -194,7 +202,7 @@ export default function ClientDashboard() {
         <h2 className="text-lg font-bold text-gray-800">My audit requests</h2>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <span className="text-sm text-gray-500">Filter :</span>
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
+          <select value={statusFilter} onChange={(e) => changeFilter(setStatusFilter, e.target.value)}
             className="rounded-md border border-gray-300 px-2 py-1 text-sm">
             <option value="all">All statuses</option>
             <option value="pending">Pending</option>
@@ -202,7 +210,7 @@ export default function ClientDashboard() {
             <option value="completed">Completed</option>
             <option value="archived">Archived</option>
           </select>
-          <select value={packFilter} onChange={(e) => setPackFilter(e.target.value)}
+          <select value={packFilter} onChange={(e) => changeFilter(setPackFilter, e.target.value)}
             className="rounded-md border border-gray-300 px-2 py-1 text-sm">
             <option value="all">All packs</option>
             <option value="audit">Audit</option>
@@ -224,10 +232,10 @@ export default function ClientDashboard() {
               </tr>
             </thead>
             <tbody>
-              {filteredRequests.length === 0 ? (
+              {pageRequests.length === 0 ? (
                 <tr><td colSpan={5} className="px-3 py-6 text-center text-gray-400">No requests to display.</td></tr>
               ) : (
-                filteredRequests.map((r) => (
+                pageRequests.map((r) => (
                   <tr key={r.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
                     <td className="px-3 py-3 font-medium text-gray-800">{sanitize(r.reference)}</td>
                     <td className="px-3 py-3 text-gray-600">{sanitize(r.pack?.name) || "—"}</td>
@@ -257,6 +265,19 @@ export default function ClientDashboard() {
             </tbody>
           </table>
         </div>
+        {filteredRequests.length > PAGE_SIZE && (
+          <div className="mt-4 flex items-center justify-between">
+            <span className="text-xs text-gray-500">{pageRequests.length} of {filteredRequests.length} requests</span>
+            <div className="flex gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button key={page} type="button" onClick={() => setCurrentPage(page)}
+                  className={`h-7 w-7 rounded text-sm font-semibold transition ${
+                    page === safePage ? "bg-brand text-white" : "bg-gray-100 text-gray-600 hover:bg-brand-soft"
+                  }`}>{page}</button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
