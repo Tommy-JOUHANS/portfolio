@@ -1,21 +1,72 @@
 // ========================================================================
-// Footer.jsx - Pied de page (barre violette de la charte).
-// Toujours visible, en bas de chaque ecran, comme sur les 11 maquettes.
+// Footer.jsx - Pied de page enrichi avec contact + liens.
 // ========================================================================
-import { Copyright } from "lucide-react";
-// Footer : composant du pied de page.
+import { Link } from "react-router-dom";
+import { Copyright, Mail, MapPin, Shield } from "lucide-react";
+
 export default function Footer() {
-  // On calcule l'annee courante pour ne pas la coder en dur.
   const year = new Date().getFullYear();
 
-  // Rendu du pied de page.
   return (
-    // <footer> : fond violet, texte blanc centre, espace interieur vertical.
-    <footer className="bg-brand py-4 text-center">
-      {/* Ligne de texte de la plateforme, en blanc et en gras.           */}
-      <p className="text-sm font-semibold text-white">
-        Copyright <Copyright className="inline-block h-4 w-4" /> {year}. All rights reserved CyberAudit {"&"} Solutions.
-      </p>
+    <footer className="bg-brand text-white">
+      <div className="mx-auto max-w-6xl px-6 py-8">
+        <div className="grid gap-6 md:grid-cols-3">
+
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-2">
+              <Shield size={20} />
+              <h3 className="text-lg font-bold">CyberAudit &amp; Solutions</h3>
+            </div>
+            <p className="mt-2 text-sm text-white/70">
+              Cybersecurity audit platform for French SMEs without in-house IT security.
+            </p>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="font-semibold">Quick Links</h4>
+            <ul className="mt-2 space-y-1 text-sm">
+              <li>
+                <Link to="/" className="text-white/70 transition hover:text-white">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" className="text-white/70 transition hover:text-white">
+                  Sign In
+                </Link>
+              </li>
+              <li>
+                <Link to="/register" className="text-white/70 transition hover:text-white">
+                  Create an account
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="font-semibold">Contact</h4>
+            <ul className="mt-2 space-y-1 text-sm text-white/70">
+              <li className="flex items-center gap-2">
+                <Mail size={14} />
+                <a href="mailto:cyberaudit721@gmail.com" className="transition hover:text-white">
+                  cyberaudit721@gmail.com
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <MapPin size={14} />
+                Dijon, France
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-6 border-t border-white/20 pt-4 text-center text-sm text-white/80">
+          <Copyright className="inline-block h-4 w-4" /> {year} CyberAudit &amp; Solutions. All rights reserved.
+        </div>
+      </div>
     </footer>
   );
 }
