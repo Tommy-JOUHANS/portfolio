@@ -64,7 +64,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-6 border-t border-white/20 pt-4 text-center text-sm text-white/80">
-          <Copyright className="inline-block h-4 w-4" /> {year} CyberAudit &amp; Solutions. All rights reserved.
+          <Copyright className="inline-block h-4 w-4" /> {year} CyberAudit &amp; Solutions. <em className="italic text-white/50">All rights reserved.</em>
         </div>
       </div>
     </footer>

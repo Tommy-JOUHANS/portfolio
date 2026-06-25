@@ -58,6 +58,7 @@ const PACKS = [
   {
     name: "Pack Protection",
     price: "€3,500",
+    popular: true,
     included: "Audit + System Security & 24/7 SOC Monitoring",
     forWhom: "SMEs with sensitive data",
     perimeter: "Audit + Continuous Monitoring & Real-Time Alerts",
@@ -201,7 +202,7 @@ export default function HomePage() {
               </div>
             </article>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {SERVICES.map((service) => {
               const Icon = service.icon;
               return (
@@ -248,7 +249,12 @@ export default function HomePage() {
                     className={index % 2 === 0 ? "bg-white" : "bg-cream"}
                   >
                     <td className="px-4 py-3 font-semibold text-brand">
-                      {pack.name}
+                      <div className="flex flex-wrap items-center gap-2">
+                        {pack.name}
+                        {pack.popular && (
+                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700">★ Most popular</span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3 font-bold text-brand">
                       {pack.price}
