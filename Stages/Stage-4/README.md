@@ -590,63 +590,80 @@ jobs:
 
 | # | Deliverable | Category | Status | Date | Resource |
 |---|------------|----------|--------|------|----------|
-| 01 | Team Formation | Setup | ✅ Done | Jan 2026 | [Stages/README.md](../README.md) |
-| 02 | MVP Scope Definition | Setup | ✅ Done | Jan 2026 | [Stages/README.md](../README.md) |
-| 03 | Project Planning | Planning | ✅ Done | Feb 2026 | [Stages/README.md](../README.md) |
-| 04 | GitHub Repository Setup | Setup | ✅ Done | Feb 2026 | [github.com/Tommy-JOUHANS/portfolio](https://github.com/Tommy-JOUHANS/portfolio) |
-| 05 | Technical Architecture Document | Design | ✅ Done | Mar 2026 | [cyberaudit/](../../cyberaudit/) |
-| 06 | Data Model Design | Design | ✅ Done | Mar 2026 | [backend/apps/](../../cyberaudit/backend/) |
-| 07 | Custom User Model | Backend | ✅ Done | Apr 2026 | [accounts/models.py](../../cyberaudit/backend/apps/accounts/models.py) |
-| 08 | JWT Authentication (simplejwt) | Backend | ✅ Done | Apr 2026 | [accounts/views.py](../../cyberaudit/backend/apps/accounts/views.py) |
-| 09 | Register / Login / Logout API | Backend | ✅ Done | Apr 2026 | [accounts/views.py](../../cyberaudit/backend/apps/accounts/views.py) |
-| 10 | Me (Profile) Endpoint | Backend | ✅ Done | Apr 2026 | [accounts/views.py](../../cyberaudit/backend/apps/accounts/views.py) |
-| 11 | Change Password Endpoint | Backend | ✅ Done | Apr 2026 | [accounts/views.py](../../cyberaudit/backend/apps/accounts/views.py) |
-| 12 | Pack Model | Backend | ✅ Done | Apr 2026 | [apps/packs/](../../cyberaudit/backend/apps/packs/) |
-| 13 | Pack CRUD API | Backend | ✅ Done | Apr 2026 | [apps/packs/](../../cyberaudit/backend/apps/packs/) |
-| 14 | Request Model | Backend | ✅ Done | Apr 2026 | [apps/requests/](../../cyberaudit/backend/apps/requests/) |
-| 15 | Request CRUD API | Backend | ✅ Done | May 2026 | [apps/requests/](../../cyberaudit/backend/apps/requests/) |
-| 16 | Training Module Model | Backend | ✅ Done | May 2026 | [apps/training/](../../cyberaudit/backend/apps/training/) |
-| 17 | Training Module API | Backend | ✅ Done | May 2026 | [apps/training/](../../cyberaudit/backend/apps/training/) |
-| 18 | Admin User Management | Backend | ✅ Done | May 2026 | [backend/](../../cyberaudit/backend/) |
-| 19 | CORS Configuration | Backend | ✅ Done | May 2026 | [backend/](../../cyberaudit/backend/) |
-| 20 | Mock Data Import Script | Backend | ✅ Done | May 2026 | [backend/](../../cyberaudit/backend/) |
-| 21 | React + Vite Project Setup | Frontend | ✅ Done | Apr 2026 | [frontend/package.json](../../cyberaudit/frontend/package.json) |
-| 22 | Tailwind CSS v4 Configuration | Frontend | ✅ Done | Apr 2026 | [frontend/src/](../../cyberaudit/frontend/src/) |
-| 23 | React Router v7 Setup | Frontend | ✅ Done | Apr 2026 | [frontend/src/](../../cyberaudit/frontend/src/) |
-| 24 | AuthContext — JWT Storage | Frontend | ✅ Done | Apr 2026 | [src/contexts/](../../cyberaudit/frontend/src/contexts/) |
-| 25 | Login Page | Frontend | ✅ Done | Apr 2026 | [src/pages/](../../cyberaudit/frontend/src/pages/) |
-| 26 | Register Page | Frontend | ✅ Done | Apr 2026 | [src/pages/](../../cyberaudit/frontend/src/pages/) |
-| 27 | ProtectedRoute Component | Frontend | ✅ Done | Apr 2026 | [src/components/](../../cyberaudit/frontend/src/components/) |
-| 28 | ClientDashboard Page | Frontend | ✅ Done | May 2026 | [src/pages/](../../cyberaudit/frontend/src/pages/) |
-| 29 | AdminDashboard Page | Frontend | ✅ Done | May 2026 | [src/pages/](../../cyberaudit/frontend/src/pages/) |
-| 30 | TrainingPage — Async Loading & Interactions | Frontend | ✅ Done | May 2026 | [src/pages/](../../cyberaudit/frontend/src/pages/) |
-| 31 | StatCard Component | Frontend | ✅ Done | May 2026 | [src/components/](../../cyberaudit/frontend/src/components/) |
-| 32 | StatusBadge Component | Frontend | ✅ Done | May 2026 | [src/components/](../../cyberaudit/frontend/src/components/) |
-| 33 | Axios API Layer — dataService | Frontend | ✅ Done | May 2026 | [src/services/](../../cyberaudit/frontend/src/services/) |
-| 34 | conftest.py + pytest Setup | Tests | ✅ Done | May 2026 | [backend/](../../cyberaudit/backend/) |
-| 35 | TestUserModel — 8 tests | Tests | ✅ Done | May 2026 | [accounts/tests.py](../../cyberaudit/backend/apps/accounts/tests.py) |
-| 36 | TestRegisterView — 3 tests | Tests | ✅ Done | May 2026 | [accounts/tests.py](../../cyberaudit/backend/apps/accounts/tests.py) |
-| 37 | TestLoginView — 3 tests | Tests | ✅ Done | May 2026 | [accounts/tests.py](../../cyberaudit/backend/apps/accounts/tests.py) |
-| 38 | TestMeView — 3 tests | Tests | ✅ Done | May 2026 | [accounts/tests.py](../../cyberaudit/backend/apps/accounts/tests.py) |
-| 39 | TestLogoutView + TestChangePasswordView — 4 tests | Tests | ✅ Done | May 2026 | [accounts/tests.py](../../cyberaudit/backend/apps/accounts/tests.py) |
-| 40 | Vitest + @testing-library/react Setup | Tests | ✅ Done | May 2026 | [frontend/vite.config.js](../../cyberaudit/frontend/vite.config.js) |
-| 41 | validators.test.js — 21 tests | Tests | ✅ Done | May 2026 | [\_\_tests\_\_/validators.test.js](../../cyberaudit/frontend/src/__tests__/validators.test.js) |
-| 42 | StatusBadge + useAuth + ProtectedRoute — 19 tests | Tests | ✅ Done | Jun 2026 | [\_\_tests\_\_/](../../cyberaudit/frontend/src/__tests__/) |
-| 43 | dataService + DashboardPage + TrainingPage + StatCard — 16 tests | Tests | ✅ Done | Jun 2026 | [\_\_tests\_\_/](../../cyberaudit/frontend/src/__tests__/) |
-| 44 | GitHub Actions CI/CD Pipeline | DevOps | ✅ Done | May 2026 | [.github/workflows/](../../.github/workflows/) |
-| 45 | Railway — Backend Deployment | DevOps | 🚀 Deployed | May 2026 | railway.app |
-| 46 | Vercel — Frontend Deployment | DevOps | 🚀 Deployed | May 2026 | vercel.app |
-| 47 | CyberAudit_Technical_Architecture.docx | Docs | ✅ Done | Jun 2026 | Local document |
-| 48 | CyberAudit_Data_Model.docx | Docs | ✅ Done | Jun 2026 | Local document |
-| 49 | CyberAudit_Backend_API.docx | Docs | ✅ Done | Jun 2026 | Local document |
-| 50 | CyberAudit_Authentication.docx | Docs | ✅ Done | Jun 2026 | Local document |
-| 51 | CyberAudit_Frontend_Components.docx | Docs | ✅ Done | Jun 2026 | Local document |
-| 52 | CyberAudit_Frontend_Tests_Vitest.docx | Docs | ✅ Done | Jun 2026 | Local document (40 tests) |
-| 53 | CyberAudit_Frontend_Tests_Advanced.docx | Docs | ✅ Done | Jun 2026 | Local document (16 tests) |
-| 54 | CyberAudit_Project_Deliverables.docx | Docs | ✅ Done | Jun 2026 | Local document (this table) |
-| 55 | CI/CD Pipeline Documentation | Docs | 🔄 In Progress | Jun 2026 | Local document |
-| 56 | Weekly Progress Report | Docs | ✅ Done | Jun 2026 | Local document |
-| 57 | Oral Presentation Preparation | Docs | ✅ Done | Jun 2026 | Local document |
+| 01 | Team Formation | Setup | ✅ Done | April 20th 2026 | [Team Formation](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-1/CyberAudit_Portfolio_EN_stage1.pdf) |
+| 02 | MVP Scope Definition | Setup | ✅ Done | April 23 2026 | [MVP Scope Definition](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-1/CyberAudit_Portfolio_EN_stage1.pdf) |
+| 03 | Project Planning | Planning | ✅ Done | April 27th 2026 | [Project Planning](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-2/CyberAudit_Stage2_Project%20planning_en.pdf) |
+| 04 | GitHub Repository Setup | Setup | ✅ Done | April 30th 2026 | [GitHub Repository Setup](https://github.com/Tommy-JOUHANS/portfolio) |
+| 05 | Technical Architecture Document | Design | ✅ Done | May 4th 2026 - May 22th 2026 | [Technical Architecture Document](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/Stage-3-Technical-Documentation-EN.pdf) |
+| 06 | Data Model Design | Design | ✅ Done | May 14th 2026 | [Data Model Design](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/DIAGRAMME%20ER%202.png) |
+| 07 | Custom User Model | Backend | ✅ Done | May 26th 2026 | [Custom User Model](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/models.py) |
+| 08 | JWT Authentication (simplejwt) | Backend | ✅ Done | May 29th 2026 | [JWT Authentication (simplejwt)](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/views.py) |
+| 09 | Register / Login / Logout API | Backend | ✅ Done | June 2nd 2026 | [accounts/views.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/views.py) |
+| 10 | Profile Endpoint | Backend | ✅ Done | June 3rd 2026 | [accounts/views.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/serializers.py) |
+| 11 | Change Password Endpoint | Backend | ✅ Done | June 4th 2026 | [accounts/serializers.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/serializers.py) |
+| 12 | Pack Model | Backend | ✅ Done | June 5th 2026 | [apps/packs/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/models.py) |
+| 13 | Pack CRUD API | Backend | ✅ Done | June 6th 2026 | [apps/packs/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/views.py) |
+| 14 | Request Model | Backend | ✅ Done | June 7th 2026 | [apps/requests/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/models.py) |
+| 15 | Request CRUD API | Backend | ✅ Done | June 8th 2026 | [apps/requests/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/urls.py) |
+| 16 | Training Module Model | Backend | ✅ Done | June 12th 2026 | [apps/training/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/training/models.py) |
+| 17 | Training Module API | Backend | ✅ Done | June 13th 2026 | [apps/training/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/training/urls.py) |
+| 18 | Admin User Management | Backend | ✅ Done | June 14th 2026 | [Admin User Management](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/admin.py) |
+| 19 | CORS Configuration | Backend | ✅ Done | June 17th 2026 | [backend/config/setting.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/config/settings.py) |
+| 20 | Mock Data Import Script | Backend | ✅ Done | June 18th 2026 | [backend/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/import_mock_data.py) |
+| 21 | React + Vite Project Setup | Frontend | ✅ Done | May 26th 2026 | [frontend/package.json](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/package.json) |
+| 22 | Tailwind CSS v4 Configuration | Frontend | ✅ Done | May 27th 2026 | [frontend/src/global.cc](portfolio/cyberaudit/frontend/src/global.css at main · Tommy-JOUHANS/portfolio) |
+| 23 | React Router v7 Setup | Frontend | ✅ Done | May 28th 2026 | [frontend/src/App.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/App.jsx) |
+| 24 | AuthContext — JWT Storage | Frontend | ✅ Done | May 29th 2026 | [src/contexts/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/context/AuthContext.jsx) |
+| 25 | Login Page | Frontend | ✅ Done | June 1st 2026 | [src/pages/LoginPage.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/pages/LoginPage.jsx) |
+| 26 | Register Page | Frontend | ✅ Done | June 2nd 2026 | [src/pages/RegisterPage.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/pages/RegisterPage.jsx) |
+| 27 | ProtectedRoute Component | Frontend | ✅ Done | June 3rd 2026 | [src/components/auth/ProtectedRoute.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/auth/ProtectedRoute.jsx) |
+| 28 | ClientDashboard Page | Frontend | ✅ Done | June 4th 2026 | [src/pages/dashboard/ClientDashboard](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/dashboard/ClientDashboard.jsx) |
+| 29 | AdminDashboard Page | Frontend | ✅ Done | June 5th 2026 | [src/pages/admin/AdminDashboard.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/admin/AdminDashboard.jsx) |
+| 30 | TrainingPage — Async Loading & Interactions | Frontend | ✅ Done | June 8th 2026 | [src/pages/TrainingPage.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/pages/TrainingPage.jsx) |
+| 31 | StatCard Component | Frontend | ✅ Done | June 9th 2026 | [src/components/dashboard/StaCard.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/dashboard/StatCard.jsx) |
+| 32 | StatusBadge Component | Frontend | ✅ Done | June 11th 2026 | [src/components/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/dashboard/StatusBadge.jsx) |
+| 33 | Axios API Layer — dataService | Frontend | ✅ Done | June 12th 2026 | [src/services/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/services/dataService.js) |
+| 34 | conftest.py + pytest Setup | Tests | ✅ Done | June 13th 2026 | [backend/conftest.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/conftest.py) |
+| 35 | TestUserModel — 8 tests | Tests | ✅ Done | June 15th 2026 | [accounts/tests.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/tests.py) |
+| 36 | TestRegisterView — 3 tests | Tests | ✅ Done | June 16th 2026 | [accounts/tests.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/tests.py) |
+| 37 | TestLoginView — 3 tests | Tests | ✅ Done | June 16th 2026 | [accounts/tests.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/tests.py) |
+| 38 | TestMeView — 3 tests | Tests | ✅ Done | June 17th 2026 | [accounts/tests.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/tests.py) |
+| 39 | TestLogoutView + TestChangePasswordView — 4 tests | Tests | ✅ Done | June 17th 2026 | [accounts/tests.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/tests.py) |
+| 40 | Vitest + @testing-library/react Setup | Tests | ✅ Done | June 18th 2026 | [frontend/vite.config.js](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/vite.config.js) |
+| 41 | validators.test.js — 21 tests | Tests | ✅ Done | June 19th 2026 | [\_\_tests\_\_/validators.test.js](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/__tests__/validators.test.js) |
+| 42 | StatusBadge + useAuth + ProtectedRoute — 19 tests | Tests | ✅ Done | June 22nd 2026 | [StatusBadge](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/__tests__/StatusBadge.test.jsx) + [useAuth](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/__tests__/useAuth.test.jsx) +[ProtectedRoute](portfolio/cyberaudit/frontend/src/__tests__/ProtectedRoute.test.jsx at main · Tommy-JOUHANS/portfolio) |
+| 43 | dataService + DashboardPage + TrainingPage + StatCard — 16 tests | Tests | ✅ Done | JunE 23rd 2026 | [dataService](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/__tests__/dataService.test.js) +[DashBoardPage](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/__tests__/DashboardPage.test.jsx) +
+[TrainingPage](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/__tests__/TrainingPage.test.jsx) +[StatCard](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/__tests__/StatCard.test.jsx) |
+| 44 | GitHub Actions CI/CD Pipeline | DevOps | ✅ Done | June 15th 2026 | [.github/workflows/](https://github.com/Tommy-JOUHANS/portfolio/tree/main/.github/workflows) |
+| 45 | Railway — Backend Deployment | DevOps | 🚀 Deployed | June 16th 2026 | [railway.json](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/railway.json) + [railway.app](https://railway.com/project/9c8a0235-3f5d-4ace-96a3-5dd4f7cc97f3?environmentId=e4b668d8-4a10-440a-85a5-fafa7f1ac01b)|
+| 46 | Vercel — Frontend Deployment | DevOps | 🚀 Deployed | June 23th 2026 | [vercel.json](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/vercel.json) |
+| 47 | CyberAudit_Admin_Portal | Docs | ✅ Done | June 2026 | [Admin portal](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_Admin_Portal.pdf) |
+| 48 | CyberAudit_AuditPack_Request.pdf  | Docs | ✅ Done | June 2026 | [Pack & Request Api](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_AuditPack_Request.pdf) |
+| 49 | CyberAudit_Authentication_Flow.pdf | Docs | ✅ Done | Jun 2026 | [Authentification Flow](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_Authentication_Flow.pdf) |
+| 50 | CyberAudit_Backend_Tests_Accounts.pdf | Docs | ✅ Done | Jun 2026 | [CyberAudit_Backend_Tests_Accounts](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_Backend_Tests_Accounts.pdf) |
+| 51 | CyberAudit_Client_Portal.pdf  | Docs | ✅ Done | Jun 2026 | [Client Portal](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_Client_Portal.pdf) |
+| 52 | CyberAudit_CustomUserModel.pdf  | Docs | ✅ Done | Jun 2026 | [Custom User Model](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_CustomUserModel.pdf) |
+| 53 | CyberAudit_Database_Migrations | Docs | ✅ Done | Jun 2026 | [Database Migrations](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_Database_Migrations.pdf) |
+| 54 | CyberAudit_JWT_Auth | Docs | ✅ Done | Jun 2026 | [JWT Auth](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_JWT_Auth.pdf) |
+| 55 | CyberAudit_Lighthouse_Analysis | Docs | ✅ Done | Jun 2026 | [Lighthouse analysis](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_Lighthouse_Analysis.pdf) |
+| 56 | CyberAudit_MockData_Import.pdf | Docs | ✅ Done | Jun 2026 | [MockData Import](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_MockData_Import.pdf) |
+| 57 | Notification System | Docs | ✅ Done | Jun 2026 | [Notification](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_Notifications_System.pdf) |
+| 58 | CyberAudit_PDF_Report_Generation | Docs | ✅ Done | Jun 2026 | [PDF Report Generate](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_PDF_Report_Generation.pdf) |
+| 59 | CyberAudit_ReportViewerPage.pdf | Docs | ✅ Done | Jun 2026 | [ReportViewerPage](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_ReportViewerPage.pdf) |
+| 60 | CyberAudit_Responsive_Design | Docs | ✅ Done | Jun 2026 | [Responsive_Design](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_Responsive_Design.pdf) |
+| 61 | CyberAudit_Training_Modules_Page | Docs | ✅ Done | Jun 2026 | [Training Modules](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_Training_Modules.pdf) |
+| 62 | CyberAudit_Training_Modules_API | Docs | ✅ Done | Jun 2026 | [Training Modules API](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/CyberAudit_Training_Modules_API.pdf) |
+| 63 | Railway_Deployment_CyberAudit | Docs | ✅ Done | Jun 2026 | [Railway Deployment](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/Railway_Deployments_CyberAudit.pdf) |
+| 64 | CI/CD Pipeline Documentation | Docs | ✅ Done | Jun 2026 | [CI/CD](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/GitHub_Actions_CI-CD_Pipeline.pdf) |
+| 65 | Unit-Test-Report-Backend-Frontend.pdf | Docs | ✅ Done | Jun 2026 | [Unit test report backend](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/Unit-Test-Report-Backend-Frontend.pdf) |
+| 66 | Unit-Test-Report-Backend-Frontend.pdf | Docs | ✅ Done | Jun 2026 | [Unit test report backend](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/Unit-Test-Report-Backend-Frontend.pdf) |
+| 67 | Vercel Deployment Summary | Docs | ✅ Done | Jun 2026 | [Vercel Deployment Summary](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/Vercel%20Deployment%20Summary.pdf) |
+| 68 | Video demonstration of application | Docs | ✅ Done | Jun 2026 | [Video demonstration of application CyberAudit & Solution](https://www.youtube.com/watch?v=jxrV9IZSC70) |
+| 69 | W3C Validation Test of the HTML Semantics | Docs | ✅ Done | Jun 2026 | [W3C Validation Test of the HTML Semantics](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/w3c-tests-pages-en.pdf) |
+| 70 | Oral Presentation Preparation | Docs | ✅ Done | Jun 2026 | [W3C Validation Test of the HTML Semantics](https://www.canva.com/design/DAHMKMUyGGQ/kS4hqcMnJfMw9uW-hnnqqw/view?utm_content=DAHMKMUyGGQ&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6e36e0a1b5) |
+
+
+
 
 ### Repository Structure
 
