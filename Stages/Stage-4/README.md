@@ -660,7 +660,7 @@ jobs:
 | 67 | Vercel Deployment Summary | Docs | ✅ Done | Jun 2026 | [Vercel Deployment Summary](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/Vercel%20Deployment%20Summary.pdf) |
 | 68 | Video demonstration of application | Docs | ✅ Done | Jun 2026 | [Video demonstration of application CyberAudit & Solution](https://www.youtube.com/watch?v=jxrV9IZSC70) |
 | 69 | W3C Validation Test of the HTML Semantics | Docs | ✅ Done | Jun 2026 | [W3C Validation Test of the HTML Semantics](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/w3c-tests-pages-en.pdf) |
-| 70 | Oral Presentation Preparation | Docs | ✅ Done | Jun 2026 | [W3C Validation Test of the HTML Semantics](https://www.canva.com/design/DAHMKMUyGGQ/kS4hqcMnJfMw9uW-hnnqqw/view?utm_content=DAHMKMUyGGQ&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6e36e0a1b5) |
+| 70 | Oral Presentation Preparation | Docs | ✅ Done | Jun 2026 | [Oral Presentation Preparation](https://www.canva.com/design/DAHMKMUyGGQ/kS4hqcMnJfMw9uW-hnnqqw/view?utm_content=DAHMKMUyGGQ&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6e36e0a1b5) |
 
 
 
