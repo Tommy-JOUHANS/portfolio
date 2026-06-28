@@ -9,10 +9,10 @@ import "@testing-library/jest-dom";
 // classique (React.createElement) sans l'importer explicitement.
 global.React = React;
 
-// ── Mock localStorage complet ────────────────────────────────────────────────
-// Vitest v3 + jsdom récent ne fournit pas localStorage.clear() nativement.
+// ── Mock sessionStorage complet ────────────────────────────────────────────────
+// Vitest v3 + jsdom récent ne fournit pas sessionStorage.clear() nativement.
 // On remplace l'objet entier par un mock en mémoire.
-const localStorageMock = (() => {
+const sessionStorageMock = (() => {
   let store = {};
   return {
     getItem:    (key)        => store[key] ?? null,
@@ -24,14 +24,14 @@ const localStorageMock = (() => {
   };
 })();
 
-Object.defineProperty(window, "localStorage", {
-  value:    localStorageMock,
+Object.defineProperty(window, "sessionStorage", {
+  value:    sessionStorageMock,
   writable: true,
 });
 
-// Réinitialise le localStorage entre chaque test pour éviter les fuites d'état.
+// Réinitialise le sessionStorage entre chaque test pour éviter les fuites d'état.
 beforeEach(() => {
-  localStorage.clear();
+  sessionStorage.clear();
 });
 
 // Filtre les erreurs React connues (PropTypes, act(), etc.) pour garder

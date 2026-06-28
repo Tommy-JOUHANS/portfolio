@@ -17,6 +17,8 @@ export default function AdminDashboard() {
   const [packFilter, setPackFilter]   = useState("all");
   const [clientQuery, setClientQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortField, setSortField]     = useState("submitted_at");
+  const [sortDir, setSortDir]         = useState("desc");
 
   useEffect(() => {
     async function load() {
@@ -46,10 +48,32 @@ export default function AdminDashboard() {
     return statusOk && packOk && clientOk;
   });
 
-  const totalPages   = Math.max(1, Math.ceil(filteredRequests.length / PAGE_SIZE));
+  // Tri des dossiers filtres
+  const sortedRequests = [...filteredRequests].sort((a, b) => {
+    let av = "", bv = "";
+    if (sortField === "reference")     { av = a.reference || ""; bv = b.reference || ""; }
+    else if (sortField === "client")   { av = (a.client_info?.company_name || "").toLowerCase(); bv = (b.client_info?.company_name || "").toLowerCase(); }
+    else if (sortField === "pack")     { av = (a.pack?.name || "").toLowerCase(); bv = (b.pack?.name || "").toLowerCase(); }
+    else if (sortField === "submitted_at") { av = a.submitted_at || ""; bv = b.submitted_at || ""; }
+    else if (sortField === "status")   { av = a.status || ""; bv = b.status || ""; }
+    const cmp = av > bv ? 1 : av < bv ? -1 : 0;
+    return sortDir === "asc" ? cmp : -cmp;
+  });
+
+  function handleSort(field) {
+    if (sortField === field) {
+      setSortDir((d) => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDir("asc");
+    }
+    setCurrentPage(1);
+  }
+
+  const totalPages   = Math.max(1, Math.ceil(sortedRequests.length / PAGE_SIZE));
   const safePage     = Math.min(currentPage, totalPages);
   const startIndex   = (safePage - 1) * PAGE_SIZE;
-  const pageRequests = filteredRequests.slice(startIndex, startIndex + PAGE_SIZE);
+  const pageRequests = sortedRequests.slice(startIndex, startIndex + PAGE_SIZE);
 
   function changeFilter(setter, value) { setter(value); setCurrentPage(1); }
   function resetFilters() { setStatusFilter("all"); setPackFilter("all"); setClientQuery(""); setCurrentPage(1); }
@@ -117,11 +141,26 @@ export default function AdminDashboard() {
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-brand-soft text-gray-600">
               <tr>
-                <th className="px-3 py-2 font-semibold">Case #</th>
-                <th className="px-3 py-2 font-semibold">Client</th>
-                <th className="px-3 py-2 font-semibold">Pack</th>
-                <th className="px-3 py-2 font-semibold">Submitted</th>
-                <th className="px-3 py-2 font-semibold">Status</th>
+                {[
+                  { field: "reference", label: "Case #" },
+                  { field: "client", label: "Client" },
+                  { field: "pack", label: "Pack" },
+                  { field: "submitted_at", label: "Submitted" },
+                  { field: "status", label: "Status" },
+                ].map(({ field, label }) => (
+                  <th
+                    key={field}
+                    onClick={() => handleSort(field)}
+                    className="cursor-pointer select-none px-3 py-2 font-semibold transition hover:bg-brand-soft/60"
+                  >
+                    <span className="flex items-center gap-1">
+                      {label}
+                      <span className={`text-xs ${sortField === field ? "text-brand" : "text-gray-400"}`}>
+                        {sortField === field ? (sortDir === "asc" ? "↑" : "↓") : "↕"}
+                      </span>
+                    </span>
+                  </th>
+                ))}
                 <th className="px-3 py-2 font-semibold">Action</th>
               </tr>
             </thead>
@@ -136,11 +175,30 @@ export default function AdminDashboard() {
                   <td className="px-3 py-3 text-gray-600">{formatDate(r.submitted_at)}</td>
                   <td className="px-3 py-3"><StatusBadge status={r.status} /></td>
                   <td className="px-3 py-3">
-                    {r.status === "completed" ? (
-                      <Link to={`/admin/report/${r.reference}`} className="font-medium text-brand hover:underline">View report</Link>
-                    ) : (
-                      <Link to={`/admin/request/${r.reference}`} className="font-medium text-brand hover:underline">View / Edit</Link>
-                    )}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <Link
+                        to={`/admin/request/${r.reference}`}
+                        title="Manage status and details"
+                        className="inline-flex items-center gap-1 rounded-md border border-brand bg-white px-2.5 py-1 text-xs font-semibold text-brand transition hover:bg-brand hover:text-white"
+                      >
+                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit
+                      </Link>
+                      {r.status === "completed" && (
+                        <Link
+                          to={`/admin/report/${r.reference}`}
+                          title="View vulnerability report"
+                          className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 transition hover:bg-gray-100"
+                        >
+                          <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Report
+                        </Link>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

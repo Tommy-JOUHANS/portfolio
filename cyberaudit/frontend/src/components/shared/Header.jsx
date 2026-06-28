@@ -22,7 +22,7 @@ export default function Header() {
 
   // handleSignOut : deconnecte l'utilisateur puis le ramene a l'accueil.
   function handleSignOut() {
-    // Efface la session (etat global + localStorage).
+    // Efface la session (etat global + sessionStorage).
     logout();
     // Redirige vers la page d'accueil publique.
     navigate("/");

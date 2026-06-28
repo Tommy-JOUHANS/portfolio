@@ -10,6 +10,8 @@ import api from "../../services/api.js";
 import StatCard from "./StatCard.jsx";
 import StatusBadge from "./StatusBadge.jsx";
 
+const PAGE_SIZE = 5;
+
 function formatDate(isoString) {
   return new Date(isoString).toLocaleDateString("fr-FR");
 }
@@ -22,6 +24,22 @@ function timeAgo(isoString) {
   return `il y a ${Math.floor(hours / 24)} j`;
 }
 
+// Detecte le type de notification a partir du message
+function getNotifType(message) {
+  const m = (message || "").toLowerCase();
+  if (m.includes("report") && m.includes("available")) return "report";
+  if (m.includes("status changed") || m.includes("statut")) return "status";
+  if (m.includes("received your") || m.includes("audit request")) return "received";
+  return "default";
+}
+
+const NOTIF_STYLES = {
+  report:   { icon: "✓", border: "border-green-500", bg: "bg-green-50",  iconBg: "bg-green-100", iconColor: "text-green-700" },
+  status:   { icon: "↻", border: "border-blue-500",  bg: "bg-blue-50",   iconBg: "bg-blue-100",  iconColor: "text-blue-700" },
+  received: { icon: "✉", border: "border-amber-500", bg: "bg-amber-50",  iconBg: "bg-amber-100", iconColor: "text-amber-700" },
+  default:  { icon: "•", border: "border-brand",     bg: "bg-cream",     iconBg: "bg-brand-soft", iconColor: "text-brand" },
+};
+
 export default function ClientDashboard() {
   const { user } = useAuth();
   const [requests, setRequests]           = useState([]);
@@ -32,6 +50,9 @@ export default function ClientDashboard() {
   const [statusFilter, setStatusFilter]   = useState("all");
   const [packFilter, setPackFilter]       = useState("all");
   const [downloading, setDownloading]     = useState(null);
+  const [showAllNotifs, setShowAllNotifs] = useState(false);
+  const [currentPage, setCurrentPage]     = useState(1);
+  const [pdfMap, setPdfMap]               = useState({});
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -52,6 +73,47 @@ export default function ClientDashboard() {
 
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadData(); }, [loadData]);
+
+  // Verifie quels dossiers Completed ont un PDF dispo (HEAD requests)
+  useEffect(() => {
+    const completed = requests.filter((r) => r.status === "completed");
+    if (completed.length === 0) return;
+    let cancelled = false;
+    Promise.all(
+      completed.map((r) =>
+        api({ method: "HEAD", url: `/audits/${r.id}/report/`, validateStatus: () => true })
+          .then((res) => [r.id, res.status >= 200 && res.status < 300])
+          .catch(() => [r.id, false])
+      )
+    ).then((results) => {
+      if (!cancelled) setPdfMap(Object.fromEntries(results));
+    });
+    return () => { cancelled = true; };
+  }, [requests]);
+
+  // Polling intelligent toutes les 30 sec : SEULEMENT pour les PDFs pas encore prets
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPdfMap((currentMap) => {
+        const pending = requests.filter((r) => r.status === "completed" && !currentMap[r.id]);
+        if (pending.length === 0) return currentMap; // tout est pret, on arrete de poller
+        Promise.all(
+          pending.map((r) =>
+            api({ method: "HEAD", url: `/audits/${r.id}/report/`, validateStatus: () => true })
+              .then((res) => [r.id, res.status >= 200 && res.status < 300])
+              .catch(() => [r.id, false])
+          )
+        ).then((results) => {
+          const newlyReady = results.filter(([, isReady]) => isReady);
+          if (newlyReady.length > 0) {
+            setPdfMap((prev) => ({ ...prev, ...Object.fromEntries(newlyReady) }));
+          }
+        });
+        return currentMap;
+      });
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [requests]);
 
   async function handleDownload(request) {
     setDownloading(request.id);
@@ -93,6 +155,11 @@ export default function ClientDashboard() {
 
   const openCount      = requests.filter((r) => r.status === "pending" || r.status === "in_progress").length;
   const completedCount = requests.filter((r) => r.status === "completed").length;
+  const totalPages   = Math.max(1, Math.ceil(filteredRequests.length / PAGE_SIZE));
+  const safePage     = Math.min(currentPage, totalPages);
+  const startIndex   = (safePage - 1) * PAGE_SIZE;
+  const pageRequests = filteredRequests.slice(startIndex, startIndex + PAGE_SIZE);
+  function changeFilter(setter, value) { setter(value); setCurrentPage(1); }
 
   if (loading) return (
     <div className="flex h-64 items-center justify-center">
@@ -132,14 +199,14 @@ export default function ClientDashboard() {
       <div className="@container grid gap-3 xs:grid-cols-3 sm:gap-4">
         <StatCard label="Open requests"     value={openCount}      accentClass="text-amber-500" />
         <StatCard label="Completed"         value={completedCount} accentClass="text-green-600" />
-        <StatCard label="Reports available" value={completedCount} accentClass="text-brand"     />
+        <StatCard label="Reports available" value={Object.values(pdfMap).filter(Boolean).length} accentClass="text-brand"     />
       </div>
 
       <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm @sm:p-5">
         <h2 className="text-lg font-bold text-gray-800">My audit requests</h2>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <span className="text-sm text-gray-500">Filter :</span>
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
+          <select value={statusFilter} onChange={(e) => changeFilter(setStatusFilter, e.target.value)}
             className="rounded-md border border-gray-300 px-2 py-1 text-sm">
             <option value="all">All statuses</option>
             <option value="pending">Pending</option>
@@ -147,7 +214,7 @@ export default function ClientDashboard() {
             <option value="completed">Completed</option>
             <option value="archived">Archived</option>
           </select>
-          <select value={packFilter} onChange={(e) => setPackFilter(e.target.value)}
+          <select value={packFilter} onChange={(e) => changeFilter(setPackFilter, e.target.value)}
             className="rounded-md border border-gray-300 px-2 py-1 text-sm">
             <option value="all">All packs</option>
             <option value="audit">Audit</option>
@@ -169,10 +236,10 @@ export default function ClientDashboard() {
               </tr>
             </thead>
             <tbody>
-              {filteredRequests.length === 0 ? (
+              {pageRequests.length === 0 ? (
                 <tr><td colSpan={5} className="px-3 py-6 text-center text-gray-400">No requests to display.</td></tr>
               ) : (
-                filteredRequests.map((r) => (
+                pageRequests.map((r) => (
                   <tr key={r.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
                     <td className="px-3 py-3 font-medium text-gray-800">{sanitize(r.reference)}</td>
                     <td className="px-3 py-3 text-gray-600">{sanitize(r.pack?.name) || "—"}</td>
@@ -180,11 +247,15 @@ export default function ClientDashboard() {
                     <td className="px-3 py-3"><StatusBadge status={r.status} /></td>
                     <td className="px-3 py-3">
                       {r.status === "completed" ? (
-                        <button type="button" disabled={downloading === r.id}
-                          onClick={() => handleDownload(r)}
-                          className="font-medium text-brand hover:underline disabled:opacity-50">
-                          {downloading === r.id ? "Downloading…" : "Download report"}
-                        </button>
+                        pdfMap[r.id] ? (
+                          <button type="button" disabled={downloading === r.id}
+                            onClick={() => handleDownload(r)}
+                            className="font-medium text-brand hover:underline disabled:opacity-50">
+                            {downloading === r.id ? "Downloading…" : "Download report"}
+                          </button>
+                        ) : (
+                          <span className="text-xs italic text-amber-600">PDF being prepared…</span>
+                        )
                       ) : (
                         <Link to={`/audit/confirmation/${r.reference}`}
                           className="font-medium text-brand hover:underline">
@@ -198,20 +269,60 @@ export default function ClientDashboard() {
             </tbody>
           </table>
         </div>
+        {filteredRequests.length > PAGE_SIZE && (
+          <div className="mt-4 flex items-center justify-between">
+            <span className="text-xs text-gray-500">{pageRequests.length} of {filteredRequests.length} requests</span>
+            <div className="flex gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button key={page} type="button" onClick={() => setCurrentPage(page)}
+                  className={`h-7 w-7 rounded text-sm font-semibold transition ${
+                    page === safePage ? "bg-brand text-white" : "bg-gray-100 text-gray-600 hover:bg-brand-soft"
+                  }`}>{page}</button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm @sm:p-5">
-        <h2 className="text-lg font-bold text-gray-800">Recent notifications</h2>
+      <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-gray-800">Recent notifications</h2>
+          {notifications.length > 0 && (
+            <span className="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-semibold text-brand">
+              {notifications.length}
+            </span>
+          )}
+        </div>
         {notifications.length === 0 ? (
-          <p className="mt-3 text-sm text-gray-400">No notifications.</p>
+          <p className="mt-3 text-sm text-gray-400">No notifications yet.</p>
         ) : (
-          <ul className="mt-3 flex flex-col gap-2">
-            {notifications.map((n) => (
-              <li key={n.id} className="rounded-md border-l-4 border-brand bg-cream px-3 py-2 text-sm text-gray-700">
-                {sanitize(n.message)} <span className="text-gray-400">({timeAgo(n.created_at)})</span>
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className="mt-3 flex flex-col gap-2">
+              {(showAllNotifs ? notifications : notifications.slice(0, 5)).map((n) => {
+                const style = NOTIF_STYLES[getNotifType(n.message)];
+                return (
+                  <li key={n.id} className={`flex items-start gap-3 rounded-lg border-l-4 ${style.border} ${style.bg} p-3 transition hover:shadow-sm`}>
+                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${style.iconBg} ${style.iconColor} text-base font-bold`}>
+                      {style.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm leading-snug text-gray-700">{sanitize(n.message)}</p>
+                      <p className="mt-1 text-xs italic text-gray-400">{timeAgo(n.created_at)}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            {notifications.length > 5 && (
+              <button
+                type="button"
+                onClick={() => setShowAllNotifs(!showAllNotifs)}
+                className="mt-3 w-full rounded-md border border-gray-200 py-2 text-sm font-semibold text-brand transition hover:bg-brand-soft"
+              >
+                {showAllNotifs ? "Show less" : `Show all (${notifications.length})`}
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -1,16 +1,10 @@
 """
 accounts/views.py — Endpoints d'authentification JWT.
-
-  POST /api/auth/register/         → RegisterView
-  POST /api/auth/login/            → LoginView
-  POST /api/auth/logout/           → LogoutView   (blacklist refresh token)
-  POST /api/auth/token/refresh/    → TokenRefreshView (SimpleJWT natif)
-  GET  /api/auth/me/               → MeView
-  PATCH /api/auth/me/              → MeView
-  DELETE /api/auth/me/             → MeView (désactivation compte)
-  POST /api/auth/change-password/  → ChangePasswordView
 """
 
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -21,13 +15,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
 from .serializers import ChangePasswordSerializer, RegisterSerializer, UserSerializer
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Helpers
-# ─────────────────────────────────────────────────────────────────────────────
-
 
 def _token_response(user):
-    """Retourne access + refresh + données utilisateur."""
     refresh = RefreshToken.for_user(user)
     return {
         "access": str(refresh.access_token),
@@ -36,16 +25,9 @@ def _token_response(user):
     }
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# POST /api/auth/register/
-# ─────────────────────────────────────────────────────────────────────────────
-
-
 class RegisterView(APIView):
-    """Création d'un compte client + retour des tokens JWT."""
-
     permission_classes = [AllowAny]
-    throttle_scope = "login"  # 5 req/min (config settings.py)
+    throttle_scope = "login"
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -54,23 +36,13 @@ class RegisterView(APIView):
         return Response(_token_response(user), status=status.HTTP_201_CREATED)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# POST /api/auth/login/
-# ─────────────────────────────────────────────────────────────────────────────
-
-
 class LoginView(APIView):
-    """Vérification des identifiants + génération des tokens JWT."""
-
     permission_classes = [AllowAny]
     throttle_scope = "login"
 
     def post(self, request):
         email = request.data.get("email", "").strip().lower()
         password = request.data.get("password", "")
-
-        # Recherche de l'utilisateur (même message si email inconnu ou mdp faux
-        # → anti-énumération de comptes).
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
@@ -78,30 +50,20 @@ class LoginView(APIView):
                 {"non_field_errors": ["Email ou mot de passe incorrect."]},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
-
         if not user.check_password(password):
             return Response(
                 {"non_field_errors": ["Email ou mot de passe incorrect."]},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
-
         if not user.is_active:
             return Response(
                 {"non_field_errors": ["Ce compte est désactivé."]},
                 status=status.HTTP_403_FORBIDDEN,
             )
-
         return Response(_token_response(user))
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# POST /api/auth/logout/
-# ─────────────────────────────────────────────────────────────────────────────
-
-
 class LogoutView(APIView):
-    """Blacklist le refresh token pour invalider la session."""
-
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -122,14 +84,7 @@ class LogoutView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# GET / PATCH / DELETE /api/auth/me/
-# ─────────────────────────────────────────────────────────────────────────────
-
-
 class MeView(APIView):
-    """Profil de l'utilisateur connecté — lecture, modification, suppression."""
-
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -142,20 +97,12 @@ class MeView(APIView):
         return Response(serializer.data)
 
     def delete(self, request):
-        """Désactive le compte (soft delete — ne supprime pas l'enregistrement)."""
         request.user.is_active = False
         request.user.save(update_fields=["is_active"])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# POST /api/auth/change-password/
-# ─────────────────────────────────────────────────────────────────────────────
-
-
 class ChangePasswordView(APIView):
-    """Changement de mot de passe après vérification de l'ancien."""
-
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -164,3 +111,62 @@ class ChangePasswordView(APIView):
         request.user.set_password(serializer.validated_data["new_password"])
         request.user.save(update_fields=["password"])
         return Response({"detail": "Mot de passe modifié avec succès."})
+
+
+class PasswordResetRequestView(APIView):
+    """Génère un token de reset password. Anti-énumération."""
+
+    permission_classes = [AllowAny]
+    throttle_scope = "login"
+
+    def post(self, request):
+        email = request.data.get("email", "").strip().lower()
+        if not email:
+            return Response({"detail": "Email requis."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            return Response(
+                {
+                    "success": True,
+                    "reset_token": f"{uid}.{token}",
+                    "user_email": email,
+                    "user_name": user.first_name or email.split("@")[0],
+                }
+            )
+        except User.DoesNotExist:
+            return Response({"success": True})
+
+
+class PasswordResetConfirmView(APIView):
+    """Valide le token et change le mot de passe."""
+
+    permission_classes = [AllowAny]
+    throttle_scope = "login"
+
+    def post(self, request):
+        token_combined = request.data.get("token", "")
+        new_password = request.data.get("new_password", "")
+        if not token_combined or "." not in token_combined:
+            return Response({"detail": "Token invalide."}, status=status.HTTP_400_BAD_REQUEST)
+        if len(new_password) < 8:
+            return Response(
+                {"detail": "Le mot de passe doit faire au moins 8 caractères."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            uid, token = token_combined.split(".", 1)
+            user_pk = force_str(urlsafe_base64_decode(uid))
+            user = User.objects.get(pk=user_pk)
+        except (ValueError, User.DoesNotExist):
+            return Response(
+                {"detail": "Token invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST
+            )
+        if not default_token_generator.check_token(user, token):
+            return Response(
+                {"detail": "Token invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST
+            )
+        user.set_password(new_password)
+        user.save(update_fields=["password"])
+        return Response({"success": True, "detail": "Mot de passe modifié avec succès."})

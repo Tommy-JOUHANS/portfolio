@@ -3,6 +3,17 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "CyberAudit & Solutions — React frontend (Vite + Tailwind + EmailJS)",
+  "main": "src/main.jsx",
+  "author": "Tommy JOUHANS & James ROUSSEL",
+  "license": "UNLICENSED",
+  "keywords": [
+    "cybersecurity",
+    "audit",
+    "react",
+    "vite",
+    "holberton"
+  ],
   "scripts": {
     "dev": "vite",
     "lint": "eslint .",
@@ -11,24 +22,19 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "email": "email dev --dir emails"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@lhci/cli": "^0.15.1",
     "@tailwindcss/vite": "^4.3.0",
     "axios": "^1.9.0",
-    "cors": "^2.8.6",
     "dompurify": "^3.4.8",
-    "express": "^5.2.1",
     "lucide-react": "^1.16.0",
-    "mysql2": "^3.22.4",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.1.1",
-    "sequelize": "^6.37.8",
-    "tailwindcss": "^4.3.0",
-    "typescript": "^6.0.3"
+    "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.29.7",
@@ -52,13 +58,5 @@
     "jsdom": "^26.1.0",
     "vite": "^8.0.12",
     "vitest": "^3.2.3"
-  },
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
-  "main": "eslint.config.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  }
 }

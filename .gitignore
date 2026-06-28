@@ -1,11 +1,84 @@
-
-# Python virtual environments — JAMAIS en git
+# Python / Django
 .venv/
 venv/
+env/
 **/.venv/
 **/venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
 
-# Backups locaux
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+coverage.xml
+
+# Node / React / Vite
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+build/
+out/
+
+# Environment & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+*.pem
+*.key
+secrets.json
+
+# IDE & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
 *.bak
+*.tmp
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Generated PDFs (don't commit user reports, but keep doc PDFs)
+generated_reports/
+*.pdf
+!Stages/**/*.pdf
+!docs/**/*.pdf
+
+# Vitest coverage reports
+coverage/
+**/coverage/

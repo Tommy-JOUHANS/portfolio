@@ -30,6 +30,7 @@ import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 // RegisterPage : ecran 2 de la doc - formulaire de creation de compte.
 import RegisterPage from "./pages/RegisterPage.jsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 // DashboardPage : ecran 4 - tableau de bord (client ou admin selon le role).
 import DashboardPage from "./pages/DashboardPage.jsx";
 // NewAuditPage : ecran 5 - formulaire de demande d'audit.
@@ -84,6 +85,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             {/* "/register" : page d'inscription.                         */}
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
             {/* ---- Portail : tableau de bord (roles client ET admin) --- */}
             {/* ProtectedRoute verifie connexion + role autorise.         */}
