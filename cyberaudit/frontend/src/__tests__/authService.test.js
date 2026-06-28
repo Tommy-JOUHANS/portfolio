@@ -24,27 +24,27 @@ const SESSION_KEY = "cyberaudit:session";
 
 beforeEach(() => {
   vi.clearAllMocks();
-  localStorage.clear();
+  sessionStorage.clear();
 });
 
 // ── getSession ────────────────────────────────────────────────────────────────
 describe("getSession()", () => {
-  it("returns null when localStorage has no session", () => {
+  it("returns null when sessionStorage has no session", () => {
     expect(getSession()).toBeNull();
   });
 
   it("returns the parsed session object when it exists", () => {
     const session = { access: "acc", refresh: "ref", user: { email: "a@b.com" } };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
     expect(getSession()).toEqual(session);
   });
 
   it("migrates old { token, user } format: clears it and returns null", () => {
     const oldFormat = { token: "old-jwt", user: { email: "x@x.com" } };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(oldFormat));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(oldFormat));
     const result = getSession();
     expect(result).toBeNull();
-    expect(localStorage.getItem(SESSION_KEY)).toBeNull();
+    expect(sessionStorage.getItem(SESSION_KEY)).toBeNull();
   });
 });
 
@@ -61,12 +61,12 @@ describe("login()", () => {
     });
   });
 
-  it("saves the session to localStorage and returns it", async () => {
+  it("saves the session to sessionStorage and returns it", async () => {
     api.post.mockResolvedValue({
       data: { access: "acc", refresh: "ref", user: { email: "u@u.com" } },
     });
     const result = await login("u@u.com", "pass");
-    const stored = JSON.parse(localStorage.getItem(SESSION_KEY));
+    const stored = JSON.parse(sessionStorage.getItem(SESSION_KEY));
     expect(stored.access).toBe("acc");
     expect(result.user.email).toBe("u@u.com");
   });
@@ -161,36 +161,36 @@ describe("register()", () => {
 // ── logout ────────────────────────────────────────────────────────────────────
 describe("logout()", () => {
   it("calls api.post with the refresh token when a session exists", async () => {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ access: "a", refresh: "r", user: {} }));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ access: "a", refresh: "r", user: {} }));
     api.post.mockResolvedValue({});
     await logout();
     expect(api.post).toHaveBeenCalledWith("/auth/logout/", { refresh: "r" });
   });
 
-  it("removes the session from localStorage after logout", async () => {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ access: "a", refresh: "r", user: {} }));
+  it("removes the session from sessionStorage after logout", async () => {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ access: "a", refresh: "r", user: {} }));
     api.post.mockResolvedValue({});
     await logout();
-    expect(localStorage.getItem(SESSION_KEY)).toBeNull();
+    expect(sessionStorage.getItem(SESSION_KEY)).toBeNull();
   });
 
-  it("does not call api.post when there is no session in localStorage", async () => {
+  it("does not call api.post when there is no session in sessionStorage", async () => {
     await logout();
     expect(api.post).not.toHaveBeenCalled();
   });
 
   it("still removes session when api.post throws (best-effort)", async () => {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ access: "a", refresh: "r", user: {} }));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ access: "a", refresh: "r", user: {} }));
     api.post.mockRejectedValue(new Error("Server error"));
     await logout();
-    expect(localStorage.getItem(SESSION_KEY)).toBeNull();
+    expect(sessionStorage.getItem(SESSION_KEY)).toBeNull();
   });
 
   it("does not call api.post when session has no refresh token", async () => {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ access: "a", user: {} }));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ access: "a", user: {} }));
     await logout();
     expect(api.post).not.toHaveBeenCalled();
-    expect(localStorage.getItem(SESSION_KEY)).toBeNull();
+    expect(sessionStorage.getItem(SESSION_KEY)).toBeNull();
   });
 });
 

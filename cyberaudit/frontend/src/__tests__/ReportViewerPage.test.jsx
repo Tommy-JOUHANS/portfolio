@@ -51,21 +51,21 @@ const FAKE_AUDIT_PENDING = {
   status: "in_progress",
 };
 
-// ── Helpers localStorage ──────────────────────────────────────────────────────
+// ── Helpers sessionStorage ──────────────────────────────────────────────────────
 function setAdminUser() {
-  localStorage.setItem(
+  sessionStorage.setItem(
     "cyberaudit:session",
     JSON.stringify({ user: { role: "admin", first_name: "Admin" } })
   );
 }
 function setClientUser() {
-  localStorage.setItem(
+  sessionStorage.setItem(
     "cyberaudit:session",
     JSON.stringify({ user: { role: "client", first_name: "Alice" } })
   );
 }
 function clearUser() {
-  localStorage.removeItem("cyberaudit:session");
+  sessionStorage.removeItem("cyberaudit:session");
 }
 
 // ── Rendu ─────────────────────────────────────────────────────────────────────

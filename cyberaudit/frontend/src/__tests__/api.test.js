@@ -31,48 +31,48 @@ const getResFulfilled  = () => api.interceptors.response.handlers.filter(Boolean
 const getResRejected   = () => api.interceptors.response.handlers.filter(Boolean)[0]?.rejected;
 
 beforeEach(() => {
-  localStorage.clear();
+  sessionStorage.clear();
   vi.clearAllMocks();
 });
 
 // ── Request interceptor ───────────────────────────────────────────────────────
 describe("api – request interceptor", () => {
   it("adds Authorization header when a valid session exists", () => {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ access: "token-abc" }));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ access: "token-abc" }));
     const config = { url: "/api/me/", headers: {} };
     const result = getReqFulfilled()(config);
     expect(result.headers.Authorization).toBe("Bearer token-abc");
   });
 
-  it("does NOT add Authorization when localStorage has no session", () => {
+  it("does NOT add Authorization when sessionStorage has no session", () => {
     const config = { url: "/api/users/", headers: {} };
     const result = getReqFulfilled()(config);
     expect(result.headers.Authorization).toBeUndefined();
   });
 
   it("does NOT add Authorization when session has no access field", () => {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ refresh: "only-refresh" }));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ refresh: "only-refresh" }));
     const config = { url: "/api/audits/", headers: {} };
     const result = getReqFulfilled()(config);
     expect(result.headers.Authorization).toBeUndefined();
   });
 
   it("skips Authorization for /token/refresh routes", () => {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ access: "tok" }));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ access: "tok" }));
     const config = { url: "/auth/token/refresh/", headers: {} };
     const result = getReqFulfilled()(config);
     expect(result.headers.Authorization).toBeUndefined();
   });
 
   it("skips Authorization for /login routes", () => {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ access: "tok" }));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ access: "tok" }));
     const config = { url: "/auth/login/", headers: {} };
     const result = getReqFulfilled()(config);
     expect(result.headers.Authorization).toBeUndefined();
   });
 
   it("skips Authorization for /register routes", () => {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ access: "tok" }));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ access: "tok" }));
     const config = { url: "/auth/register/", headers: {} };
     const result = getReqFulfilled()(config);
     expect(result.headers.Authorization).toBeUndefined();
@@ -157,7 +157,7 @@ describe("api – response interceptor (errors)", () => {
   });
 
   it("redirects to /login and removes session when no session on 401", async () => {
-    // No session in localStorage → throws "Pas de session" → goes to catch
+    // No session in sessionStorage → throws "Pas de session" → goes to catch
     Object.defineProperty(window, "location", {
       value: { href: "" },
       writable: true,
@@ -170,11 +170,11 @@ describe("api – response interceptor (errors)", () => {
 
     await expect(getResRejected()(error)).rejects.toThrow();
     expect(window.location.href).toBe("/login");
-    expect(localStorage.getItem(SESSION_KEY)).toBeNull();
+    expect(sessionStorage.getItem(SESSION_KEY)).toBeNull();
   });
 
   it("redirects to /login when session has no refresh token", async () => {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ access: "a" })); // no refresh
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ access: "a" })); // no refresh
     Object.defineProperty(window, "location", {
       value: { href: "" },
       writable: true,
@@ -190,7 +190,7 @@ describe("api – response interceptor (errors)", () => {
   });
 
   it("calls axios.post for token refresh on 401 with valid session", async () => {
-    localStorage.setItem(
+    sessionStorage.setItem(
       SESSION_KEY,
       JSON.stringify({ access: "old-token", refresh: "refresh-tok" })
     );
@@ -213,13 +213,13 @@ describe("api – response interceptor (errors)", () => {
       { refresh: "refresh-tok" }
     );
 
-    // localStorage should be updated with the new access token
-    const stored = JSON.parse(localStorage.getItem(SESSION_KEY));
+    // sessionStorage should be updated with the new access token
+    const stored = JSON.parse(sessionStorage.getItem(SESSION_KEY));
     expect(stored?.access).toBe("new-token");
   });
 
   it("redirects to /login and removes session when token refresh fails", async () => {
-    localStorage.setItem(
+    sessionStorage.setItem(
       SESSION_KEY,
       JSON.stringify({ access: "old", refresh: "ref" })
     );
@@ -235,7 +235,7 @@ describe("api – response interceptor (errors)", () => {
     };
 
     await expect(getResRejected()(error)).rejects.toThrow("Refresh failed");
-    expect(localStorage.getItem(SESSION_KEY)).toBeNull();
+    expect(sessionStorage.getItem(SESSION_KEY)).toBeNull();
     expect(window.location.href).toBe("/login");
   });
 });
