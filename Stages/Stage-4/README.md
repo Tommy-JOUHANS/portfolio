@@ -62,6 +62,7 @@
    │  (7 tables)     │         │   (Celery queue) │
    └─────────────────┘         └──────────────────┘
 ```
+**Click here for views : [Data Model Design](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/architecture.png)
 
 ### Sequence Diagram — Audit Request Submission
 
@@ -178,6 +179,7 @@ sequenceDiagram
                                        │  UNIQUE(user_id,module) │
                                        └─────────────────────────┘
 ```
+**Click here for views : [Data Model Design](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/DIAGRAMME%20ER%202.png)**
 
 ### Key Relationships
 
@@ -596,32 +598,32 @@ jobs:
 | 04 | GitHub Repository Setup | Setup | ✅ Done | April 30th 2026 | [GitHub Repository Setup](https://github.com/Tommy-JOUHANS/portfolio) |
 | 05 | Technical Architecture Document | Design | ✅ Done | May 4th 2026 - May 22th 2026 | [Technical Architecture Document](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/Stage-3-Technical-Documentation-EN.pdf) |
 | 06 | Data Model Design | Design | ✅ Done | May 14th 2026 | [Data Model Design](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/DIAGRAMME%20ER%202.png) |
-| 07 | Custom User Model | Backend | ✅ Done | May 26th 2026 | [Custom User Model](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/models.py) |
-| 08 | JWT Authentication (simplejwt) | Backend | ✅ Done | May 29th 2026 | [JWT Authentication (simplejwt)](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/views.py) |
+| 07 | Custom User Model | Backend | ✅ Done | May 26th 2026 | [apps/accounts/models.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/models.py) |
+| 08 | JWT Authentication (simplejwt) | Backend | ✅ Done | May 29th 2026 | [apps/accounts/views.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/views.py) |
 | 09 | Register / Login / Logout API | Backend | ✅ Done | June 2nd 2026 | [accounts/views.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/views.py) |
 | 10 | Profile Endpoint | Backend | ✅ Done | June 3rd 2026 | [accounts/urls.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/urls.py) |
 | 11 | Change Password Endpoint | Backend | ✅ Done | June 4th 2026 | [accounts/views.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/views.py) |
-| 12 | Pack Model | Backend | ✅ Done | June 5th 2026 | [apps/packs/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/models.py) |
-| 13 | Pack CRUD API | Backend | ✅ Done | June 6th 2026 | [apps/packs/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/views.py) |
-| 14 | Request Model | Backend | ✅ Done | June 7th 2026 | [apps/requests/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/models.py) |
-| 15 | Request CRUD API | Backend | ✅ Done | June 8th 2026 | [apps/requests/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/urls.py) |
-| 16 | Training Module Model | Backend | ✅ Done | June 12th 2026 | [apps/training/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/training/models.py) |
-| 17 | Training Module API | Backend | ✅ Done | June 13th 2026 | [apps/training/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/training/urls.py) |
-| 18 | Admin User Management | Backend | ✅ Done | June 14th 2026 | [Admin User Management](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/admin.py) |
+| 12 | Pack Model | Backend | ✅ Done | June 5th 2026 | [apps/audits/models.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/models.py) |
+| 13 | Pack CRUD API | Backend | ✅ Done | June 6th 2026 | [/audits/urls.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/views.py) |
+| 14 | Request Model | Backend | ✅ Done | June 7th 2026 | [apps/audits/models.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/models.py) |
+| 15 | Request CRUD API | Backend | ✅ Done | June 8th 2026 | [apps//audits/urls.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/urls.py) |
+| 16 | Training Module Model | Backend | ✅ Done | June 12th 2026 | [apps/training/models.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/training/models.py) |
+| 17 | Training Module API | Backend | ✅ Done | June 13th 2026 | [apps/training/urls.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/training/urls.py) |
+| 18 | Admin User Management | Backend | ✅ Done | June 14th 2026 | [/audits/admin.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/admin.py) |
 | 19 | CORS Configuration | Backend | ✅ Done | June 17th 2026 | [backend/config/setting.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/config/settings.py) |
 | 20 | Mock Data Import Script | Backend | ✅ Done | June 18th 2026 | [backend/import_mock_data.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/import_mock_data.py) |
 | 21 | React + Vite Project Setup | Frontend | ✅ Done | May 26th 2026 | [frontend/package.json](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/package.json) |
 | 22 | Tailwind CSS v4 Configuration | Frontend | ✅ Done | May 27th 2026 | [frontend/src/global.cc](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/global.css) |
 | 23 | React Router v7 Setup | Frontend | ✅ Done | May 28th 2026 | [frontend/src/App.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/App.jsx) |
-| 24 | AuthContext — JWT Storage | Frontend | ✅ Done | May 29th 2026 | [src/contexts/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/context/AuthContext.jsx) |
+| 24 | AuthContext — JWT Storage | Frontend | ✅ Done | May 29th 2026 | [src/contexts/AuthContext.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/context/AuthContext.jsx) |
 | 25 | Login Page | Frontend | ✅ Done | June 1st 2026 | [src/pages/LoginPage.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/pages/LoginPage.jsx) |
 | 26 | Register Page | Frontend | ✅ Done | June 2nd 2026 | [src/pages/RegisterPage.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/pages/RegisterPage.jsx) |
 | 27 | ProtectedRoute Component | Frontend | ✅ Done | June 3rd 2026 | [src/components/auth/ProtectedRoute.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/auth/ProtectedRoute.jsx) |
-| 28 | ClientDashboard Page | Frontend | ✅ Done | June 4th 2026 | [src/pages/dashboard/ClientDashboard](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/dashboard/ClientDashboard.jsx) |
+| 28 | ClientDashboard Page | Frontend | ✅ Done | June 4th 2026 | [src/pages/dashboard/ClientDashboard.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/dashboard/ClientDashboard.jsx) |
 | 29 | AdminDashboard Page | Frontend | ✅ Done | June 5th 2026 | [src/pages/admin/AdminDashboard.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/admin/AdminDashboard.jsx) |
 | 30 | TrainingPage — Async Loading & Interactions | Frontend | ✅ Done | June 8th 2026 | [src/pages/TrainingPage.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/pages/TrainingPage.jsx) |
 | 31 | StatCard Component | Frontend | ✅ Done | June 9th 2026 | [src/components/dashboard/StaCard.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/dashboard/StatCard.jsx) |
-| 32 | StatusBadge Component | Frontend | ✅ Done | June 11th 2026 | [src/components/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/dashboard/StatusBadge.jsx) |
+| 32 | StatusBadge Component | Frontend | ✅ Done | June 11th 2026 | [src/components/dashboard/StatusBadge.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/components/dashboard/StatusBadge.jsx) |
 | 33 | Axios API Layer — dataService | Frontend | ✅ Done | June 12th 2026 | [src/services/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/services/dataService.js) |
 | 34 | conftest.py + pytest Setup | Tests | ✅ Done | June 13th 2026 | [backend/conftest.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/conftest.py) |
 | 35 | TestUserModel — 8 tests | Tests | ✅ Done | June 15th 2026 | [accounts/tests.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/tests.py) |
