@@ -62,7 +62,7 @@
    │  (7 tables)     │         │   (Celery queue) │
    └─────────────────┘         └──────────────────┘
 ```
-**Click here for views : [Data Model Design](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/architecture.png)
+**Click here for views : [Architecture](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/architecture.png)
 
 ### Sequence Diagram — Audit Request Submission
 
