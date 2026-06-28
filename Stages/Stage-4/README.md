@@ -611,7 +611,7 @@ jobs:
 | 19 | CORS Configuration | Backend | ✅ Done | June 17th 2026 | [backend/config/setting.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/config/settings.py) |
 | 20 | Mock Data Import Script | Backend | ✅ Done | June 18th 2026 | [backend/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/import_mock_data.py) |
 | 21 | React + Vite Project Setup | Frontend | ✅ Done | May 26th 2026 | [frontend/package.json](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/package.json) |
-| 22 | Tailwind CSS v4 Configuration | Frontend | ✅ Done | May 27th 2026 | [frontend/src/global.cc](portfolio/cyberaudit/frontend/src/global.css at main · Tommy-JOUHANS/portfolio) |
+| 22 | Tailwind CSS v4 Configuration | Frontend | ✅ Done | May 27th 2026 | [frontend/src/global.cc](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/global.css) |
 | 23 | React Router v7 Setup | Frontend | ✅ Done | May 28th 2026 | [frontend/src/App.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/App.jsx) |
 | 24 | AuthContext — JWT Storage | Frontend | ✅ Done | May 29th 2026 | [src/contexts/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/context/AuthContext.jsx) |
 | 25 | Login Page | Frontend | ✅ Done | June 1st 2026 | [src/pages/LoginPage.jsx](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/frontend/src/pages/LoginPage.jsx) |
