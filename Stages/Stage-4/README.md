@@ -599,7 +599,7 @@ jobs:
 | 07 | Custom User Model | Backend | ✅ Done | May 26th 2026 | [Custom User Model](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/models.py) |
 | 08 | JWT Authentication (simplejwt) | Backend | ✅ Done | May 29th 2026 | [JWT Authentication (simplejwt)](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/views.py) |
 | 09 | Register / Login / Logout API | Backend | ✅ Done | June 2nd 2026 | [accounts/views.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/views.py) |
-| 10 | Profile Endpoint | Backend | ✅ Done | June 3rd 2026 | [accounts/views.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/serializers.py) |
+| 10 | Profile Endpoint | Backend | ✅ Done | June 3rd 2026 | [accounts/urls.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/urls.py) |
 | 11 | Change Password Endpoint | Backend | ✅ Done | June 4th 2026 | [accounts/serializers.py](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/serializers.py) |
 | 12 | Pack Model | Backend | ✅ Done | June 5th 2026 | [apps/packs/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/accounts/models.py) |
 | 13 | Pack CRUD API | Backend | ✅ Done | June 6th 2026 | [apps/packs/](https://github.com/Tommy-JOUHANS/portfolio/blob/main/cyberaudit/backend/apps/audits/views.py) |
