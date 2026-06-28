@@ -144,19 +144,21 @@ describe("AdminDashboard", () => {
     });
   });
 
-  it("affiche un lien 'View report' pour les demandes completed", async () => {
+  it("affiche un lien 'Report' pour les demandes completed", async () => {
     api.get.mockResolvedValue({ data: FAKE_REQUESTS });
     renderDashboard();
     await waitFor(() => {
-      expect(screen.getByRole("link", { name: /view report/i })).toBeInTheDocument();
+      // Seul le dossier completed affiche le lien "Report"
+      expect(screen.getByRole("link", { name: /^Report$/i })).toBeInTheDocument();
     });
   });
 
-  it("affiche un lien 'View / Edit' pour les demandes non-completed", async () => {
+  it("affiche un lien 'Edit' pour toutes les demandes", async () => {
     api.get.mockResolvedValue({ data: FAKE_REQUESTS });
     renderDashboard();
     await waitFor(() => {
-      const editLinks = screen.getAllByRole("link", { name: /view \/ edit/i });
+      // Chaque ligne a un lien "Edit" (gestion statut + détails)
+      const editLinks = screen.getAllByRole("link", { name: /^Edit$/i });
       expect(editLinks.length).toBeGreaterThanOrEqual(1);
     });
   });

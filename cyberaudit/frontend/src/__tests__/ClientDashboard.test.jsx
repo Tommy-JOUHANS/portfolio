@@ -11,9 +11,12 @@ vi.mock("../services/dataService.js", () => ({
   getNotificationsByUserId: vi.fn(),
 }));
 
-vi.mock("../services/api.js", () => ({
-  default: { get: vi.fn() },
-}));
+vi.mock("../services/api.js", () => {
+  // api doit être appelable (HEAD pour pdfMap) ET avoir .get (download)
+  const mockApi = vi.fn();
+  mockApi.get = vi.fn();
+  return { default: mockApi };
+});
 
 import { getAllRequests, getNotificationsByUserId } from "../services/dataService.js";
 import api from "../services/api.js";
@@ -76,6 +79,8 @@ function renderDashboard() {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  // HEAD requests pour pdfMap → status 200 = PDF dispo → affiche "Download report"
+  api.mockResolvedValue({ status: 200 });
 });
 
 // ── Tests ─────────────────────────────────────────────────────────────────────

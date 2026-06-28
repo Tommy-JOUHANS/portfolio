@@ -73,8 +73,12 @@ describe("HomePage", () => {
 
   it("renders 'Sign In' link pointing to /login", () => {
     renderPage();
-    const signIn = screen.getByText("Sign In");
-    expect(signIn.closest("a")).toHaveAttribute("href", "/login");
+    // Plusieurs "Sign In" existent (hero + CTA section) → on vérifie que tous pointent vers /login
+    const signIns = screen.getAllByText("Sign In");
+    expect(signIns.length).toBeGreaterThanOrEqual(1);
+    signIns.forEach((el) => {
+      expect(el.closest("a")).toHaveAttribute("href", "/login");
+    });
   });
 
   it("renders table column headers", () => {

@@ -12,9 +12,12 @@ vi.mock("../services/dataService.js", () => ({
   updateRequest:               vi.fn(),
 }));
 
-vi.mock("../services/api.js", () => ({
-  default: { get: vi.fn() },
-}));
+vi.mock("../services/api.js", () => {
+  // api doit être appelable (requêtes HEAD pour pdfReady) ET avoir .get (download)
+  const mockApi = vi.fn();
+  mockApi.get = vi.fn();
+  return { default: mockApi };
+});
 
 import {
   getReportByReference,
@@ -84,6 +87,8 @@ beforeEach(() => {
   clearUser();
   updateRequest.mockResolvedValue({});
   generateReportFromFindings.mockResolvedValue({ security_score: 85, grade: "A" });
+  // HEAD request → pdfReady = true par défaut (sinon le bouton Download PDF n'apparaît jamais)
+  api.mockResolvedValue({ status: 200 });
 });
 
 afterEach(() => clearUser());
@@ -256,18 +261,16 @@ describe("ReportViewerPage", () => {
 
   // ── handleDownloadPdf — cas supplémentaires ───────────────────────────────
 
-  it("affiche 'Audit ID not found.' si l'audit est null quand Download PDF est cliqué", async () => {
+  it("affiche 'PDF not generated yet' si l'audit est null (client non-admin)", async () => {
+    // Quand audit=null, le useEffect HEAD ne s'exécute pas (guard: if (!audit?.id) return)
+    // → pdfReady reste false → le bouton Download PDF n'apparaît pas
+    // → le client voit à la place "PDF not generated yet"
     setClientUser();
-    // rapport présent (bouton Download PDF visible) mais audit null
     getReportByReference.mockResolvedValue(FAKE_REPORT);
     getRequestByReference.mockResolvedValue(null);
     renderPage();
-    await waitFor(() => screen.getByRole("button", { name: /download pdf/i }));
-
-    fireEvent.click(screen.getByRole("button", { name: /download pdf/i }));
-
     await waitFor(() =>
-      expect(screen.getByText(/audit id not found/i)).toBeInTheDocument()
+      expect(screen.getByText(/pdf not generated yet/i)).toBeInTheDocument()
     );
   });
 
