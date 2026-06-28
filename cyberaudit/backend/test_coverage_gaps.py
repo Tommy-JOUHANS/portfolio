@@ -570,3 +570,115 @@ def test_training_module_detail_view_returns_content_md(auth_client):
     # La vue détail inclut content_md (absent de la vue liste)
     assert "content_md" in resp.data
     assert resp.data["slug"] == mod.slug
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 12. accounts/views.py — PasswordResetRequestView + PasswordResetConfirmView
+#     Lignes 123-139 et 149-172
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+@pytest.mark.django_db
+class TestPasswordResetRequestView:
+    """Couvre PasswordResetRequestView.post() — lignes 123-139."""
+
+    URL = "/api/auth/password-reset/request/"
+
+    def test_email_absent_returns_400(self, api_client):
+        """Ligne 125 : email vide → 400 + detail."""
+        resp = api_client.post(self.URL, {})
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+        assert "detail" in resp.data
+
+    def test_email_existant_returns_200_avec_token(self, api_client, client_user):
+        """Lignes 127-137 : email en base → 200 + reset_token + user_email."""
+        resp = api_client.post(self.URL, {"email": client_user.email})
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data["success"] is True
+        assert "reset_token" in resp.data
+        assert "." in resp.data["reset_token"]  # format uid.token
+        assert resp.data["user_email"] == client_user.email
+
+    def test_email_inexistant_returns_200_sans_token(self, api_client):
+        """Ligne 139 : email absent en base → 200 sans reset_token (anti-énumération)."""
+        resp = api_client.post(self.URL, {"email": "ghost@nowhere.example"})
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data.get("success") is True
+        assert "reset_token" not in resp.data
+
+    def test_email_case_insensitive(self, api_client, client_user):
+        """Ligne 123 : strip + lower → email en majuscules reconnu."""
+        resp = api_client.post(self.URL, {"email": client_user.email.upper()})
+        assert resp.status_code == status.HTTP_200_OK
+        assert "reset_token" in resp.data
+
+
+@pytest.mark.django_db
+class TestPasswordResetConfirmView:
+    """Couvre PasswordResetConfirmView.post() — lignes 149-172."""
+
+    URL = "/api/auth/password-reset/confirm/"
+
+    def _get_token(self, api_client, email):
+        """Demande un token de reset et le retourne."""
+        resp = api_client.post(
+            "/api/auth/password-reset/request/", {"email": email}
+        )
+        return resp.data["reset_token"]
+
+    def test_token_absent_returns_400(self, api_client):
+        """Ligne 152 : token absent → 400."""
+        resp = api_client.post(self.URL, {"new_password": "newpass123"})
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+        assert "detail" in resp.data
+
+    def test_token_sans_point_returns_400(self, api_client):
+        """Ligne 152 : token sans '.' → 400."""
+        resp = api_client.post(
+            self.URL, {"token": "tokenSansPoint", "new_password": "newpass123"}
+        )
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_mot_de_passe_trop_court_returns_400(self, api_client, client_user):
+        """Lignes 153-157 : new_password < 8 chars → 400."""
+        token = self._get_token(api_client, client_user.email)
+        resp = api_client.post(
+            self.URL, {"token": token, "new_password": "court"}
+        )
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+        assert "8" in resp.data.get("detail", "")
+
+    def test_uid_invalide_returns_400(self, api_client):
+        """Lignes 162-165 : uid non décodable ou user inexistant → 400."""
+        resp = api_client.post(
+            self.URL,
+            {"token": "invaliduid.invalidtoken", "new_password": "newpass123"},
+        )
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+        assert "invalide" in resp.data.get("detail", "").lower()
+
+    def test_token_invalide_returns_400(self, api_client, client_user):
+        """Lignes 166-169 : uid valide mais token falsifié → check_token échoue → 400."""
+        from django.utils.encoding import force_bytes
+        from django.utils.http import urlsafe_base64_encode
+
+        uid = urlsafe_base64_encode(force_bytes(client_user.pk))
+        resp = api_client.post(
+            self.URL,
+            {"token": f"{uid}.fakesignature", "new_password": "newpass123"},
+        )
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+        assert "invalide" in resp.data.get("detail", "").lower()
+
+    def test_cas_nominal_change_mot_de_passe(self, api_client, client_user):
+        """Lignes 170-172 : token valide + mdp ≥ 8 chars → 200 + mdp changé."""
+        token = self._get_token(api_client, client_user.email)
+        resp = api_client.post(
+            self.URL,
+            {"token": token, "new_password": "NouveauMdp!2026"},
+        )
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data["success"] is True
+        # Vérifier que le mot de passe est bien changé en base
+        client_user.refresh_from_db()
+        assert client_user.check_password("NouveauMdp!2026")
