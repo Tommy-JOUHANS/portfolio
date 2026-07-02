@@ -1,17 +1,15 @@
 // ========================================================================
-// Footer.jsx - Pied de page enrichi avec contact + liens.
+// Footer.jsx - Pied de page enrichi avec contact + liens + pages legales.
 // ========================================================================
 import { Link } from "react-router-dom";
-import { Copyright, Mail, MapPin, Shield } from "lucide-react";
+import { Copyright, Mail, MapPin, Shield, Scale } from "lucide-react";
 
 export default function Footer() {
   const year = new Date().getFullYear();
-
   return (
     <footer className="bg-brand text-white">
       <div className="mx-auto max-w-6xl px-6 py-8">
-        <div className="grid gap-6 md:grid-cols-3">
-
+        <div className="grid gap-6 md:grid-cols-4">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2">
@@ -40,6 +38,31 @@ export default function Footer() {
               <li>
                 <Link to="/register" className="text-white/70 transition hover:text-white">
                   Create an account
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <div className="flex items-center gap-2">
+              <Scale size={16} />
+              <h4 className="font-semibold">Legal</h4>
+            </div>
+            <ul className="mt-2 space-y-1 text-sm">
+              <li>
+                <Link to="/mentions-legales" className="text-white/70 transition hover:text-white">
+                  Legal Notice
+                </Link>
+              </li>
+              <li>
+                <Link to="/confidentialite" className="text-white/70 transition hover:text-white">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/cgu" className="text-white/70 transition hover:text-white">
+                  Terms of Service
                 </Link>
               </li>
             </ul>
