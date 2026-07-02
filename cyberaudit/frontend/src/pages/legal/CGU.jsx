@@ -52,12 +52,10 @@ export default function CGU() {
             </p>
             <ul className="space-y-2 text-slate-200">
               <li>
-                &bull; <strong>James ROUSSEL</strong> &mdash; Student, Holberton
-                School Dijon
+                &bull; <strong>James ROUSSEL</strong> : Student, Holberton School Dijon
               </li>
               <li>
-                &bull; <strong>Tommy JOUHANS</strong> &mdash; Student, Holberton
-                School Dijon
+                &bull; <strong>Tommy JOUHANS</strong> : Student, Holberton School Dijon
               </li>
             </ul>
             <p className="text-slate-200 mt-4">
