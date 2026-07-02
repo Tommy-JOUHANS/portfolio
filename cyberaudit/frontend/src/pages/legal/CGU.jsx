@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 /**
@@ -33,7 +32,7 @@ export default function CGU() {
         <div className="space-y-10">
           <section className="bg-[#1E2761] rounded-xl p-6 md:p-8 border border-cyan-500/20">
             <h2 className="text-2xl font-bold text-cyan-400 mb-4">
-              Article 1 : Purpose
+               Article 1 : Purpose
             </h2>
             <p className="text-slate-200 leading-relaxed">
               CyberAudit &amp; Solutions is an educational cybersecurity audit
@@ -45,7 +44,7 @@ export default function CGU() {
 
           <section className="bg-[#1E2761] rounded-xl p-6 md:p-8 border border-cyan-500/20">
             <h2 className="text-2xl font-bold text-cyan-400 mb-4">
-              Article 2 : Service Publishers
+               Article 2 : Service Publishers
             </h2>
             <p className="text-slate-200 mb-3">
               The service is co-published by:
@@ -308,10 +307,6 @@ export default function CGU() {
               </Link>
             </div>
           </section>
-        </div>
-
-        <div className="mt-12 text-center text-slate-500 text-sm">
-          &copy; 2026 CyberAudit &amp; Solutions. All rights reserved.
         </div>
       </div>
     </div>

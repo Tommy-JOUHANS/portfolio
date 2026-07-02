@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 /**
@@ -332,10 +331,6 @@ export default function Confidentialite() {
               </Link>
             </div>
           </section>
-        </div>
-
-        <div className="mt-12 text-center text-slate-500 text-sm">
-          &copy; 2026 CyberAudit &amp; Solutions. All rights reserved.
         </div>
       </div>
     </div>
