@@ -1,3 +1,4 @@
+import {} from "lucide-ract";
 <div align="center">
 
 # CyberAudit & Solutions
@@ -73,7 +74,7 @@ Built in a four-week sprint (Stage 3 → Stage 4) at Holberton School Dijon, in 
                                                        └────────────────┘
 ```
 
-📐 **Detailed architecture diagram:** [`Stages/Stage-3/architecture-HD.png`](Stages/Stage-3/architecture-HD.png)
+📐 **Detailed architecture diagram:** [`Stages/Stage-3/architecture.png`](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/architecture.png)
 
 ---
 
@@ -106,7 +107,7 @@ Four core entities, all using UUID primary keys, all relations enforced by the D
                                              └────────────────┘
 ```
 
-🗃️ **Detailed ERD:** [`Stages/Stage-3/erd-database-HD.png`](Stages/Stage-3/erd-database-HD.png)
+🗃️ **Detailed ERD:** [`Stages/Stage-3/erd-database-HD.png`](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/DIAGRAMME%20ER%202.png)
 
 ---
 
@@ -288,7 +289,7 @@ All secrets managed via environment variables — **no credentials in source cod
 | **James ROUSSEL** | Backend & DevOps Lead | API + database, authentication & security, deployment, CI/CD |
 
 **Holberton School Dijon — Portfolio Project — 2026**
-**Partner:** Les Entrep' entrepreneurial association — Dijon
+**Partner:** Les Entrep' entrepreneurial association, Dijon
 
 ---
 
@@ -300,6 +301,6 @@ This project is developed as a school portfolio under the supervision of Holbert
 
 <div align="center">
 
-**Built with ❤️ in Dijon**
+**Holberton School in Dijon**
 
 </div>
