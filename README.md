@@ -1,4 +1,3 @@
-import {} from "lucide-ract";
 <div align="center">
 
 # CyberAudit & Solutions
@@ -17,7 +16,7 @@ import {} from "lucide-ract";
 
 ---
 
-## 📖 Overview
+## <Book /> Overview
 
 **CyberAudit & Solutions** is a full-stack web platform that connects French **SME clients** (without in-house IT security) with **CyberAudit operators**. It replaces email-driven audit workflows with a structured, traceable, and secure platform — from request to vulnerability report delivery.
 
@@ -29,7 +28,7 @@ Built in a four-week sprint (Stage 3 → Stage 4) at Holberton School Dijon, in 
 
 ## ✨ Features
 
-- 🔐 **JWT authentication** with refresh + blacklist (SimpleJWT)
+- <Lock /> **JWT authentication** with refresh + blacklist (SimpleJWT)
 - 🎫 **Audit request workflow** — 4 service packs (€1,000 → €5,000)
 - 📊 **Real-time status tracking** — Pending / In Progress / Completed / Archived
 - 📧 **Transactional emails** via EmailJS — confirmation + status updates
