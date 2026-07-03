@@ -16,7 +16,7 @@
 
 ---
 
-## <Book /> Overview
+## Overview
 
 **CyberAudit & Solutions** is a full-stack web platform that connects French **SME clients** (without in-house IT security) with **CyberAudit operators**. It replaces email-driven audit workflows with a structured, traceable, and secure platform — from request to vulnerability report delivery.
 
@@ -26,20 +26,20 @@ Built in a four-week sprint (Stage 3 → Stage 4) at Holberton School Dijon, in 
 
 ---
 
-## ✨ Features
+## Features
 
 - <Lock /> **JWT authentication** with refresh + blacklist (SimpleJWT)
-- 🎫 **Audit request workflow** — 4 service packs (€1,000 → €5,000)
-- 📊 **Real-time status tracking** — Pending / In Progress / Completed / Archived
-- 📧 **Transactional emails** via EmailJS — confirmation + status updates
-- 📄 **Asynchronous PDF report generation** — Celery + WeasyPrint
-- 🛡️ **Role-Based Access Control (RBAC)** with 404 anti-enumeration
-- 🚫 **Anti-tampering** — server-side security score recalculation
-- 🎓 **5 cybersecurity training modules** (anti-phishing, MFA, VPN, backup, incident response)
+- **Audit request workflow** : 4 service packs (€1,000 → €5,000)
+- **Real-time status tracking** : Pending / In Progress / Completed / Archived
+- **Transactional emails** via EmailJS : confirmation + status updates
+- **Asynchronous PDF report generation** : Celery + WeasyPrint
+- **Role-Based Access Control (RBAC)** with 404 anti-enumeration
+- **Anti-tampering** : server-side security score recalculation
+- **5 cybersecurity training modules** (anti-phishing, MFA, VPN, backup, incident response)
 
 ---
 
-## 🏛️ Architecture
+## Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
