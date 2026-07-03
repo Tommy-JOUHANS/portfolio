@@ -66,7 +66,7 @@
 
 ### Sequence Diagram — Audit Request Submission
 
-```
+```mermaid
 sequenceDiagram
   actor User
   participant Front as AuditRequestForm
