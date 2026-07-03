@@ -66,7 +66,7 @@
 
 ### Sequence Diagrams:
 
-![Sequence-diagrammes-en](Sequence-diagrammes-en)
+![Sequence-diagrammes-en](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-4/Sequence-diagrammes-en.png)
 
 ## 2. Database Schema
 
