@@ -79,7 +79,7 @@ export default function MentionsLegales() {
                   Frontend (user interface)
                 </h3>
                 <p className="text-slate-300 text-sm">
-                  <strong>Vercel Inc.</strong> &mdash; 340 S Lemon Ave #4133,
+                  <strong>Vercel Inc.</strong> 340 S Lemon Ave #4133,
                   Walnut, CA 91789, USA
                 </p>
                 <a
@@ -96,7 +96,7 @@ export default function MentionsLegales() {
                   Backend (API, database, workers)
                 </h3>
                 <p className="text-slate-300 text-sm">
-                  <strong>Railway Corp.</strong> &mdash; 500 Folsom St, San
+                  <strong>Railway Corp.</strong> 500 Folsom St, San
                   Francisco, CA 94105, USA
                 </p>
                 <a
