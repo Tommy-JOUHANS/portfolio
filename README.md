@@ -28,7 +28,7 @@ Built in a four-week sprint (Stage 3 → Stage 4) at Holberton School Dijon, in 
 
 ## Features
 
-- <Lock /> **JWT authentication** with refresh + blacklist (SimpleJWT)
+- **JWT authentication** with refresh + blacklist (SimpleJWT)
 - **Audit request workflow** : 4 service packs (€1,000 → €5,000)
 - **Real-time status tracking** : Pending / In Progress / Completed / Archived
 - **Transactional emails** via EmailJS : confirmation + status updates
@@ -73,11 +73,11 @@ Built in a four-week sprint (Stage 3 → Stage 4) at Holberton School Dijon, in 
                                                        └────────────────┘
 ```
 
-📐 **Detailed architecture diagram:** [`Stages/Stage-3/architecture.png`](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/architecture.png)
+ **Detailed architecture diagram:** [`Stages/Stage-3/architecture.png`](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/architecture.png)
 
 ---
 
-## 🗄️ Database Diagram
+## Database Diagram
 
 Four core entities, all using UUID primary keys, all relations enforced by the Django ORM:
 
@@ -106,7 +106,7 @@ Four core entities, all using UUID primary keys, all relations enforced by the D
                                              └────────────────┘
 ```
 
-🗃️ **Detailed ERD:** [`Stages/Stage-3/erd-database-HD.png`](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/DIAGRAMME%20ER%202.png)
+ **Detailed ERD:** [`Stages/Stage-3/erd-database-HD.png`](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/DIAGRAMME%20ER%202.png)
 
 ---
 
@@ -208,7 +208,7 @@ npm run dev
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Backend
 ```bash
@@ -265,7 +265,7 @@ portfolio/
 
 ---
 
-## 🚢 Deployment
+## Deployment
 
 | Service | Platform | Notes |
 |---|---|---|
@@ -280,7 +280,7 @@ All secrets managed via environment variables — **no credentials in source cod
 
 ---
 
-## 👥 Team
+## Team
 
 | Member | Role | Focus |
 |---|---|---|
@@ -292,7 +292,7 @@ All secrets managed via environment variables — **no credentials in source cod
 
 ---
 
-## 📜 License
+## License
 
 This project is developed as a school portfolio under the supervision of Holberton School Dijon. All rights reserved by the authors.
 
