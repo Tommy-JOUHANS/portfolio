@@ -64,50 +64,9 @@
 ```
 **Click here for views : [Architecture](https://github.com/Tommy-JOUHANS/portfolio/blob/main/Stages/Stage-3/diagrammes/architecture.png)
 
-### Sequence Diagram : Audit Request Submission
+### Sequence Diagrams:
 
-```
-sequenceDiagram
-  actor User
-  participant Front as AuditRequestForm
-  participant API as Django /audits
-  participant DB as PostgreSQL
-  participant Redis
-  participant Worker as Celery Worker
-  participant SMTP
-
-  User->>Front: Selects pack + scope_notes
-  Front->>API: POST /api/audits/ + JWT Bearer
-  API->>API: Validates JWT + data
-  API->>DB: INSERT audit_request (status=pending)
-  API->>Redis: enqueue send_ack_email(audit_id)
-  API-->>Front: 201 Created { reference: "CYB-2026-0001" }
-  Front-->>User: Redirect /audit/confirmation/CYB-2026-0001
-  Worker->>Redis: dequeue task
-  Worker->>SMTP: Acknowledgement email
-  Worker->>DB: UPDATE notification status=sent
-  SMTP-->>User: Email received
-```
-
-### Technology Stack
-
-| Layer | Technology | Version | Rationale |
-|-------|-----------|---------|-----------|
-| Frontend | React + Vite | 19 / 8 | Reactive SPA, fast HMR, rich ecosystem |
-| Styles | Tailwind CSS | 4 | Utility-first, design consistency, no CSS spaghetti |
-| Routing | React Router | 7 | SPA standard, `ProtectedRoute` with built-in RBAC |
-| HTTP | Axios | 1.9 | JWT interceptors, auto-refresh, configurable timeout |
-| Backend | Django + DRF | 5.1 / 3.17 | Powerful ORM, built-in Django admin, batteries included |
-| Auth | SimpleJWT | 5.5 | Access 60 min + Refresh 7 days, blacklist on logout |
-| Async | Celery + Redis | 5.6 / 7.4 | Non-blocking PDF generation and emails |
-| PDF | WeasyPrint | 62 | HTML+CSS → faithful server-side PDF rendering |
-| Dev DB | SQLite | — | Lightweight, zero config, ideal for development |
-| Prod DB | PostgreSQL | — | Robust, ACID, native UUID, full-text search |
-| CI/CD | GitHub Actions | — | Lint + Tests + Build automated on each PR |
-| Deploy (BE) | Railway | — | Backend hosted, auto-deploy from `main` |
-| Deploy (FE) | Vercel | — | Frontend hosted, auto-deploy from `main` |
-
----
+![Sequence-diagrammes-en](Sequence-diagrammes-en)
 
 ## 2. Database Schema
 
@@ -193,7 +152,7 @@ sequenceDiagram
 
 ---
 
-## 3. Sprint Planning : Task 0
+## 3. Sprint Planning — Task 0
 
 ### Global Calendar (12 weeks · 27 April → 19 July 2026)
 
@@ -211,7 +170,7 @@ sequenceDiagram
 
 ---
 
-### Sprint 1 : Authentication & JWT (S3 · 11–17 May)
+### Sprint 1 — Authentication & JWT (S3 · 11–17 May)
 
 **Duration:** 1 week | **Goal:** Complete authentication system with JWT
 
@@ -234,7 +193,7 @@ sequenceDiagram
 
 ---
 
-### Sprint 2 : Core Features 1 (S4 · 18–24 May)
+### Sprint 2 — Core Features 1 (S4 · 18–24 May)
 
 **Duration:** 1 week | **Goal:** Client dashboard + audit request submission
 
@@ -259,7 +218,7 @@ sequenceDiagram
 
 ---
 
-### Sprint 3 : Core Features 2 + Tests (S5 · 25 May–1 Jun)
+### Sprint 3 — Core Features 2 + Tests (S5 · 25 May–1 Jun)
 
 **Duration:** 1 week | **Goal:** PDF, training, real API connection, tests
 
@@ -356,7 +315,7 @@ refactor(api): extract RBAC permissions to dedicated module
 
 ---
 
-## 5. Progress Tracking : Task 2
+## 5. Progress Tracking — Task 2
 
 ### Velocity Metrics
 
@@ -395,9 +354,9 @@ Each morning (async Slack/Discord message):
 
 ---
 
-## 6. Reviews & Retrospectives : Task 3
+## 6. Reviews & Retrospectives — Task 3
 
-### Sprint 1 Review : Authentication (17 May)
+### Sprint 1 Review — Authentication (17 May)
 
 **Demo performed:**
 - New client account registration (validation: 10 chars, uppercase, lowercase, digit, special)
@@ -420,7 +379,7 @@ Each morning (async Slack/Discord message):
 
 ---
 
-### Sprint 2 Review : Dashboard & Audit (24 May)
+### Sprint 2 Review — Dashboard & Audit (24 May)
 
 **Demo performed:**
 - Pack selection → submission → reference `CYB-2026-0001` generated
@@ -443,7 +402,7 @@ Each morning (async Slack/Discord message):
 
 ---
 
-### Sprint 3 Review : PDF + Tests (1 Jun)
+### Sprint 3 Review — PDF + Tests (1 Jun)
 
 **Demo performed:**
 - Admin triggers PDF generation → `202 Accepted` → report available
@@ -452,7 +411,7 @@ Each morning (async Slack/Discord message):
 - CI GitHub Actions: green pipeline on `develop` branch
 - Test results: 21 backend accounts tests + 21 validator frontend tests
 
-### Sprint 4 Review : Deployment + Advanced Tests (Jun 2026)
+### Sprint 4 Review — Deployment + Advanced Tests (Jun 2026)
 
 **Demo performed:**
 - Railway backend live: full Django REST API accessible via HTTPS
@@ -463,7 +422,7 @@ Each morning (async Slack/Discord message):
 
 ---
 
-## 7. Integration Tests & QA : Task 4
+## 7. Integration Tests & QA — Task 4
 
 ### Test Pyramid
 
@@ -533,7 +492,7 @@ npm test -- --run --coverage
 
 ---
 
-### Manual Postman Tests : Key Scenarios
+### Manual Postman Tests — Key Scenarios
 
 ```
 # ── Authentication ────────────────────────────────────────────────
@@ -559,7 +518,7 @@ GET  /api/training/modules/1/           → 200 { content_md }
 
 ---
 
-### CI/CD Pipeline : GitHub Actions
+### CI/CD Pipeline — GitHub Actions
 
 File: `.github/workflows/ci.yml`
 
@@ -580,7 +539,7 @@ jobs:
 
 ---
 
-## 8. Deliverables : Task 5
+## 8. Deliverables — Task 5
 
 ### Summary
 
@@ -713,7 +672,7 @@ portfolio/
 
 ---
 
-## 9. Technical Review Preparation : Task 6
+## 9. Technical Review Preparation — Task 6
 
 ### MVP Checklist
 
@@ -733,7 +692,7 @@ portfolio/
 - [x] 55 pytest backend tests passing
 - [x] Technical documentation (Word documents)
 
-### Technical Questions : Prepared Answers
+### Technical Questions — Prepared Answers
 
 **Q: Why UUID as primary key for User and AuditRequest?**
 UUID v4 prevents resource enumeration (IDOR attack). With integer IDs, an attacker can iterate `/api/audits/1`, `/api/audits/2`... UUIDs are unpredictable and non-sequential.
