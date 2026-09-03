@@ -7,3 +7,7 @@
 ##- Portfolio Project - Technical Documentation (Stage 3 - France)
 
 ##- Portfolio Project - MVP Development & Execution & Technical Manual Review (Stage 4 - France)
+
+##- Portfolio Project - Project Closure
+
+##- RNCP5 - DWWM "Développeur web et web mobile" 
